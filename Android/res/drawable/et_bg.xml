@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/et_corner_disable_bg" android:state_enabled="false"></item>
+    <item android:drawable="@drawable/et_corner_select_bg" android:state_selected="true"></item>
+    <item android:drawable="@drawable/et_corner_select_bg" android:state_focused="true"></item>
+    <item android:drawable="@drawable/et_corner_normal_bg"></item>
+
+</selector>

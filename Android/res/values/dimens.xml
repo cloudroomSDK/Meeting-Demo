@@ -1,0 +1,10 @@
+<resources>
+
+    <dimen name="color_btn_radius">5dp</dimen>
+    <dimen name="color_btn_scale">5dp</dimen>
+    <dimen name="board_option_btn_size">30dp</dimen>
+    <dimen name="common_btn_height">40dp</dimen>
+    <dimen name="common_edit_height">40dp</dimen>
+    <dimen name="text_icon_btn_icon_size">40dp</dimen>
+
+</resources>

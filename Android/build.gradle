@@ -1,0 +1,85 @@
+buildscript {
+    repositories {
+        jcenter()
+        google()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.6.3'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        google()
+    }
+}
+
+apply plugin: 'com.android.application'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    //noinspection GradleCompatible
+    implementation "com.android.support:appcompat-v7:26.0.1"
+    implementation "com.tencent.bugly:crashreport:2.1.9"
+    implementation "com.tencent.bugly:nativecrashreport:3.0"
+}
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.0"
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = [ 'src', 'java']
+            aidl.srcDirs = [ 'src', 'aidl']
+            res.srcDirs = [ 'res']
+            resources.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
+            assets.srcDirs = ['assets']
+            jniLibs.srcDirs = ['libs']
+       }
+    }
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 28
+        ndk {
+            abiFilters "armeabi-v7a"
+        }
+        externalNativeBuild {
+            cmake {
+                arguments '-DANDROID_STL=c++_static', '-DANDROID_PLATFORM=android-16', '-DANDROID_TOOLCHAIN=clang'
+            }
+        }
+    }
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "MeetingDemo.apk"
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
+
+    Properties props = new Properties()
+    props.load(new FileInputStream(file("../../../../../cloudroomsigning.properties")))
+    println props['KEYSTORE_FILE']
+    println props['KEY_ALIAS']
+    signingConfigs {
+        release {
+            storeFile file(props['KEYSTORE_FILE'])
+            keyAlias props['KEY_ALIAS']
+            keyPassword props['KEY_PASSWORD']
+            storePassword props['KEYSTORE_PASSWORD']
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            signingConfig  signingConfigs.release
+        }
+    }
+}
