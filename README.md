@@ -2,7 +2,7 @@
 实现了一个视频会议场景示例，包括音视频通话、屏幕共享、云端录制、文字聊天等功能。
 
 ## 支持的平台
-示例应用包含 Android, iOS, MacOS, Windows 以及Web平台。
+本示例应用包含 Android, iOS, MacOS, Windows 以及Web平台。
 
 展示了：
 - 创建 / 加入 / 离开房间
@@ -16,13 +16,14 @@
 - 直播推流
 - 多摄像头
 
-项目文件夹名称|平台|描述
----|---|---
-[Meeting-Demo-Android](./Android)|Android (Java)|Android 视频会议Demo
-[Meeting-Demo-iOS](./iOS)|iOS (Objective-C)|iOS 视频会议Demo （Objective-C）
-[Meeting-Demo-MacOS](./macOS)|MacOS (Objective-C) <img width=30/>|MacOS 视频会议Demo （Objective-C）
-[Meeting-Demo-Windows](./Windows)|Windows|Windows 视频会议Demo
-[Meeting-Demo-Web](./Web)|Web|Web 视频会议Demo
+
+项目位置|平台|语言|SDK
+---|---|---|---
+[/Android](./Android)|Android|Java|[云屋RTC Android SDK](https://sdk.cloudroom.com/sdkdoc/Android/)
+[/iOS](./iOS)|iOS|Objective-C|[云屋RTC iOS SDK](https://sdk.cloudroom.com/sdkdoc/iOS/)
+[/MacOS](./macOS)|MacOS|Objective-C|[云屋RTC MacOS SDK](https://sdk.cloudroom.com/sdkdoc/MacOS/)
+[/Windows](./Windows)|Windows|C++|[云屋RTC Windows SDK](https://sdk.cloudroom.com/sdkdoc/Windows/)
+[/Web](./Web)|Web|JS|[云屋RTC Web SDK](https://sdk.cloudroom.com/sdkdoc/H5/)
 
 ## 联系我们
 - 更多示例见 [官方SDK示例](https://github.com/cloudroomSDK)
