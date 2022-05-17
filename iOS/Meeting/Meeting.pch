@@ -1,0 +1,33 @@
+//
+//  Meeting.pch
+//  Meeting
+//
+//  Created by king on 2017/2/10.
+//  Copyright © 2017年 BossKing10086. All rights reserved.
+//
+
+#ifndef Meeting_pch
+#define Meeting_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#ifdef __OBJC__
+    #ifdef DEBUG
+        #define MLog(...) NSLog(@"%s %@", __func__, [NSString stringWithFormat:__VA_ARGS__])
+    #else
+        #define MLog(...)
+    #endif
+    #import "NSString+K.h"
+    #import "NSArray+K.h"
+    #import "HUDUtil.h"
+    #import "BaseNavController.h"
+    #import <CloudroomVideoSDK_IOS/CloudroomVideoSDK_IOS.h>
+
+    #define weakify(o) __weak __typeof(o) wSelf = o;
+    #define strongify(wSelf) __strong __typeof(wSelf) sSelf = wSelf;
+    #define UIColorFromRGBA(r, g, b, a) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:a]
+    #define MAS_SHORTHAND
+#endif
+
+#endif /* Meeting_pch */

@@ -1,0 +1,25 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "ca43da6a-9e9a-2442-a102-ef887e0deb8b++8617",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+    "ca43da6a-9e9a-2442-a102-ef887e0deb8b++8617" : {
+
+    }
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "ca43da6a-9e9a-2442-a102-ef887e0deb8b++8617" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "F0229A21-B479-47DD-A77A-34BF3881FD51",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "ca43da6a-9e9a-2442-a102-ef887e0deb8b++8617" : "MeetingV3_Phone_mini\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Meeting",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "CloudroomMeetingSDK\/CloudroomMeetingSDK_IOS\/Examples\/Meeting(OC)\/Meeting.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/10.0.9.9\/svn\/Terminal",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "ca43da6a-9e9a-2442-a102-ef887e0deb8b++8617"
+    }
+  ]
+}
