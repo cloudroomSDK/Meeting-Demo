@@ -1,0 +1,27 @@
+﻿<Window x:Class="Meeting_WPF.Login"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="登陆" Height="360" Width="320" ResizeMode="NoResize" WindowStyle="SingleBorderWindow" WindowStartupLocation="CenterScreen" Closed="Window_Closed">
+    <Grid Height="auto">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="37*" />
+            <ColumnDefinition Width="120*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70*"/>
+            <RowDefinition Height="20*" />
+            <RowDefinition Height="20*" />
+            <RowDefinition Height="20*" />
+        </Grid.RowDefinitions>
+
+        <Image Grid.Row="0" Grid.Column="1" Source="/Res/logo.png" Stretch="Fill" HorizontalAlignment="Center" Width="120" Margin="14,29,106,29"/>
+
+        <Label Grid.Column="0" Grid.Row="1" Margin="0,13,5,13" HorizontalAlignment="Right" VerticalAlignment="Center" Height="25" Width="34">昵称</Label>
+        <TextBox Name="edtNickname" Grid.Column="1" Grid.Row="1" Margin="5,10,0,9" Height="32" HorizontalAlignment="Left" VerticalAlignment="Center" Width="160"></TextBox>
+
+        <Button Name="btnLogin"  Grid.Column="1" Grid.Row="2" Margin="5,9,0,10"  HorizontalAlignment="Left" VerticalAlignment="Center" Width="160" Height="32" Click="btnLogin_Click" Style="{StaticResource HighlightBtn}">登陆</Button>
+        <Button Name="btnSet"  Grid.Column="1" Grid.Row="3" Margin="0,0,75,0" HorizontalAlignment="Right" VerticalAlignment="Top" Background="Transparent" BorderBrush="Transparent" Click="btnSet_Click" Width="64">服务器设置</Button>
+
+    </Grid>
+</Window>

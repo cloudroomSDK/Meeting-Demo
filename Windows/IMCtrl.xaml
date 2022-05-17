@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="Meeting_WPF.IMCtrl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" >
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="286*" />
+            <RowDefinition Height="40" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300*" />
+            <ColumnDefinition Width="80*" />
+        </Grid.ColumnDefinitions>
+        <Label Background="#ABD9F5"  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="聊天" FontSize="14" VerticalContentAlignment="Center" />
+        <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" TextWrapping="WrapWithOverflow" Name="chatText" VerticalContentAlignment="Top" IsReadOnly="True" VerticalScrollBarVisibility="Auto"></TextBox>
+        <TextBox Grid.Row="2" Grid.Column="0"  Margin="5,0,0,0" Height="25" Name="txtMsg"></TextBox>
+        <Button Grid.Row="2" Grid.Column="1" Margin="5,0,5,0" Height="25" VerticalAlignment="Center" Style="{StaticResource HighlightBtn}" Name="btnSend" Click="btnSend_Click">发送</Button>
+    </Grid>
+</UserControl>

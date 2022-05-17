@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="Meeting_WPF.ScreenSharePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Height="680" Width="1070" Background="#FAFAFA">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="415*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,0" Name="panel_top">
+            <TextBlock Margin="20,0,0,0" VerticalAlignment="Center">共享选项:</TextBlock>
+            <CheckBox Margin="20,0,0,0" VerticalAlignment="Center" Name="chkAllowControl" Click="chkAllowControl_Click">允许他人远程控制</CheckBox>
+            <ComboBox Margin="5,0,0,0" MinWidth="130" Height="24" Name="cmbMembers" SelectionChanged="cmbMembers_SelectionChanged" Background="White"></ComboBox>
+        </StackPanel>
+        <Button Grid.Row="0" Name="photoBtn" Margin="0,0,10,0" Width="120" Height="30" FontSize="14" HorizontalAlignment="Right"  VerticalAlignment="Center" Style="{StaticResource HighlightBtn}" Content="拍照" Click="btn_photo"/>
+        <WindowsFormsHost Grid.Row="1" Name="screenShareHost" />
+    </Grid>
+</UserControl>

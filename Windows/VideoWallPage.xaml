@@ -1,0 +1,31 @@
+﻿<UserControl x:Class="Meeting_WPF.VideoWallPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:y="clr-namespace:Meeting_WPF"
+    Height="680" Width="1070" xmlns:my="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration" SizeChanged="UserControl_SizeChanged" Background="#FAFAFA">
+
+    <UserControl.Resources>
+        <y:MicProgressBarValueConverter x:Key="pbMicConverter"/>
+        <Style x:Key="MicProgressBarStyle" TargetType="{x:Type ProgressBar}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Grid>
+                            <Image Name="PART_Track" Source="/Res/mic_0.png" HorizontalAlignment="Left" Stretch="Fill"/>
+                            <Image Name="PART_Indicator" Source="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Value, Converter={StaticResource pbMicConverter}}" HorizontalAlignment="Left" Stretch="Fill"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+        <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Name="grid_videos" HorizontalAlignment="Center" VerticalAlignment="Center"  Background="LightGray">
+        </Grid>
+
+        </Grid>
+</UserControl>
