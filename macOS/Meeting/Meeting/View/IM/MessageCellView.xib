@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19455" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19455"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView identifier="MessageCellView" id="c22-O7-iKe" customClass="MessageCellView">
+            <rect key="frame" x="0.0" y="0.0" width="451" height="26"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="1rz-K2-DV4">
+                    <rect key="frame" x="3" y="5" width="37" height="16"/>
+                    <textFieldCell key="cell" lineBreakMode="charWrapping" title="Label" id="vXK-zI-snl">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="1rz-K2-DV4" secondAttribute="bottom" constant="5" id="LdR-OY-q4d"/>
+                <constraint firstItem="1rz-K2-DV4" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="5" id="RQh-KU-fMP"/>
+                <constraint firstItem="1rz-K2-DV4" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="5" id="fny-bS-Z3M"/>
+                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="1rz-K2-DV4" secondAttribute="trailing" constant="5" id="lXx-3M-KUu"/>
+            </constraints>
+            <connections>
+                <outlet property="messageLabel" destination="1rz-K2-DV4" id="cGi-EA-RLQ"/>
+            </connections>
+            <point key="canvasLocation" x="125.5" y="42"/>
+        </customView>
+    </objects>
+</document>

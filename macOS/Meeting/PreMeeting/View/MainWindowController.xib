@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19455" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19455"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="MainWindowController">
+            <connections>
+                <outlet property="createButton" destination="8v3-iS-eWu" id="TEC-rT-rJ8"/>
+                <outlet property="enterButton" destination="v4U-Ac-FpL" id="bp3-Xj-quk"/>
+                <outlet property="meetIDBgView" destination="BLF-cl-GpX" id="gl1-SM-nsi"/>
+                <outlet property="meetIDTF" destination="SB6-d2-Vwh" id="8Rw-7k-IxK"/>
+                <outlet property="nicknameBgView" destination="7h0-d0-Zli" id="no7-et-q0d"/>
+                <outlet property="nicknameTF" destination="mDs-qf-8U7" id="tR2-I3-vQa"/>
+                <outlet property="sdkVerLabel" destination="eDD-Gm-pPh" id="Rjf-R4-r2m"/>
+                <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="F0z-JX-Cv5">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="196" y="240" width="355" height="520"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1055"/>
+            <value key="minSize" type="size" width="355" height="520"/>
+            <value key="maxSize" type="size" width="355" height="520"/>
+            <view key="contentView" id="se5-gp-TjO">
+                <rect key="frame" x="0.0" y="0.0" width="355" height="520"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kpg-pl-Zkk">
+                        <rect key="frame" x="18" y="464" width="256" height="21"/>
+                        <textFieldCell key="cell" lineBreakMode="clipping" title="Cloudroom Meeting Demo" id="3nG-ux-UiP">
+                            <font key="font" textStyle="title2" name=".SFNS-Regular"/>
+                            <color key="textColor" name="systemTealColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dcO-63-vWX">
+                        <rect key="frame" x="18" y="429" width="256" height="16"/>
+                        <textFieldCell key="cell" lineBreakMode="clipping" title="创建一个新房间或输入房间号加入已有房间" id="wFE-Kg-Qq9">
+                            <font key="font" usesAppearanceFont="YES"/>
+                            <color key="textColor" name="systemGrayColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="BLF-cl-GpX">
+                        <rect key="frame" x="20" y="364" width="315" height="39"/>
+                        <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="oKU-Ak-lDd">
+                                <rect key="frame" x="10" y="12" width="48" height="16"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="房间号:" id="idh-ZM-Ek9">
+                                    <font key="font" usesAppearanceFont="YES"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField focusRingType="none" horizontalHuggingPriority="249" verticalHuggingPriority="750" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="SB6-d2-Vwh">
+                                <rect key="frame" x="72" y="12" width="225" height="16"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" focusRingType="none" placeholderString="请输入房间号" id="fL9-jj-Cuk">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="39" id="0fb-f5-PUr"/>
+                            <constraint firstItem="SB6-d2-Vwh" firstAttribute="leading" secondItem="oKU-Ak-lDd" secondAttribute="trailing" constant="18" id="HNl-io-tdl"/>
+                            <constraint firstAttribute="trailing" secondItem="SB6-d2-Vwh" secondAttribute="trailing" constant="20" id="M3Z-Ze-cjB"/>
+                            <constraint firstItem="SB6-d2-Vwh" firstAttribute="centerY" secondItem="oKU-Ak-lDd" secondAttribute="centerY" id="UcL-Kp-fHa"/>
+                            <constraint firstItem="oKU-Ak-lDd" firstAttribute="leading" secondItem="BLF-cl-GpX" secondAttribute="leading" constant="12" id="eQb-ag-41j"/>
+                            <constraint firstItem="oKU-Ak-lDd" firstAttribute="centerY" secondItem="BLF-cl-GpX" secondAttribute="centerY" id="mee-uP-GVs"/>
+                        </constraints>
+                    </customView>
+                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="7h0-d0-Zli">
+                        <rect key="frame" x="20" y="307" width="315" height="39"/>
+                        <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9OS-mo-lwI">
+                                <rect key="frame" x="10" y="12" width="49" height="16"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="昵    称:" id="bFo-72-qdP">
+                                    <font key="font" usesAppearanceFont="YES"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField focusRingType="none" horizontalHuggingPriority="249" verticalHuggingPriority="750" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="mDs-qf-8U7">
+                                <rect key="frame" x="73" y="12" width="224" height="16"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" focusRingType="none" placeholderString="请输入昵称" id="Jhy-9V-gwm">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="9OS-mo-lwI" firstAttribute="leading" secondItem="7h0-d0-Zli" secondAttribute="leading" constant="12" id="1yi-jF-oxb"/>
+                            <constraint firstItem="mDs-qf-8U7" firstAttribute="centerY" secondItem="9OS-mo-lwI" secondAttribute="centerY" id="IzE-Yl-TLm"/>
+                            <constraint firstAttribute="trailing" secondItem="mDs-qf-8U7" secondAttribute="trailing" constant="20" id="gjS-qC-gtV"/>
+                            <constraint firstItem="9OS-mo-lwI" firstAttribute="centerY" secondItem="7h0-d0-Zli" secondAttribute="centerY" id="o6T-dp-khb"/>
+                            <constraint firstItem="mDs-qf-8U7" firstAttribute="leading" secondItem="9OS-mo-lwI" secondAttribute="trailing" constant="18" id="r7V-hT-cFj"/>
+                        </constraints>
+                    </customView>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="v4U-Ac-FpL">
+                        <rect key="frame" x="20" y="242" width="315" height="39"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="39" id="DMN-MZ-jlk"/>
+                        </constraints>
+                        <buttonCell key="cell" type="square" title="进入房间" bezelStyle="shadowlessSquare" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="krc-28-ijc">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system" size="16"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="enterRoomAction:" target="-2" id="B1j-P4-BdO"/>
+                        </connections>
+                    </button>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="uED-5b-gzV">
+                        <rect key="frame" x="162" y="198" width="31" height="16"/>
+                        <textFieldCell key="cell" lineBreakMode="clipping" title="或者" id="QOW-NL-W8T">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="YR7-HH-4MP">
+                        <rect key="frame" x="39" y="206" width="117" height="1"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="1" id="EnY-BX-hHP"/>
+                        </constraints>
+                    </customView>
+                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="Ngq-1g-2GN">
+                        <rect key="frame" x="211" y="206" width="105" height="1"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="1" id="HRH-sQ-tqp"/>
+                        </constraints>
+                    </customView>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8v3-iS-eWu">
+                        <rect key="frame" x="20" y="141" width="315" height="39"/>
+                        <buttonCell key="cell" type="square" title="创建房间" bezelStyle="shadowlessSquare" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="NqT-rw-xfp">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system" size="16"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="createRoomAction:" target="-2" id="heP-Ax-1qW"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dui-2C-yyN">
+                        <rect key="frame" x="134" y="71" width="88" height="32"/>
+                        <buttonCell key="cell" type="push" title="登录设置" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="hNs-PE-LRf">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="settingAction:" target="-2" id="hpd-1w-a2k"/>
+                        </connections>
+                    </button>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="eDD-Gm-pPh">
+                        <rect key="frame" x="137" y="40" width="82" height="16"/>
+                        <textFieldCell key="cell" lineBreakMode="clipping" title="SDKVer：---" id="aJJ-wm-P1r">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="BLF-cl-GpX" firstAttribute="top" secondItem="dcO-63-vWX" secondAttribute="bottom" constant="26" id="0Rp-NJ-GVm"/>
+                    <constraint firstItem="7h0-d0-Zli" firstAttribute="trailing" secondItem="BLF-cl-GpX" secondAttribute="trailing" id="1Al-a4-SmE"/>
+                    <constraint firstItem="dui-2C-yyN" firstAttribute="top" secondItem="8v3-iS-eWu" secondAttribute="bottom" constant="43" id="2UW-HF-cJB"/>
+                    <constraint firstItem="7h0-d0-Zli" firstAttribute="top" secondItem="BLF-cl-GpX" secondAttribute="bottom" constant="18" id="3mR-eC-RUE"/>
+                    <constraint firstItem="BLF-cl-GpX" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" symbolic="YES" id="3tG-Gx-xji"/>
+                    <constraint firstItem="7h0-d0-Zli" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" symbolic="YES" id="4Qy-QR-q3x"/>
+                    <constraint firstAttribute="trailing" secondItem="v4U-Ac-FpL" secondAttribute="trailing" constant="20" symbolic="YES" id="6XW-8B-Fqt"/>
+                    <constraint firstItem="8v3-iS-eWu" firstAttribute="height" secondItem="v4U-Ac-FpL" secondAttribute="height" id="7ey-av-M5j"/>
+                    <constraint firstAttribute="trailing" secondItem="BLF-cl-GpX" secondAttribute="trailing" constant="20" id="A70-tt-of3"/>
+                    <constraint firstAttribute="trailing" secondItem="8v3-iS-eWu" secondAttribute="trailing" constant="20" symbolic="YES" id="CDq-Ga-hZB"/>
+                    <constraint firstItem="YR7-HH-4MP" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="39" id="DjP-jk-C0A"/>
+                    <constraint firstItem="kpg-pl-Zkk" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" symbolic="YES" id="Dmo-KT-htJ"/>
+                    <constraint firstItem="dcO-63-vWX" firstAttribute="top" secondItem="kpg-pl-Zkk" secondAttribute="bottom" constant="19" id="Gbs-wP-u4Z"/>
+                    <constraint firstItem="v4U-Ac-FpL" firstAttribute="top" secondItem="7h0-d0-Zli" secondAttribute="bottom" constant="26" id="JQu-AL-LrI"/>
+                    <constraint firstItem="v4U-Ac-FpL" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" symbolic="YES" id="Jgw-bQ-88m"/>
+                    <constraint firstItem="8v3-iS-eWu" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" symbolic="YES" id="LIu-Zb-vHK"/>
+                    <constraint firstItem="8v3-iS-eWu" firstAttribute="top" secondItem="uED-5b-gzV" secondAttribute="bottom" constant="18" id="OuZ-Rh-M1Q"/>
+                    <constraint firstItem="Ngq-1g-2GN" firstAttribute="leading" secondItem="uED-5b-gzV" secondAttribute="trailing" constant="20" id="RWT-q9-Deh"/>
+                    <constraint firstItem="uED-5b-gzV" firstAttribute="leading" secondItem="YR7-HH-4MP" secondAttribute="trailing" constant="8" symbolic="YES" id="V1D-Gz-4sK"/>
+                    <constraint firstItem="dui-2C-yyN" firstAttribute="centerX" secondItem="se5-gp-TjO" secondAttribute="centerX" id="VsE-eB-vJS"/>
+                    <constraint firstAttribute="trailing" secondItem="Ngq-1g-2GN" secondAttribute="trailing" constant="39" id="Xdr-l9-DbH"/>
+                    <constraint firstItem="YR7-HH-4MP" firstAttribute="centerY" secondItem="uED-5b-gzV" secondAttribute="centerY" id="fUW-vS-iFl"/>
+                    <constraint firstItem="dcO-63-vWX" firstAttribute="trailing" secondItem="kpg-pl-Zkk" secondAttribute="trailing" id="hjj-Ca-yW5"/>
+                    <constraint firstItem="uED-5b-gzV" firstAttribute="top" secondItem="v4U-Ac-FpL" secondAttribute="bottom" constant="28" id="iIF-Nm-fvA"/>
+                    <constraint firstItem="dcO-63-vWX" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" symbolic="YES" id="jV8-oZ-Yia"/>
+                    <constraint firstItem="Ngq-1g-2GN" firstAttribute="centerY" secondItem="uED-5b-gzV" secondAttribute="centerY" id="jiM-9r-CXO"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="kpg-pl-Zkk" secondAttribute="trailing" constant="20" id="ktJ-KJ-FBI"/>
+                    <constraint firstItem="eDD-Gm-pPh" firstAttribute="top" secondItem="dui-2C-yyN" secondAttribute="bottom" constant="22" id="o97-3e-2L9"/>
+                    <constraint firstItem="eDD-Gm-pPh" firstAttribute="centerX" secondItem="se5-gp-TjO" secondAttribute="centerX" id="sM2-J2-aWv"/>
+                    <constraint firstItem="7h0-d0-Zli" firstAttribute="height" secondItem="BLF-cl-GpX" secondAttribute="height" id="uNc-vC-0WM"/>
+                    <constraint firstItem="kpg-pl-Zkk" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="35" id="vjh-J6-fwM"/>
+                    <constraint firstItem="uED-5b-gzV" firstAttribute="centerX" secondItem="se5-gp-TjO" secondAttribute="centerX" id="yJN-fg-lcW"/>
+                </constraints>
+            </view>
+            <connections>
+                <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
+            </connections>
+            <point key="canvasLocation" x="36.5" y="229"/>
+        </window>
+    </objects>
+</document>

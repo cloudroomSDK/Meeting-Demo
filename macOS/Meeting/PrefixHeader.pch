@@ -1,0 +1,28 @@
+//
+//  PrefixHeader.pch
+//  Meeting
+//
+//  Created by YunWu01 on 2021/11/5.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#ifdef DEBUG
+#define MLog(...) NSLog(@"%s %@", __func__, [NSString stringWithFormat:__VA_ARGS__])
+#else
+#define MLog(...)
+#endif
+
+#import "NSArray+K.h"
+#import "NSString+Check.h"
+#import "UIManage.h"
+#import "NSAlert+Alert.h"
+#import "MJExtension.h"
+
+#import <CloudroomVideoSDK_MAC/CloudroomVideoSDK_MAC.h>
+
+#endif /* PrefixHeader_pch */

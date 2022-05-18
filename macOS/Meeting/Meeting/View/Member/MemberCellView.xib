@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19455" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19455"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner">
+            <connections>
+                <outlet property="microphoneButton" destination="9n3-pp-l4o" id="cQf-pC-5bW"/>
+                <outlet property="nameLabel" destination="nUq-SD-W2g" id="jjj-eV-AEf"/>
+                <outlet property="videoButton" destination="lj4-Rc-02L" id="cvb-Oe-5Bf"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView identifier="MemberCellView" id="c22-O7-iKe" customClass="MemberCellView">
+            <rect key="frame" x="0.0" y="0.0" width="467" height="30"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="nUq-SD-W2g">
+                    <rect key="frame" x="18" y="7" width="4" height="16"/>
+                    <textFieldCell key="cell" lineBreakMode="clipping" id="Tw8-yj-Ie6">
+                        <font key="font" usesAppearanceFont="YES"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button translatesAutoresizingMaskIntoConstraints="NO" id="9n3-pp-l4o">
+                    <rect key="frame" x="392" y="5" width="20" height="20"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="9n3-pp-l4o" secondAttribute="height" multiplier="1:1" id="OG4-Kg-z75"/>
+                        <constraint firstAttribute="width" constant="20" id="TDh-61-8sf"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="v3s-5m-2Ns">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="microphoneAction:" target="c22-O7-iKe" id="dzX-50-ISy"/>
+                    </connections>
+                </button>
+                <button translatesAutoresizingMaskIntoConstraints="NO" id="lj4-Rc-02L">
+                    <rect key="frame" x="427" y="5" width="20" height="20"/>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="p0i-5t-JrH">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="videoAction:" target="c22-O7-iKe" id="peF-ak-wOx"/>
+                    </connections>
+                </button>
+            </subviews>
+            <constraints>
+                <constraint firstItem="9n3-pp-l4o" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="nUq-SD-W2g" secondAttribute="trailing" constant="30" id="1oW-BY-2zT"/>
+                <constraint firstItem="nUq-SD-W2g" firstAttribute="centerY" secondItem="c22-O7-iKe" secondAttribute="centerY" id="3J5-c9-eFs"/>
+                <constraint firstAttribute="trailing" secondItem="lj4-Rc-02L" secondAttribute="trailing" constant="20" symbolic="YES" id="EOE-Bt-ofV"/>
+                <constraint firstItem="lj4-Rc-02L" firstAttribute="height" secondItem="9n3-pp-l4o" secondAttribute="height" id="GrC-Ex-t9M"/>
+                <constraint firstItem="nUq-SD-W2g" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="20" id="VS6-Ck-kHh"/>
+                <constraint firstItem="lj4-Rc-02L" firstAttribute="width" secondItem="9n3-pp-l4o" secondAttribute="width" id="Xi7-ya-w3K"/>
+                <constraint firstItem="lj4-Rc-02L" firstAttribute="leading" secondItem="9n3-pp-l4o" secondAttribute="trailing" constant="15" id="ZxV-jJ-Tpf"/>
+                <constraint firstItem="9n3-pp-l4o" firstAttribute="centerY" secondItem="c22-O7-iKe" secondAttribute="centerY" id="bya-cU-Mzh"/>
+                <constraint firstItem="lj4-Rc-02L" firstAttribute="centerY" secondItem="c22-O7-iKe" secondAttribute="centerY" id="iUi-Dp-RPw"/>
+            </constraints>
+            <connections>
+                <outlet property="microphoneButton" destination="9n3-pp-l4o" id="1jc-b3-BGB"/>
+                <outlet property="nameLabel" destination="nUq-SD-W2g" id="3t6-0h-eeq"/>
+                <outlet property="videoButton" destination="lj4-Rc-02L" id="7e3-IC-YoA"/>
+            </connections>
+            <point key="canvasLocation" x="133.5" y="63"/>
+        </customView>
+    </objects>
+</document>
