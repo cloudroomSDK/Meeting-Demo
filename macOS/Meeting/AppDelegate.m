@@ -104,9 +104,6 @@
         MLog(@"VideoCallSDK init error!");
         [[CloudroomVideoSDK shareInstance] uninit];
     }
-
-    //设置oss账号
-    [[CloudroomVideoSDK shareInstance] setAliyunOssAccountInfo:@"LTAIHJIOQulHaGQv" accessSecret:@"uhofooE515WKKXsTYQ7kNqRE5E19JM"];
     
     // 获取 SDK 版本号
     NSLog(@"GetVideoCallSDKVer:%@", [CloudroomVideoSDK getCloudroomVideoSDKVer]);
