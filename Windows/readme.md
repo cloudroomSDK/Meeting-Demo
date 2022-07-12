@@ -1,2 +1,4 @@
-此demo为vs2013 c#工程，在开发前，请先[下载](https://sdk.cloudroom.com/pages/download#sdk)并安装SDK组件到系统。</br>
-其它相关准备工作，可以参考[官网开发手册](https://docs.cloudroom.com/sdk/document/fastIntegration/beforeDevelop?platform=Windows)
+#运行SDK Demo操作步骤
+
+* 此demo为vs2013 c#工程，请安装vs2013或以上版本；
+* 请在官网[下载SDK](https://www.cloudroom.com/api/getDownloadUrlApi?Client=SDK-78)并安装SDK组件到系统，请参考[官网开发手册](https://docs.cloudroom.com/sdk/document/fastIntegration/beforeDevelop?platform=Windows)
