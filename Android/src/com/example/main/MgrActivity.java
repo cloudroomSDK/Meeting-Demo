@@ -45,7 +45,7 @@ public class MgrActivity extends BaseActivity {
 		// 登陆失败
 		@Override
 		public void loginFail(CRVIDEOSDK_ERR_DEF sdkErr, String cookie) {
-			// TODO Auto-generated method stub
+			
 			enableOption(false);
 
 			mHandler.removeMessages(MSG_LOGIN);
@@ -65,7 +65,7 @@ public class MgrActivity extends BaseActivity {
 		// 登陆成功
 		@Override
 		public void loginSuccess(String usrID, String cookie) {
-			// TODO Auto-generated method stub
+			
 			Log.d(TAG, "onLoginSuccess");
 			enableOption(true);
 			mHandler.removeMessages(MSG_LOGIN);
@@ -94,7 +94,7 @@ public class MgrActivity extends BaseActivity {
 
 		@Override
 		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
+			
 			switch (msg.what) {
 			case MSG_LOGIN:
 				doLogin();
@@ -140,12 +140,17 @@ public class MgrActivity extends BaseActivity {
 	}
 
 	@Override
-	protected void onResume() {
-		super.onResume();
+	protected void onRequestPermissionsFinished() {
+		super.onRequestPermissionsFinished();
 		if (!VideoSDKHelper.getInstance().isLogin()) {
 			mHandler.removeMessages(MSG_LOGIN);
 			mHandler.sendEmptyMessage(MSG_LOGIN);
-		} 
+		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
 		if (SettingActivity.bSettingChanged) {
 			mHandler.removeMessages(MSG_LOGIN);
 			mHandler.sendEmptyMessage(MSG_LOGIN);
@@ -161,7 +166,6 @@ public class MgrActivity extends BaseActivity {
 
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		super.onDestroy();
 		mHandler.removeMessages(MSG_LOGIN);
 		CloudroomVideoMgr.getInstance().unregisterCallback(mMgrCallback);
@@ -173,7 +177,7 @@ public class MgrActivity extends BaseActivity {
 			enterMeeting();
 			break;
 		case R.id.btn_createmeeting:
-			enterMeetingActivity(0, "", true);
+			enterMeetingActivity(0, true);
 			break;
 		case R.id.btn_server_setting:
 			openSetting();
@@ -194,12 +198,11 @@ public class MgrActivity extends BaseActivity {
 			VideoSDKHelper.getInstance().showToast(R.string.err_meetid_prompt);
 			return;
 		}
-		enterMeetingActivity(meetID, "", false);
+		enterMeetingActivity(meetID, false);
 	}
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		// TODO Auto-generated method stub
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			return true;
 		}
@@ -208,7 +211,6 @@ public class MgrActivity extends BaseActivity {
 
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
-		// TODO Auto-generated method stub
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			// 显示退出框
 			showExitDialog();
@@ -222,7 +224,7 @@ public class MgrActivity extends BaseActivity {
 		startActivity(intent);
 	}
 
-	private static int ACOUNT_RANDOM = (int) ((Math.random() * 9 + 1) * 1000);
+	private static int USERID_RANDOM = (int) ((Math.random() * 9 + 1) * 1000);
 
 	// 登陆操作
 	private void doLogin() {
@@ -236,12 +238,12 @@ public class MgrActivity extends BaseActivity {
 		String server = sharedPreferences.getString(SettingActivity.KEY_SERVER,
 				SettingActivity.DEFAULT_SERVER);
 		// 获取配置的账号密码
-		String authAccount = sharedPreferences.getString(
-				SettingActivity.KEY_ACCOUNT, SettingActivity.DEFAULT_ACCOUNT);
-		String authPswd = sharedPreferences.getString(SettingActivity.KEY_PSWD,
-				SettingActivity.DEFAULT_PSWD);
+		String appID = sharedPreferences.getString(
+				SettingActivity.KEY_APPID, SettingActivity.DEFAULT_APPID);
+		String appSecret = sharedPreferences.getString(SettingActivity.KEY_APPSECRET,
+				SettingActivity.DEFAULT_APPSECRET);
 		// 登录私有账号昵称，正式商用建议使用有意义的不重复账号
-		String privAcnt = "Android_" + ACOUNT_RANDOM;
+		String privAcnt = "Android_" + USERID_RANDOM;
 		String nickName = privAcnt;
 
 		// 检查服务器地址是否为空
@@ -249,13 +251,14 @@ public class MgrActivity extends BaseActivity {
 			VideoSDKHelper.getInstance().showToast(R.string.null_server);
 			return;
 		}
-		// 检查账号密码是否为空
-		if (TextUtils.isEmpty(authAccount)) {
-			VideoSDKHelper.getInstance().showToast(R.string.null_account);
+		// 检查APPID是否为空
+		if (TextUtils.isEmpty(appID)) {
+			VideoSDKHelper.getInstance().showToast(R.string.null_appid);
 			return;
 		}
-		if (TextUtils.isEmpty(authPswd)) {
-			VideoSDKHelper.getInstance().showToast(R.string.null_pswd);
+		// 检查APPSECRET是否为空
+		if (TextUtils.isEmpty(appSecret)) {
+			VideoSDKHelper.getInstance().showToast(R.string.null_appsecret);
 			return;
 		}
 		// 检查昵称是否为空
@@ -263,14 +266,14 @@ public class MgrActivity extends BaseActivity {
 			VideoSDKHelper.getInstance().showToast(R.string.null_nickname);
 			return;
 		}
-		doLogin(server, authAccount, authPswd, nickName, privAcnt);
+		doLogin(server, appID, appSecret, nickName, privAcnt);
 	}
 
 	private LoginDat mLoginData = null;
 	private boolean mLoging = false;
 
 	// 登陆操作
-	private void doLogin(String server, String authAcnt, String authPswd,
+	private void doLogin(String server, String appID, String appSecret,
 			String nickName, String privAcnt) {
 		// 设置服务器地址
 		CloudroomVideoSDK.getInstance().setServerAddr(server);
@@ -281,10 +284,10 @@ public class MgrActivity extends BaseActivity {
 		loginDat.nickName = nickName;
 		// 第三方账号
 		loginDat.privAcnt = privAcnt;
-		// 登录账号，使用开通SDK的账号
-		loginDat.authAcnt = authAcnt;
-		// 登录密码必须做MD5处理
-		loginDat.authPswd = authPswd;
+		// APPID，使用开通SDK的APPID
+		loginDat.authAcnt = appID;
+		// APPSECRET必须做MD5处理
+		loginDat.authPswd = appSecret;
 		// 执行登录操作
 		CloudroomVideoMgr.getInstance().login(loginDat);
 
@@ -304,24 +307,20 @@ public class MgrActivity extends BaseActivity {
 
 			@Override
 			public void onOk() {
-				// TODO Auto-generated method stub
 				// 退出程序
 				DemoApp.getInstance().terminalApp();
 			}
 
 			@Override
 			public void onCancel() {
-				// TODO Auto-generated method stub
 
 			}
 		});
 	}
 
-	private void enterMeetingActivity(int meetID, String meetPswd,
-			boolean createMeeting) {
+	private void enterMeetingActivity(int meetID, boolean createMeeting) {
 		Intent intent = new Intent(this, MeetingActivity.class);
 		MeetingActivity.mMeetID = meetID;
-		MeetingActivity.mMeetPswd = meetPswd;
 		MeetingActivity.mBCreateMeeting = createMeeting;
 		startActivity(intent);
 	}

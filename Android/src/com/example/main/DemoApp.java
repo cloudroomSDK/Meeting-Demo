@@ -29,7 +29,7 @@ public class DemoApp extends Application {
 
 	@Override
 	public void onCreate() {
-		// TODO Auto-generated method stub
+
 		super.onCreate();
 
 		mInstance = this;
@@ -157,7 +157,7 @@ public class DemoApp extends Application {
 
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
+
 			android.os.Process.killProcess(android.os.Process.myPid());
 		}
 	};

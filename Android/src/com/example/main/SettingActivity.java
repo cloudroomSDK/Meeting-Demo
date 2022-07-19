@@ -37,18 +37,18 @@ public class SettingActivity extends BaseActivity {
 	public static boolean bInitDataChanged = false;
 
 	private EditText mServerEditText = null;
-	private EditText mAccountEditText = null;
-	private EditText mPswdEditText = null;
+	private EditText mAppIDEditText = null;
+	private EditText mAppSecretEditText = null;
 	private TextView mDatEncTV = null;
 
 	public static final String KEY_SERVER = "server";
-	public static final String KEY_ACCOUNT = "account";
-	public static final String KEY_PSWD = "password";
+	public static final String KEY_APPID = "account";
+	public static final String KEY_APPSECRET = "password";
 	public static final String KEY_DATENC_TYPE = "datEncType";
 
 	public static final String DEFAULT_SERVER = "sdk.cloudroom.com";
-	public static final String DEFAULT_ACCOUNT = "demo@cloudroom.com";
-	public static final String DEFAULT_PSWD = MD5Util.MD5("123456");
+	public static final String DEFAULT_APPID = "demo@cloudroom.com";
+	public static final String DEFAULT_APPSECRET = MD5Util.MD5("123456");
 	public static final String DEFAULT_DATENC_TYPE = "1";
 
 	@Override
@@ -58,8 +58,8 @@ public class SettingActivity extends BaseActivity {
 
 		mServerEditText = (EditText) findViewById(R.id.et_server);
 
-		mAccountEditText = (EditText) findViewById(R.id.et_account);
-		mPswdEditText = (EditText) findViewById(R.id.et_pswd);
+		mAppIDEditText = (EditText) findViewById(R.id.et_appid);
+		mAppSecretEditText = (EditText) findViewById(R.id.et_appsecret);
 
 		mDatEncTV = findViewById(R.id.tv_datenc_type);
 
@@ -71,13 +71,13 @@ public class SettingActivity extends BaseActivity {
 				.getDefaultSharedPreferences(this);
 
 		String server = sharedPreferences.getString(KEY_SERVER, DEFAULT_SERVER);
-		String account = sharedPreferences.getString(KEY_ACCOUNT,
-				DEFAULT_ACCOUNT);
-		String pswd = sharedPreferences.getString(KEY_PSWD, DEFAULT_PSWD);
+		String appID = sharedPreferences.getString(KEY_APPID,
+				DEFAULT_APPID);
+		String appSecret = sharedPreferences.getString(KEY_APPSECRET, DEFAULT_APPSECRET);
 
 		mServerEditText.setText(server);
-		mAccountEditText.setText(account);
-		mPswdEditText.setText(pswd);
+		mAppIDEditText.setText(appID);
+		mAppSecretEditText.setText(appSecret);
 
 		// 光标放到文字最后
 		Editable text = mServerEditText.getText();
@@ -94,7 +94,7 @@ public class SettingActivity extends BaseActivity {
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		// TODO Auto-generated method stub
+		
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			return true;
 		}
@@ -103,7 +103,7 @@ public class SettingActivity extends BaseActivity {
 
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
-		// TODO Auto-generated method stub
+		
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			saveAndFinish();
 			return true;
@@ -119,8 +119,8 @@ public class SettingActivity extends BaseActivity {
 			break;
 		case R.id.btn_restore:
 			mServerEditText.setText(DEFAULT_SERVER);
-			mAccountEditText.setText(DEFAULT_ACCOUNT);
-			mPswdEditText.setText(DEFAULT_PSWD);
+			mAppIDEditText.setText(DEFAULT_APPID);
+			mAppSecretEditText.setText(DEFAULT_APPSECRET);
 			ArrayList<String> datEncTypeStrs = UITool.getStringArray(this, R.array.datenc_types);
 			mDatEncTV.setText(datEncTypeStrs.get(Integer.parseInt(DEFAULT_DATENC_TYPE)));
 			saveAndFinish();
@@ -154,18 +154,18 @@ public class SettingActivity extends BaseActivity {
 
 	private void saveAndFinish() {
 		String server = mServerEditText.getText().toString();
-		String account = mAccountEditText.getText().toString();
-		String pswd = mPswdEditText.getText().toString();
+		String appID = mAppIDEditText.getText().toString();
+		String appSecret = mAppSecretEditText.getText().toString();
 		if (TextUtils.isEmpty(server)) {
 			VideoSDKHelper.getInstance().showToast(R.string.null_server);
 			return;
 		}
-		if (TextUtils.isEmpty(account)) {
-			VideoSDKHelper.getInstance().showToast(R.string.null_account);
+		if (TextUtils.isEmpty(appID)) {
+			VideoSDKHelper.getInstance().showToast(R.string.null_appid);
 			return;
 		}
-		if (TextUtils.isEmpty(pswd)) {
-			VideoSDKHelper.getInstance().showToast(R.string.null_pswd);
+		if (TextUtils.isEmpty(appSecret)) {
+			VideoSDKHelper.getInstance().showToast(R.string.null_appsecret);
 			return;
 		}
 
@@ -176,10 +176,10 @@ public class SettingActivity extends BaseActivity {
 
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(this);
-		String oldPswd = sharedPreferences
-				.getString(KEY_PSWD, DEFAULT_PSWD);
-		String oldAccount = sharedPreferences.getString(KEY_ACCOUNT,
-				DEFAULT_ACCOUNT);
+		String oldAppSecret = sharedPreferences
+				.getString(KEY_APPSECRET, DEFAULT_APPSECRET);
+		String oldAppID = sharedPreferences.getString(KEY_APPID,
+				DEFAULT_APPID);
 		String oldServer = sharedPreferences.getString(KEY_SERVER,
 				DEFAULT_SERVER);
 		String oldDatEncType = sharedPreferences.getString(KEY_DATENC_TYPE,
@@ -194,15 +194,15 @@ public class SettingActivity extends BaseActivity {
 			bInitDataChanged = true;
 		}
 
-		if(!oldPswd.equals(pswd)) {
-			// 判断密码是否恢复默认
-			if (!DEFAULT_PSWD.equals(pswd)) {
-				pswd = MD5Util.MD5(pswd);
+		if(!oldAppSecret.equals(appSecret)) {
+			// 判断是否恢复默认
+			if (!DEFAULT_APPSECRET.equals(appSecret)) {
+				appSecret = MD5Util.MD5(appSecret);
 			}
-			if (TextUtils.isEmpty(pswd)) {
-				editor.remove(KEY_PSWD);
+			if (TextUtils.isEmpty(appSecret)) {
+				editor.remove(KEY_APPSECRET);
 			} else {
-				editor.putString(KEY_PSWD, pswd);
+				editor.putString(KEY_APPSECRET, appSecret);
 			}
 			bSettingChanged = true;
 		}
@@ -215,11 +215,11 @@ public class SettingActivity extends BaseActivity {
 			}
 			bSettingChanged = true;
 		}
-		if(!oldAccount.equals(account)) {
-			if (TextUtils.isEmpty(account)) {
-				editor.remove(KEY_ACCOUNT);
+		if(!oldAppID.equals(appID)) {
+			if (TextUtils.isEmpty(appID)) {
+				editor.remove(KEY_APPID);
 			} else {
-				editor.putString(KEY_ACCOUNT, account);
+				editor.putString(KEY_APPID, appID);
 			}
 			bSettingChanged = true;
 		}

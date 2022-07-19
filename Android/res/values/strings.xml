@@ -15,10 +15,10 @@
     <string name="server_addr">服务器地址</string>
     <string name="null_server">服务器地址不能为空</string>
     <string name="colon">：</string>
-    <string name="account">App ID</string>
-    <string name="null_account">App ID不能为空</string>
-    <string name="pswd">App Secret</string>
-    <string name="null_pswd">App Secret不能为空</string>
+    <string name="appid">App ID</string>
+    <string name="null_appid">App ID不能为空</string>
+    <string name="appsecret">App Secret</string>
+    <string name="null_appsecret">App Secret不能为空</string>
     <string name="datenc_type">通讯协议</string>
     <string name="sdk_ver">SDK版本号：</string>
     <string name="null_nickname">昵称不能为空</string>
@@ -44,7 +44,7 @@
     <string name="video_resolution">分辨率</string>
     <string name="video_fps">帧率</string>
     <string name="meet_stopped">房间已结束</string>
-    <string name="meet_dropped">房间掉线</string>
+    <string name="meet_dropped">系统掉线</string>
     <string name="exit_meeting">退出房间？</string>
     <string name="welcome">%s，欢迎您！</string>
     <string name="meet_prompt">房间号：%d</string>

@@ -14,6 +14,7 @@ import com.cloudroom.cloudroomvideosdk.CRMgrCallback;
 import com.cloudroom.cloudroomvideosdk.CloudroomVideoMeeting;
 import com.cloudroom.cloudroomvideosdk.CloudroomVideoMgr;
 import com.cloudroom.cloudroomvideosdk.model.CRVIDEOSDK_ERR_DEF;
+import com.cloudroom.cloudroomvideosdk.model.CRVIDEOSDK_MEETING_DROPPED_REASON;
 import com.example.meetingdemo.R;
 import com.examples.tool.CRLog;
 import com.examples.tool.UITool;
@@ -52,32 +53,32 @@ public class VideoSDKHelper {
 		// 登陆失败
 		@Override
 		public void loginFail(CRVIDEOSDK_ERR_DEF sdkErr, String cookie) {
-			// TODO Auto-generated method stub
+
 			mLoginUserID = null;
 		}
 
 		// 登陆成功
 		@Override
 		public void loginSuccess(String usrID, String cookie) {
-			// TODO Auto-generated method stub
+
 			mLoginUserID = usrID;
 		}
 
 		@Override
 		public void lineOff(CRVIDEOSDK_ERR_DEF sdkErr) {
-			// TODO Auto-generated method stub
+
 			mLoginUserID = null;
 		}
 
 		@Override
 		public void notifyCallHungup(String callID, final String useExtDat) {
-			// TODO Auto-generated method stub
+
 			mEnterTime = 0;
 		}
 
 		@Override
 		public void hangupCallSuccess(String callID, String cookie) {
-			// TODO Auto-generated method stub
+
 			mEnterTime = 0;
 		}
 	};
@@ -86,7 +87,7 @@ public class VideoSDKHelper {
 
 		@Override
 		public void enterMeetingRslt(CRVIDEOSDK_ERR_DEF code) {
-			// TODO Auto-generated method stub
+
 			mIMmsgList.clear();
 			if (code == CRVIDEOSDK_ERR_DEF.CRVIDEOSDK_NOERR) {
 				mBInMeeting = true;
@@ -97,14 +98,12 @@ public class VideoSDKHelper {
 		}
 
 		@Override
-		public void meetingDropped() {
-			// TODO Auto-generated method stub
+		public void meetingDropped(CRVIDEOSDK_MEETING_DROPPED_REASON reason) {
 			mBInMeeting = false;
 		}
 
 		@Override
 		public void meetingStopped() {
-			// TODO Auto-generated method stub
 			mBInMeeting = false;
 		}
 
@@ -127,33 +126,13 @@ public class VideoSDKHelper {
 			imMsg.text = imMsgText;
 			imMsg.sendTime = (long) System.currentTimeMillis();
 			mIMmsgList.add(imMsg);
-		};
+		}
 
 		@Override
 		public void sendMeetingCustomMsgRslt(CRVIDEOSDK_ERR_DEF sdkErr,
 				String cookie) {
-			// TODO Auto-generated method stub
-			Gson gson = new Gson();
-			Map<String, String> map = gson.fromJson(cookie, Map.class);
-			if (map != null && map.containsKey("CmdType")) {
-				if (!"IM".equals(map.get("CmdType"))) {
-					return;
-				}
-			} else {
-				return;
-			}
-			if (sdkErr != CRVIDEOSDK_ERR_DEF.CRVIDEOSDK_NOERR) {
-				CRLog.debug(TAG, "sendIMmsg fail, sdkErr:" + sdkErr);
-				return;
-			}
-			CRLog.debug(TAG, "sendIMmsg success");
-			String imMsgText = map.get("IMMsg");
-			IMmsg imMsg = new IMmsg();
-			imMsg.fromUserID = getLoginUserID();
-			imMsg.text = imMsgText;
-			imMsg.sendTime = (long) System.currentTimeMillis();
-			mIMmsgList.add(imMsg);
-		};
+			CRLog.debug(TAG, "sendIMmsg(" + cookie + ") success");
+		}
 
 	};
 
@@ -199,11 +178,8 @@ public class VideoSDKHelper {
 		return mIMmsgList;
 	}
 
-	public void enterMeeting(int meetId, String meetPsw) {
-		String nickName = TextUtils.isEmpty(mNickName) ? mLoginUserID
-				: mNickName;
-		CloudroomVideoMeeting.getInstance().enterMeeting(meetId, meetPsw,
-				mLoginUserID, nickName);
+	public void enterMeeting(int meetId) {
+		CloudroomVideoMeeting.getInstance().enterMeeting(meetId);
 	}
 
 	public String getErrStr(CRVIDEOSDK_ERR_DEF errCode) {

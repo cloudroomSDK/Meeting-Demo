@@ -80,7 +80,7 @@ public class UITool {
 
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
+
 						confirmDialog.dismiss();
 					}
 				});
@@ -88,7 +88,7 @@ public class UITool {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+
 				callback.onOk();
 				confirmDialog.ok = true;
 				confirmDialog.dismiss();
@@ -98,7 +98,7 @@ public class UITool {
 
 			@Override
 			public void onDismiss(DialogInterface dialog) {
-				// TODO Auto-generated method stub
+
 				if (!confirmDialog.ok) {
 					callback.onCancel();
 				}
@@ -127,7 +127,7 @@ public class UITool {
 
 						@Override
 						public void onClick(View v) {
-							// TODO Auto-generated method stub
+
 							dialog.dismiss();
 						}
 					});
@@ -135,7 +135,7 @@ public class UITool {
 
 				@Override
 				public void onDismiss(DialogInterface dialog) {
-					// TODO Auto-generated method stub
+
 					callback.onOk();
 				}
 			});
@@ -235,7 +235,7 @@ public class UITool {
 
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
+
 					callback.onCancel();
 					dialog.dismiss();
 				}
@@ -244,7 +244,7 @@ public class UITool {
 
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
+
 					String info = inputET.getEditableText().toString();
 					callback.onInput(info);
 					dialog.dismiss();
@@ -308,7 +308,7 @@ public class UITool {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+
 				dialog.dismiss();
 			}
 		});
@@ -316,7 +316,7 @@ public class UITool {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+
 				selectListener.onSelect(wheelView.getSeletedIndex(),
 						wheelView.getSeletedItem());
 				dialog.dismiss();

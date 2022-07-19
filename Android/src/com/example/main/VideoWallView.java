@@ -32,14 +32,14 @@ public class VideoWallView extends RelativeLayout {
 
 		@Override
 		public void defVideoChanged(String userID, short videoID) {
-			// TODO Auto-generated method stub
+			
 			// 更新观看视频
 			updateWatchVideos();
 		}
 
 		@Override
 		public void enterMeetingRslt(CRVIDEOSDK_ERR_DEF code) {
-			// TODO Auto-generated method stub
+			
 			if (code != CRVIDEOSDK_ERR_DEF.CRVIDEOSDK_NOERR) {
 				return;
 			}
@@ -50,26 +50,26 @@ public class VideoWallView extends RelativeLayout {
 
 		@Override
 		public void notifyVideoWallMode(VIDEO_WALL_MODE wallMode) {
-			// TODO Auto-generated method stub
+			
 		}
 
 		@Override
 		public void userEnterMeeting(String userID) {
-			// TODO Auto-generated method stub
+			
 			// 更新观看视频
 			updateWatchVideos();
 		}
 
 		@Override
 		public void userLeftMeeting(String userID) {
-			// TODO Auto-generated method stub
+			
 			// 更新观看视频
 			updateWatchVideos();
 		}
 
 		@Override
 		public void videoDevChanged(String userID) {
-			// TODO Auto-generated method stub
+			
 			// 更新观看视频
 			updateWatchVideos();
 		}
@@ -77,7 +77,7 @@ public class VideoWallView extends RelativeLayout {
 		@Override
 		public void videoStatusChanged(String userID, VSTATUS oldStatus,
 				VSTATUS newStatus) {
-			// TODO Auto-generated method stub
+			
 			// 更新观看视频
 			updateWatchVideos();
 		}
@@ -108,7 +108,7 @@ public class VideoWallView extends RelativeLayout {
 		
 		@Override
 		public boolean handleMessage(Message msg) {
-			// TODO Auto-generated method stub
+			
 			switch (msg.what) {
 			case MSG_RESET_LAYOUT:
 				resetVideoWallLayout();
@@ -289,7 +289,7 @@ public class VideoWallView extends RelativeLayout {
 
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-		// TODO Auto-generated method stub
+		
 		super.onSizeChanged(w, h, oldw, oldh);
 		Log.d(TAG, "onSizeChanged w:" + w + " h:" + h + " oldw:" + oldw
 				+ " oldh:" + oldh);
@@ -301,7 +301,7 @@ public class VideoWallView extends RelativeLayout {
 	@Override
 	protected void onLayout(boolean changed, int left, int top, int right,
 			int bottom) {
-		// TODO Auto-generated method stub
+		
 		super.onLayout(changed, left, top, right, bottom);
 		Log.d(TAG, "onLayout left:" + left + " top:" + top + " right:" + right
 				+ " bottom:" + bottom);

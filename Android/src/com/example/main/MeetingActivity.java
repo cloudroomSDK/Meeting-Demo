@@ -42,6 +42,7 @@ import com.cloudroom.cloudroomvideosdk.MediaUIView;
 import com.cloudroom.cloudroomvideosdk.ScreenShareUIView;
 import com.cloudroom.cloudroomvideosdk.model.ASTATUS;
 import com.cloudroom.cloudroomvideosdk.model.CRVIDEOSDK_ERR_DEF;
+import com.cloudroom.cloudroomvideosdk.model.CRVIDEOSDK_MEETING_DROPPED_REASON;
 import com.cloudroom.cloudroomvideosdk.model.MEDIA_STOP_REASON;
 import com.cloudroom.cloudroomvideosdk.model.MeetInfo;
 import com.cloudroom.cloudroomvideosdk.model.Size;
@@ -75,7 +76,6 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 	private ArrayList<View> mMainPagerViewList = new ArrayList<View>();
 
 	public static int mMeetID = 0;
-	public static String mMeetPswd = "";
 	public static boolean mBCreateMeeting = false;
 
 	private ImageView mCameraIV = null;
@@ -99,8 +99,13 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 	private CRMgrCallback mMgrCallback = new CRMgrCallback() {
 
 		@Override
+		public void lineOff(CRVIDEOSDK_ERR_DEF sdkErr) {
+			VideoSDKHelper.getInstance().showToast(R.string.meet_dropped);
+			exitMeeting();
+		}
+
+		@Override
 		public void createMeetingFail(CRVIDEOSDK_ERR_DEF sdkErr, String cookie) {
-			// TODO Auto-generated method stub
 			// 创建会议失败，提示并退出界面
 			VideoSDKHelper.getInstance().showToast(R.string.create_meet_fail,
 					sdkErr);
@@ -110,9 +115,8 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 
 		@Override
 		public void createMeetingSuccess(MeetInfo meetInfo, String cookie) {
-			// TODO Auto-generated method stub
 			// 创建会议成功直接进入会议
-			enterMeeting(meetInfo.ID, meetInfo.pswd);
+			enterMeeting(meetInfo.ID);
 		}
 
 	};
@@ -121,7 +125,6 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 
 		@Override
 		public void notifyMainVideoChanged() {
-			// TODO Auto-generated method stub
 			Log.d(TAG, "notifyMainVideoChanged");
 		}
 
@@ -159,7 +162,6 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 		@Override
 		public void notifyNickNameChanged(String userID, String oldname,
 				String newname) {
-			// TODO Auto-generated method stub
 			Log.d(TAG, "notifyNickNameChanged userID:" + userID + " oldname:"
 					+ oldname + " newname:" + newname);
 		}
@@ -167,7 +169,6 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 		@Override
 		public void setNickNameRsp(CRVIDEOSDK_ERR_DEF sdkErr, String userid,
 				String newname) {
-			// TODO Auto-generated method stub
 			Log.d(TAG, "setNickNameRsp:" + sdkErr + " userid:" + userid
 					+ " newname:" + newname);
 		}
@@ -175,43 +176,23 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 		@Override
 		public void audioStatusChanged(String userID, ASTATUS oldStatus,
 				ASTATUS newStatus) {
-			// TODO Auto-generated method stub
 			updateMicBtn();
 		}
 
 		@Override
-		public void meetingDropped() {
-			// TODO Auto-generated method stub
+		public void meetingDropped(CRVIDEOSDK_MEETING_DROPPED_REASON reason) {
 			VideoSDKHelper.getInstance().showToast(R.string.meet_dropped);
-			UITool.showConfirmDialog(MeetingActivity.this, "系统掉线，重新进入？",
-					new ConfirmDialogCallback() {
-
-						@Override
-						public void onOk() {
-							// TODO Auto-generated method stub
-							enterMeeting(mMeetID, mMeetPswd);
-							UITool.showProcessDialog(MeetingActivity.this,
-									getString(R.string.entering));
-						}
-
-						@Override
-						public void onCancel() {
-							// TODO Auto-generated method stub
-							exitMeeting();
-						}
-					});
+			exitMeeting();
 		}
 
 		@Override
 		public void meetingStopped() {
-			// TODO Auto-generated method stub
 			VideoSDKHelper.getInstance().showToast(R.string.meet_stopped);
 			exitMeeting();
 		}
 
 		@Override
 		public void micEnergyUpdate(String userID, int oldLevel, int newLevel) {
-			// TODO Auto-generated method stub
 			String myUserID = CloudroomVideoMeeting.getInstance().getMyUserID();
 			if (myUserID.equals(userID)) {
 				// mMicPB.setProgress(newLevel % mMicPB.getMax());
@@ -220,19 +201,16 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 
 		@Override
 		public void videoDevChanged(String userID) {
-			// TODO Auto-generated method stub
 		}
 
 		@Override
 		public void videoStatusChanged(String userID, VSTATUS oldStatus,
 				VSTATUS newStatus) {
-			// TODO Auto-generated method stub
 			updateCameraBtn();
 		}
 
 		@Override
 		public void netStateChanged(int level) {
-			// TODO Auto-generated method stub
 			int resId = R.drawable.netstate_1;
 			int index = (level + 1) / 2;
 			if (index < 0) {
@@ -263,19 +241,7 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 		}
 
 		@Override
-		public void sendMeetingCustomMsgRslt(CRVIDEOSDK_ERR_DEF sdkErr,
-				String cookie) {
-			// TODO Auto-generated method stub
-			if (sdkErr != CRVIDEOSDK_ERR_DEF.CRVIDEOSDK_NOERR) {
-				Log.d(TAG, "sendIMmsg fail, sdkErr:" + sdkErr);
-				return;
-			}
-			Log.d(TAG, "sendIMmsg success");
-		};
-
-		@Override
 		public void notifyScreenShareStarted() {
-			// TODO Auto-generated method stub
 			mBScreenShareStarted = true;
 			VideoSDKHelper.getInstance()
 					.showToast(R.string.screenshare_started);
@@ -284,7 +250,6 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 
 		@Override
 		public void notifyScreenShareStopped() {
-			// TODO Auto-generated method stub
 			mBScreenShareStarted = false;
 			VideoSDKHelper.getInstance()
 					.showToast(R.string.screenshare_stopped);
@@ -293,14 +258,12 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 
 		@Override
 		public void notifyMediaStart(String userid) {
-			// TODO Auto-generated method stub
 			mBMediaStarted = true;
 			updateMainPager();
 		}
 
 		@Override
 		public void notifyMediaStop(String userid, MEDIA_STOP_REASON reason) {
-			// TODO Auto-generated method stub
 			mBMediaStarted = false;
 			updateMainPager();
 		}
@@ -315,7 +278,6 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 
 	@Override
 	public boolean handleMessage(Message msg) {
-		// TODO Auto-generated method stub
 		switch (msg.what) {
 		case MSG_HIDE_OPTION:
 			hideOption();
@@ -332,25 +294,21 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 
 		@Override
 		public boolean isViewFromObject(View arg0, Object arg1) {
-			// TODO Auto-generated method stub
 			return arg0 == arg1;
 		}
 
 		@Override
 		public int getCount() {
-			// TODO Auto-generated method stub
 			return mMainPagerViewList.size();
 		}
 
 		@Override
 		public void destroyItem(ViewGroup container, int position, Object object) {
-			// TODO Auto-generated method stub
 			container.removeView(mMainPagerViewList.get(position));
 		}
 
 		@Override
 		public Object instantiateItem(ViewGroup container, int position) {
-			// TODO Auto-generated method stub
 			container.addView(mMainPagerViewList.get(position),
 					new LayoutParams(LayoutParams.MATCH_PARENT,
 							LayoutParams.MATCH_PARENT));
@@ -370,14 +328,11 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 
 					@Override
 					public void onOk() {
-						// TODO Auto-generated method stub
 						exitMeeting();
 					}
 
 					@Override
 					public void onCancel() {
-						// TODO Auto-generated method stub
-
 					}
 				});
 	}
@@ -385,7 +340,6 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -407,14 +361,13 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 		if (mBCreateMeeting) {
 			createMeeting();
 		} else {
-			enterMeeting(mMeetID, mMeetPswd);
+			enterMeeting(mMeetID);
 		}
 
 		mMainHandler.post(new Runnable() {
 
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
 				UITool.showProcessDialog(MeetingActivity.this,
 						getString(R.string.entering));
 			}
@@ -471,9 +424,9 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 	}
 
 	// 进入会议
-	private void enterMeeting(int meetID, String pswd) {
+	private void enterMeeting(int meetID) {
 		// 进入会议
-		VideoSDKHelper.getInstance().enterMeeting(meetID, pswd);
+		VideoSDKHelper.getInstance().enterMeeting(meetID);
 
 		TextView titleTV = (TextView) findViewById(R.id.tv_title);
 		titleTV.setText(getString(R.string.meet_prompt, meetID));
@@ -481,7 +434,6 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		super.onDestroy();
 		unwatchHeadset();
 		CloudroomVideoMeeting.getInstance().exitMeeting();
@@ -492,7 +444,6 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		// TODO Auto-generated method stub
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			return true;
 		}
@@ -501,7 +452,6 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
-		// TODO Auto-generated method stub
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			showExitDialog();
 			return true;
@@ -697,7 +647,6 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			// TODO Auto-generated method stub
 			String action = intent.getAction();
 			Log.d(TAG, "HeadsetReceiver : " + action);
 			if (intent.hasExtra("state")) {
@@ -714,7 +663,6 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
-		// TODO Auto-generated method stub
 		int action = event.getAction();
 		switch (action) {
 		case MotionEvent.ACTION_DOWN:
@@ -768,7 +716,6 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				dialog.dismiss();
 			}
 		});
@@ -776,7 +723,6 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				selectListener.onSelect(wheelView.getSeletedIndex(),
 						wheelView.getSeletedItem());
 				dialog.dismiss();
@@ -805,7 +751,6 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 
 					@Override
 					public void onSelect(int index, String item) {
-						// TODO Auto-generated method stub
 						String[] sizeStrs = item.split("\\*");
 						VideoCfg cfg = CloudroomVideoMeeting.getInstance()
 								.getVideoCfg();
@@ -824,7 +769,6 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 
 					@Override
 					public void onSelect(int index, String item) {
-						// TODO Auto-generated method stub
 						int fps = Integer.parseInt(item);
 						VideoCfg cfg = CloudroomVideoMeeting.getInstance()
 								.getVideoCfg();
@@ -882,12 +826,10 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 		public IMAdapter(Context context, int textViewResourceId,
 				List<IMmsg> objects) {
 			super(context, textViewResourceId, objects);
-			// TODO Auto-generated constructor stub
 		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			// TODO Auto-generated method stub
 			if (convertView == null) {
 				convertView = getLayoutInflater().inflate(
 						R.layout.layout_immsg_item, null);
