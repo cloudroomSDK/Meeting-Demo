@@ -1,1 +1,2 @@
-页面入口：/meetingDemo/index.html（PC端Demo）  或  /meetingDemo/m_index.html
+* /meetingDemo/index.html（PC端Demo）
+* /meetingDemo/m_index.html（移动端Demo）
