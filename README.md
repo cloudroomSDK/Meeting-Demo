@@ -21,7 +21,7 @@
 ---|---|---|---
 [/Android](./Android)|Android|Java|[云屋RTC Android SDK](https://sdk.cloudroom.com/sdkdoc/Android/)
 [/iOS](./iOS)|iOS|Objective-C|[云屋RTC iOS SDK](https://sdk.cloudroom.com/sdkdoc/iOS/)
-[/MacOS](./macOS)|MacOS|Objective-C|[云屋RTC MacOS SDK](https://sdk.cloudroom.com/sdkdoc/MacOS/)
+[/MacOS](./macOS)|MacOS|Objective-C|[云屋RTC MacOS SDK](https://sdk.cloudroom.com/sdkdoc/Mac/)
 [/Windows](./Windows)|Windows|C++|[云屋RTC Windows SDK](https://sdk.cloudroom.com/sdkdoc/Windows/)
 [/Web](./Web)|Web|JS|[云屋RTC Web SDK](https://sdk.cloudroom.com/sdkdoc/H5/)
 
