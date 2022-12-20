@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="d0h-Hn-SSQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="d0h-Hn-SSQ">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -43,7 +43,7 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                         <state key="normal" backgroundImage="premeeting_settings"/>
                                         <connections>
-                                            <action selector="clickBtnForPMTopView:" destination="w3s-51-Kd3" eventType="touchUpInside" id="4og-c6-jg3"/>
+                                            <segue destination="hJy-H3-GOs" kind="show" id="sZs-Pc-001"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -53,9 +53,6 @@
                                     <constraint firstAttribute="height" constant="44" id="DiU-Io-Kls"/>
                                     <constraint firstItem="Bbv-57-16P" firstAttribute="centerY" secondItem="w3s-51-Kd3" secondAttribute="centerY" id="hW9-MS-M0z"/>
                                 </constraints>
-                                <connections>
-                                    <outlet property="settingsBtn" destination="Bbv-57-16P" id="bB0-v8-9T4"/>
-                                </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5PE-ep-Su7" userLabel="bottomView" customClass="PMBottomView">
                                 <rect key="frame" x="0.0" y="88" width="375" height="579"/>
@@ -204,76 +201,31 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nep-DT-1Va" userLabel="topView" customClass="PSTopView">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
-                                <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OnS-2t-X1h" userLabel="contentView">
-                                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="设置" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aaK-7Y-z7j" userLabel="titleLabel">
-                                                <rect key="frame" x="170" y="11.5" width="35" height="21"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Iba-cL-4lq" userLabel="saveBtn">
-                                                <rect key="frame" x="326" y="6" width="33" height="32"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                <state key="normal" title="保存">
-                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                </state>
-                                                <connections>
-                                                    <action selector="clickBtnForPSTopView:" destination="Nep-DT-1Va" eventType="touchUpInside" id="Igb-Le-5Gf"/>
-                                                </connections>
-                                            </button>
-                                        </subviews>
-                                        <constraints>
-                                            <constraint firstAttribute="trailing" secondItem="Iba-cL-4lq" secondAttribute="trailing" constant="16" id="5qJ-oq-br0"/>
-                                            <constraint firstItem="Iba-cL-4lq" firstAttribute="centerY" secondItem="OnS-2t-X1h" secondAttribute="centerY" id="7Uf-d8-cJ8"/>
-                                            <constraint firstAttribute="height" constant="44" id="byr-Lh-TRb"/>
-                                            <constraint firstItem="aaK-7Y-z7j" firstAttribute="centerX" secondItem="OnS-2t-X1h" secondAttribute="centerX" id="ioa-SB-6Vu"/>
-                                            <constraint firstItem="aaK-7Y-z7j" firstAttribute="centerY" secondItem="OnS-2t-X1h" secondAttribute="centerY" id="vae-lc-TJg"/>
-                                        </constraints>
-                                    </view>
-                                </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstItem="OnS-2t-X1h" firstAttribute="leading" secondItem="Nep-DT-1Va" secondAttribute="leading" id="AfJ-PW-hfj"/>
-                                    <constraint firstAttribute="bottom" secondItem="OnS-2t-X1h" secondAttribute="bottom" id="GP6-xV-lNB"/>
-                                    <constraint firstItem="OnS-2t-X1h" firstAttribute="top" secondItem="Nep-DT-1Va" secondAttribute="top" constant="20" id="MPE-fo-UE5"/>
-                                    <constraint firstAttribute="trailing" secondItem="OnS-2t-X1h" secondAttribute="trailing" id="QA3-dV-szl"/>
-                                    <constraint firstAttribute="height" constant="64" id="iM9-Sr-VDz"/>
-                                </constraints>
-                                <connections>
-                                    <outlet property="saveBtn" destination="Iba-cL-4lq" id="0ZP-d7-E4e"/>
-                                    <outlet property="titleLabel" destination="aaK-7Y-z7j" id="SYX-wC-UYo"/>
-                                </connections>
-                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G3F-wN-yPV" userLabel="bottomView" customClass="PSBottomView">
-                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="623"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="249" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="ebv-UM-l8u" userLabel="serverTextField" customClass="PMRoundTextField">
-                                        <rect key="frame" x="16" y="20" width="343" height="35.5"/>
+                                        <rect key="frame" x="16" y="20" width="343" height="37.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="iGh-0K-xBR" userLabel="userTextField" customClass="PMRoundTextField">
-                                        <rect key="frame" x="16" y="71.5" width="343" height="35.5"/>
+                                        <rect key="frame" x="16" y="73.5" width="343" height="37"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="unt-T4-Uw4" userLabel="paswdTextField" customClass="PMRoundTextField">
-                                        <rect key="frame" x="16" y="123" width="343" height="35.5"/>
+                                        <rect key="frame" x="16" y="126.5" width="343" height="37.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                                     </textField>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="nA0-5D-rSE" userLabel="rsaTextField" customClass="PMRoundTextField">
-                                        <rect key="frame" x="16" y="166.5" width="343" height="35.5"/>
+                                        <rect key="frame" x="16" y="172" width="343" height="37.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Soo-w3-nzS" userLabel="datEncTypeField" customClass="PMRoundBtn">
-                                        <rect key="frame" x="16" y="218" width="343" height="35.5"/>
+                                        <rect key="frame" x="16" y="225.5" width="343" height="37.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                         <state key="normal" title="恢复默认"/>
                                         <connections>
@@ -281,7 +233,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wVV-Dw-j80" userLabel="resetBtn" customClass="PMRoundBtn">
-                                        <rect key="frame" x="16" y="283.5" width="343" height="36"/>
+                                        <rect key="frame" x="16" y="293" width="343" height="37"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                         <state key="normal" title="恢复默认"/>
                                         <connections>
@@ -401,23 +353,26 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="JC2-0N-Ucx" firstAttribute="leading" secondItem="aXJ-q4-v1l" secondAttribute="leadingMargin" id="H4Z-Hu-woB"/>
-                            <constraint firstAttribute="trailing" secondItem="Nep-DT-1Va" secondAttribute="trailing" id="POn-Dx-uPB"/>
                             <constraint firstAttribute="trailing" secondItem="G3F-wN-yPV" secondAttribute="trailing" id="QOe-C1-R8k"/>
-                            <constraint firstItem="Nep-DT-1Va" firstAttribute="leading" secondItem="aXJ-q4-v1l" secondAttribute="leading" id="U8T-Ce-RKG"/>
                             <constraint firstAttribute="trailingMargin" secondItem="JC2-0N-Ucx" secondAttribute="trailing" id="XIY-iO-uba"/>
                             <constraint firstItem="JC2-0N-Ucx" firstAttribute="leading" secondItem="aXJ-q4-v1l" secondAttribute="leadingMargin" id="deo-oF-zbz"/>
                             <constraint firstItem="wKv-XO-gsV" firstAttribute="top" secondItem="G3F-wN-yPV" secondAttribute="bottom" id="lGt-Me-lWs"/>
                             <constraint firstItem="G3F-wN-yPV" firstAttribute="leading" secondItem="aXJ-q4-v1l" secondAttribute="leading" id="ldm-X3-T8I"/>
-                            <constraint firstItem="Nep-DT-1Va" firstAttribute="top" secondItem="aXJ-q4-v1l" secondAttribute="top" id="mHR-MA-9Nj"/>
                             <constraint firstItem="JC2-0N-Ucx" firstAttribute="trailing" secondItem="aXJ-q4-v1l" secondAttribute="trailingMargin" id="qrv-4D-XiG"/>
-                            <constraint firstItem="G3F-wN-yPV" firstAttribute="top" secondItem="Nep-DT-1Va" secondAttribute="bottom" id="uTY-o3-CaG"/>
+                            <constraint firstItem="G3F-wN-yPV" firstAttribute="top" secondItem="XKX-go-Y9x" secondAttribute="bottom" id="uTY-o3-CaG"/>
                             <constraint firstItem="wKv-XO-gsV" firstAttribute="top" secondItem="JC2-0N-Ucx" secondAttribute="bottom" id="yA7-v6-vNq"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" title="设置" id="IFg-7p-X05">
+                        <barButtonItem key="rightBarButtonItem" title="保存" id="LPT-M4-KdZ">
+                            <connections>
+                                <action selector="saveAction:" destination="hJy-H3-GOs" id="7Hs-2g-RUM"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="bottomView" destination="G3F-wN-yPV" id="OAR-n3-mj5"/>
                         <outlet property="datEncTypeView" destination="JC2-0N-Ucx" id="57L-RH-VAH"/>
-                        <outlet property="topView" destination="Nep-DT-1Va" id="DyC-LR-aOX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="h1Q-CQ-tSW" userLabel="First Responder" sceneMemberID="firstResponder"/>

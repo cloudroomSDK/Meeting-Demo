@@ -53,9 +53,7 @@ enum  AAA{a,b};
     [cloudroomVideoMgr setMgrCallback:self];
     
     // 隐藏导航栏
-    if (!self.navigationController.navigationBar.isHidden) {
-        [self.navigationController setNavigationBarHidden:YES];
-    }
+    [self.navigationController setNavigationBarHidden:YES animated:animated];
 }
 
 -(void)viewDidDisappear:(BOOL)animated
@@ -63,6 +61,8 @@ enum  AAA{a,b};
     [super viewDidDisappear:animated];
     CloudroomVideoMgr *cloudroomVideoMgr = [CloudroomVideoMgr shareInstance];
     [cloudroomVideoMgr removeMgrCallback:self];
+    
+    [self.navigationController setNavigationBarHidden:NO animated:animated];
 }
 #pragma mark - VideoMgrDelegate
 // 登录成功
@@ -235,7 +235,7 @@ enum  AAA{a,b};
         
         vc.modalPresentationStyle = UIModalPresentationFullScreen;
     }
-    [self presentViewController:vc animated:YES completion:nil];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 /* 创建房间 */

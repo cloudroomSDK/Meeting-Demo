@@ -9,7 +9,7 @@
 	<key>provisioningProfiles</key>
 	<dict>
 		<key>com.cloudroom.Meeting</key>
-		<string>cloudroom-com-debug</string>
+		<string>cloudroom_com_debug</string>
 	</dict>
 	<key>signingCertificate</key>
 	<string>iPhone Developer</string>

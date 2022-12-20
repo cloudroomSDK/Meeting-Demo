@@ -19,7 +19,6 @@
 
 @interface PreSettingsController ()
 
-@property (weak, nonatomic) IBOutlet PSTopView *topView;
 @property (weak, nonatomic) IBOutlet PSBottomView *bottomView;
 
 @property (weak, nonatomic) IBOutlet MRatioView *datEncTypeView;
@@ -33,6 +32,11 @@
     [self _commonSetup];
 }
 
+- (IBAction)saveAction:(id)sender {
+    [self _handleSave];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 #pragma mark - private method
 - (void)_commonSetup {
     [self _setupProperty];
@@ -40,12 +44,6 @@
 
 - (void)_setupProperty {
     weakify(self)
-    [_topView setResponse:^(PSTopView *view, UIButton *sender) {
-        strongify(wSelf)
-        [sSelf _handleSave];
-        [sSelf dismissViewControllerAnimated:YES completion:nil];
-    }];
-    
     [_bottomView setResponse:^(PSBottomView *view, UIButton *sender) {
         strongify(wSelf)
         if(sender == view.reset) {

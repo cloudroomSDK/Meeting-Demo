@@ -10,10 +10,6 @@
 
 @interface PMTopView ()
 
-@property (nonatomic, weak) IBOutlet UIButton *settingsBtn; /**< 设置 */
-
-- (IBAction)clickBtnForPMTopView:(UIButton *)sender;
-
 @end
 
 @implementation PMTopView
@@ -23,14 +19,8 @@
     [self _commonSetup];
 }
 
-#pragma mark - selector
-- (IBAction)clickBtnForPMTopView:(UIButton *)sender {
-    if (_response) {
-        _response(self, sender);
-    }
-}
-
 #pragma mark - private method
 - (void)_commonSetup {
+    
 }
 @end

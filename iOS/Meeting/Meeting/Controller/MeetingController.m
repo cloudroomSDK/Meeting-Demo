@@ -776,17 +776,7 @@
 
 // TODO: 测试白板功能 (king 20180716)
 - (void)_boardTest {
-    CloudroomVideoMeeting *cloudroomVideoMeeting = [CloudroomVideoMeeting shareInstance];
-    SubPage *subPage = [cloudroomVideoMeeting createBoard:@"iOS's board" width:320 height:340 pageCount:1];
-    // 创建白板
-    [cloudroomVideoMeeting initBoardPageDat:subPage boardPageNo:0 imgID:@"" elemets:@""];
-    NSString *element = @"{\"color\":4279208171,\"dot\":[{\"x\":0,\"y\":0},{\"x\":0,\"y\":0},{\"x\":4,\"y\":3},{\"x\":8,\"y\":4},{\"x\":12,\"y\":6},{\"x\":17,\"y\":7},{\"x\":23,\"y\":10},{\"x\":27,\"y\":13},{\"x\":31,\"y\":14},{\"x\":35,\"y\":16},{\"x\":40,\"y\":18},{\"x\":46,\"y\":20},{\"x\":50,\"y\":21},{\"x\":56,\"y\":22},{\"x\":63,\"y\":23},{\"x\":71,\"y\":23},{\"x\":80,\"y\":23},{\"x\":86,\"y\":23},{\"x\":92,\"y\":23},{\"x\":98,\"y\":23},{\"x\":104,\"y\":23},{\"x\":111,\"y\":23},{\"x\":121,\"y\":23},{\"x\":129,\"y\":23},{\"x\":136,\"y\":23},{\"x\":143,\"y\":23},{\"x\":149,\"y\":23},{\"x\":154,\"y\":23},{\"x\":160,\"y\":23},{\"x\":166,\"y\":23},{\"x\":171,\"y\":23},{\"x\":172,\"y\":23},{\"x\":174,\"y\":23}],\"elementID\":\"1.53\",\"left\":52,\"orderID\":1002,\"pixel\":2,\"style\":1,\"top\":74,\"type\":4}";
-    // 添加白板图元
-    [cloudroomVideoMeeting addBoardElement:subPage boardPageNo:0 elementData:element];
-    // 删除白板图元
-    [cloudroomVideoMeeting delBoardElement:subPage boardPageNo:0 elementIDs:@[@"1.53"]];
-    // 关闭白板
-    [cloudroomVideoMeeting closeBoard:subPage];
+    
 }
 
 //-(void)customCam{
