@@ -21,7 +21,7 @@
         <TextBox Name="edtNickname" Grid.Column="1" Grid.Row="1" Margin="5,10,0,9" Height="32" HorizontalAlignment="Left" VerticalAlignment="Center" Width="160"></TextBox>
 
         <Button Name="btnLogin"  Grid.Column="1" Grid.Row="2" Margin="5,9,0,10"  HorizontalAlignment="Left" VerticalAlignment="Center" Width="160" Height="32" Click="btnLogin_Click" Style="{StaticResource HighlightBtn}">登陆</Button>
-        <Button Name="btnSet"  Grid.Column="1" Grid.Row="3" Margin="0,0,75,0" HorizontalAlignment="Right" VerticalAlignment="Top" Background="Transparent" BorderBrush="Transparent" Click="btnSet_Click" Width="64">服务器设置</Button>
+        <Button Name="btnSet"  Grid.Column="1" Grid.Row="3" Margin="0,0,75,0" HorizontalAlignment="Right" VerticalAlignment="Top" Background="Transparent" BorderBrush="Transparent" Click="btnSet_Click" Width="64">设置</Button>
 
     </Grid>
 </Window>

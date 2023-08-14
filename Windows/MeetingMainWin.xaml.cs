@@ -123,7 +123,6 @@ namespace Meeting_WPF
                 App.CRVideo.VideoSDK.userEnterMeeting += userEnterMeeting;
                 App.CRVideo.VideoSDK.userLeftMeeting += userLeftMeeting;
                 App.CRVideo.VideoSDK.notifyAllAudioClose += notifyAllAudioClose;
-                App.CRVideo.VideoSDK.notifyInitBoards += notifyInitBoards;
                 App.CRVideo.VideoSDK.audioStatusChanged += audioStatusChanged;
                 App.CRVideo.VideoSDK.videoStatusChanged += videoStatusChanged;
                 App.CRVideo.VideoSDK.micEnergyUpdate += micEnergyUpdate;
@@ -145,7 +144,6 @@ namespace Meeting_WPF
                 App.CRVideo.VideoSDK.userEnterMeeting -= userEnterMeeting;
                 App.CRVideo.VideoSDK.userLeftMeeting -= userLeftMeeting;             
                 App.CRVideo.VideoSDK.notifyAllAudioClose -= notifyAllAudioClose;
-                App.CRVideo.VideoSDK.notifyInitBoards -= notifyInitBoards;
                 App.CRVideo.VideoSDK.audioStatusChanged -= audioStatusChanged;
                 App.CRVideo.VideoSDK.videoStatusChanged -= videoStatusChanged;
                 App.CRVideo.VideoSDK.micEnergyUpdate -= micEnergyUpdate;
@@ -176,15 +174,6 @@ namespace Meeting_WPF
             {
                 MemberInfo memItem = members[i];
                 mMemBerList.addMember(memItem.userID, memItem.nickName, memItem.audioStatus == 3, memItem.videoStatus == 3);
-            }
-        }
-
-        private void notifyInitBoards(object send, ICloudroomVideoSDKEvents_notifyInitBoardsEvent e)
-        {
-            if (e.p_jsonBoards == "[]" || e.p_jsonBoards == "")
-            {
-                string boardID = App.CRVideo.VideoSDK.createBoard("test", 1280, 720, 1);
-                App.CRVideo.VideoSDK.initBoardPageDat(boardID, 0, "", "");
             }
         }
 

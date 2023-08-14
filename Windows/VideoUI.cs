@@ -17,7 +17,6 @@ namespace Meeting_WPF
         {
             InitializeComponent();
 
-            //axCloudroomVideoUI1.setVisible(false);
             axCloudroomVideoUI1.keepAspectRatio = true;
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox1.Visible = false;

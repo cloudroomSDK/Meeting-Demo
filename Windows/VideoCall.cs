@@ -158,7 +158,7 @@ namespace Meeting_WPF
 
     enum CLOUDMIXER_OUTPUT_STATE
     {
-        CLOUDMOST_NULL = 0,    //未录制
+        CLOUDMOST_STARTED = 0, //未录已开始
         CLOUDMOST_RUNNING,     //录制中
         CLOUDMOST_STOPPED,     //录制结束
         CLOUDMOST_FAIL,        //录制失败

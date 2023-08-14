@@ -3,6 +3,8 @@ using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace Meeting_WPF
 {
@@ -37,6 +39,11 @@ namespace Meeting_WPF
            
             proxyType.SelectedIndex = Convert.ToInt32(iniFile.ReadValue("Cfg", "ProxyType", "0"));
             cbType.SelectedIndex = selectedIndex;
+
+            string sdkParamsBase64Str = iniFile.ReadValue("Cfg", "SDKParams", "");
+            var sdkParamsBase64by = Convert.FromBase64String(sdkParamsBase64Str);
+            sdkParamEdt.Text = System.Text.Encoding.Default.GetString(sdkParamsBase64by);
+
             mIsPasswrodChanged = false;
         }
 
@@ -50,7 +57,6 @@ namespace Meeting_WPF
                 edtToken.Visibility = System.Windows.Visibility.Hidden;
                 labelPassword.Visibility = System.Windows.Visibility.Visible;
                 edtPassword.Visibility = System.Windows.Visibility.Visible;
-                btnDefault.Visibility = System.Windows.Visibility.Visible;
             }
             else
             {
@@ -60,28 +66,24 @@ namespace Meeting_WPF
                 edtToken.Visibility = System.Windows.Visibility.Visible;
                 labelPassword.Visibility = System.Windows.Visibility.Hidden;
                 edtPassword.Visibility = System.Windows.Visibility.Hidden;
-                btnDefault.Visibility = System.Windows.Visibility.Hidden;
             }
         }
         //默认设置
-        private void btnSet_Clicked(object sender, RoutedEventArgs e)
+        private void btnDefault_Clicked(object sender, RoutedEventArgs e)
         {
+            proxyType.SelectedIndex = 0;
             edtServer.Text = "sdk.cloudroom.com";
+            cbType.SelectedIndex = 0;
             edtAccount.Text = "默认APPID";
             edtPassword.Password = "****";
-            proxyType.SelectedIndex = 0;
+            sdkParamEdt.Text = "";
+
             save2File();
         }
 
         //关闭时保存设置
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (edtServer.Text.Trim() == "" || ((edtAccount.Text.Trim() == "" || edtPassword.Password == "") && (edtToken.Text.Trim() == "")))
-            {
-                MessageBox.Show("请完成输入！");
-                e.Cancel = true;
-                return;
-            }
         }
 
         private void edtPassword_PasswordChanged(object sender, RoutedEventArgs e)
@@ -95,6 +97,20 @@ namespace Meeting_WPF
             {
                 MessageBox.Show("请完成输入！");  
                 return;
+            }
+
+            string sdkParams = sdkParamEdt.Text.Trim();
+            if( sdkParams.Length>0 )
+            {
+                try
+                {
+                    object jsonObj = JsonConvert.DeserializeObject(sdkParams);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("SDK Params参数不正确！");
+                    return;
+                }
             }
 
             save2File();
@@ -113,6 +129,9 @@ namespace Meeting_WPF
             iniFile.WriteValue("Cfg", "ProxyPort", proxyPort.Text.Trim());
             iniFile.WriteValue("Cfg", "ProxyName",  proxyUsr.Text.Trim());
             iniFile.WriteValue("Cfg", "ProxyPswd",  proxyPwd.Text.Trim());
+
+            string strParams = Convert.ToBase64String(System.Text.Encoding.Default.GetBytes(sdkParamEdt.Text.Trim()));
+            iniFile.WriteValue("Cfg", "SDKParams", strParams);
            
             if (edtAccount.Text != "默认APPID")
             {

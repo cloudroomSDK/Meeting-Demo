@@ -123,6 +123,7 @@ namespace Meeting_WPF
 
             rbVideoSpeed.IsChecked = true; //视频默认使用流畅优先
             cmbVideoSize.SelectedIndex = (int)(VIDEO_SHOW_SIZE.VSIZE_SZ_360-1);
+            VDenoise.IsChecked = true;
 
             //是否开启多摄像头判断
             ckExtCameras.IsChecked = App.CRVideo.VideoSDK.getEnableMutiVideo(Login.Instance.myUserID) > 0;
@@ -170,6 +171,16 @@ namespace Meeting_WPF
         private void cmbVideoSize_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             updateVideoCfg();
+        }
+
+        private void updateVDenoise(object sender, RoutedEventArgs e)
+        {
+            updateVDenoise();
+        }
+ 
+        private void updateVDenoise()
+        {
+            App.CRVideo.VideoSDK.setVideoDenoise(VDenoise.IsChecked==true);
         }
 
         private void micBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

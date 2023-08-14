@@ -89,15 +89,31 @@ namespace Meeting_WPF
 
             //sdk参数
             JObject sdkParamJson = new JObject();
+            string sdkParamsBase64Str = iniFile.ReadValue("Cfg", "SDKParams", "");
+            var sdkParamsBase64by = Convert.FromBase64String(sdkParamsBase64Str);
+            string strSDKParams = System.Text.Encoding.Default.GetString(sdkParamsBase64by);
+            try
+            {
+                JObject josnTmp = (JObject)JsonConvert.DeserializeObject(strSDKParams);
+                if (josnTmp != null)
+                {
+                    sdkParamJson = josnTmp;
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+
+
             int httpType = Convert.ToInt32(iniFile.ReadValue("Cfg", "HttpType", "2"));
             if ( httpType==0 )
             {
-                sdkParamJson.Add("DatEncType", "0");
+                sdkParamJson.Add("DatEncType", 0);
             }
             else
             {
-                sdkParamJson.Add("DatEncType", "1");
-                sdkParamJson.Add("VerifyHttpsCert", (httpType==2)? "1":"0");
+                sdkParamJson.Add("DatEncType", 1);
+                sdkParamJson.Add("VerifyHttpsCert", (httpType==2)? 1:0);
             }
             string sdkParamJsonStr = JsonConvert.SerializeObject(sdkParamJson);
             App.CRVideo.VideoSDK.setSDKParams(sdkParamJsonStr);

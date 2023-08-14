@@ -42,15 +42,17 @@
             <ComboBoxItem Content="1280*720"/>
             <ComboBoxItem Content="1920*1080"/>
         </ComboBox>
-        <TextBlock Grid.Column="1" Grid.Row="3" HorizontalAlignment="Left" Margin="140,0,0,0" VerticalAlignment="Center"><Run Text="视频帧率"/></TextBlock>
-        <ComboBox x:Name="FpsCmBox" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="3" Height="26" HorizontalAlignment="Left" Margin="200,0,0,0" VerticalAlignment="Center" Width="100" SelectedIndex="2">
+        <TextBlock Grid.Column="1" Grid.Row="3" HorizontalAlignment="Left" Margin="145,13.2,0,13.4" VerticalAlignment="Center"><Run Text="帧率"/></TextBlock>
+        <ComboBox x:Name="FpsCmBox" Grid.Column="1" Grid.Row="3" Height="26" HorizontalAlignment="Left" Margin="176,8.2,0,7.4" VerticalAlignment="Center" Width="52" SelectedIndex="2">
             <System:String>5</System:String>
             <System:String>10</System:String>
             <System:String>15</System:String>
             <System:String>20</System:String>
             <System:String>25</System:String>
             <System:String>30</System:String>
+            <System:String>60</System:String>
         </ComboBox>
+        <CheckBox x:Name="VDenoise" Content="视频降噪"  Grid.Column="1" Grid.Row="3" HorizontalAlignment="Left" Margin="282,13.2,0,13.4" VerticalAlignment="Center" Checked="updateVDenoise" Unchecked="updateVDenoise"/>
         <RadioButton Checked="rbVideoQuality_Checked" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4" HorizontalAlignment="Left" Margin="20,0,0,0" x:Name="rbVideoQuality" VerticalAlignment="Center" Content="视频画质优先"/>
         <RadioButton Checked="rbVideoSpeed_Checked" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4" HorizontalAlignment="Left" Margin="130,0,0,0" x:Name="rbVideoSpeed" VerticalAlignment="Center" Content="视频流畅优先"/>
         <TextBlock Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center"  Margin="200,0,0,0"><Run Text="画面比例:"/></TextBlock>
@@ -59,9 +61,9 @@
         <RadioButton GroupName="videoRation" Grid.Column="2" Grid.Row="4" HorizontalAlignment="Right" Margin="0,0,60,0" Checked="RadioButton_Checked_2" Content="1:1" />
 
         <StackPanel  Orientation="Horizontal" Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="3">
-            <CheckBox Margin="20, 0, 0,0" x:Name="Agc" Content="麦克风音量自动调整"  VerticalAlignment="Center" Height="23" Checked="updateAudioCfg" Unchecked="updateAudioCfg"/>
-            <CheckBox Margin="20, 0, 0,0" x:Name="Aec"  Content="自动回声消除" VerticalAlignment="Center"  Height="23" Checked="updateAudioCfg" Unchecked="updateAudioCfg"/>
-            <CheckBox Margin="20,0,0,0" x:Name="Ans"  Content="自动降噪" VerticalAlignment="Center"  Height="23" Checked="updateAudioCfg" Unchecked="updateAudioCfg"/>
+            <CheckBox Margin="20, 0, 0,0" x:Name="Agc" Content="麦音量自动调整"  VerticalAlignment="Center" Height="23" Checked="updateAudioCfg" Unchecked="updateAudioCfg"/>
+            <CheckBox Margin="20, 0, 0,0" x:Name="Aec"  Content="回声消除" VerticalAlignment="Center"  Height="23" Checked="updateAudioCfg" Unchecked="updateAudioCfg"/>
+            <CheckBox Margin="20,0,0,0" x:Name="Ans"  Content="麦声音降噪" VerticalAlignment="Center"  Height="23" Checked="updateAudioCfg" Unchecked="updateAudioCfg"/>
 
         </StackPanel>
 
