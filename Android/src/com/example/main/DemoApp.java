@@ -22,8 +22,6 @@ import com.tencent.bugly.crashreport.CrashReport;
 public class DemoApp extends Application {
 
 	private static final String TAG = "DemoApp";
-	public static final String DEMO_FILE_DIR = Environment
-			.getExternalStorageDirectory().getAbsolutePath() + "/MeetingDemo/";
 
 	private Handler mMainHandler = new Handler();
 
@@ -69,8 +67,6 @@ public class DemoApp extends Application {
 		// 会议Demo不需要呼叫队列功能
 		initDat.noCall = true;
 		initDat.noQueue = true;
-		// 配置文件目录
-		initDat.sdkDatSavePath = DEMO_FILE_DIR;
         initDat.datEncType = datEncTypeInt >= 1 ? "1" : "0";
         if(datEncTypeInt == 1) {
             initDat.params.put("VerifyHttpsCert", "1");

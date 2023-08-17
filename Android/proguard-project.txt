@@ -65,7 +65,7 @@
 
 -keep class com.cloudroom.cloudroomvideosdk.** { *; }
 -keep class com.cloudroom.cloudroomvideosdk.model.** { *; }
--keep class com.cloudroom.tool.** { *; }
+-keep class com.rtc.tool.** { *; }
 -keep class com.cloudroom.servicescreencap.** { *; }
 -keep class com.cloudroom.usbcamera.** { *; }
 -keep class org.webrtc.** { *; }

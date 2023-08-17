@@ -21,7 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.cloudroom.tool.AndroidTool;
+import com.rtc.tool.AndroidTool;
 import com.example.main.ButtomDialog;
 import com.example.meetingdemo.R;
 import com.examples.common.WheelView;
