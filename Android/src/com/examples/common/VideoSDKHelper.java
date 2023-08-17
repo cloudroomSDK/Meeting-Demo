@@ -17,6 +17,7 @@ import com.cloudroom.cloudroomvideosdk.model.CRVIDEOSDK_ERR_DEF;
 import com.cloudroom.cloudroomvideosdk.model.CRVIDEOSDK_MEETING_DROPPED_REASON;
 import com.example.meetingdemo.R;
 import com.examples.tool.CRLog;
+import com.examples.tool.Tools;
 import com.examples.tool.UITool;
 import com.google.gson.Gson;
 
@@ -183,7 +184,7 @@ public class VideoSDKHelper {
 	}
 
 	public String getErrStr(CRVIDEOSDK_ERR_DEF errCode) {
-		String str = UITool.LoadString(mContext, errCode.toString());
+		String str = Tools.LoadString(mContext, errCode.toString());
 		if(TextUtils.isEmpty(str)) {
 			str = mContext.getString(R.string.CRVIDEOSDK_UNKNOWERR);
 		}

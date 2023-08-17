@@ -21,7 +21,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.rtc.tool.AndroidTool;
 import com.example.main.ButtomDialog;
 import com.example.meetingdemo.R;
 import com.examples.common.WheelView;
@@ -259,7 +258,7 @@ public class UITool {
 
 	private static void fixDialogWidth(Dialog dialog) {
 		WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-		params.width = AndroidTool.dip2px(dialog.getContext(), 240);
+		params.width = Tools.dip2px(dialog.getContext(), 240);
 		params.height = WindowManager.LayoutParams.WRAP_CONTENT;
 		dialog.getWindow().setAttributes(params);
 	}
@@ -272,7 +271,7 @@ public class UITool {
 			view.setImageBitmap(BitmapFactory.decodeFile(filePathName));
 		} catch (Exception e) {
 		}
-		int size = AndroidTool.dip2px(context, 200);
+		int size = Tools.dip2px(context, 200);
 		dialog.setContentView(view, new ViewGroup.LayoutParams(size, size));
 		dialog.show();
 	}
@@ -324,51 +323,5 @@ public class UITool {
 		});
 
 		dialog.show();
-	}
-
-	public static int getResourceId(Context context, String resType,
-									String resName) {
-		if (context == null) {
-			Log.w(TAG, "getResourceId context is null");
-		}
-		try {
-			int sourceId = context.getResources().getIdentifier(resName,
-					resType, context.getPackageName());
-			return sourceId;
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return 0;
-	}
-
-	public static int getResourceId(Context context, String resClassAndName) {
-		if (context == null) {
-			Log.w(TAG, "getResourceId context is null");
-		}
-		try {
-			String[] strs = resClassAndName.split("\\.");
-			if (strs.length == 3) {
-				String resType = strs[1];
-				String resName = strs[2];
-				return AndroidTool.getResourceId(context, resType, resName);
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			// e.printStackTrace();
-		}
-		return 0;
-	}
-
-	public static String LoadString(Context context, String resName) {
-		if (context == null) {
-			Log.w(TAG, "LoadString context is null");
-		}
-		String str = "";
-		int strId = AndroidTool.getResourceId(context, "string", resName);
-		if (strId > 0) {
-			str = context.getResources().getString(strId);
-		}
-		return str;
 	}
 }

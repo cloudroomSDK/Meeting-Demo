@@ -9,10 +9,12 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.pm.ConfigurationInfo;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.util.Log;
 
 @SuppressLint("SimpleDateFormat")
 public class Tools {
@@ -46,6 +48,19 @@ public class Tools {
 		float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
 		return (int) (spValue * fontScale + 0.5f);
 	}
+
+
+	public static int dip2px(Context context, float dpValue) {
+		float scale = context.getResources().getDisplayMetrics().density;
+		return (int) (dpValue * scale + 0.5f);
+	}
+
+	public static int px2dip(Context context, float pxValue) {
+		final float scale = context.getResources().getDisplayMetrics().density;
+		return (int) (pxValue / scale + 0.5f);
+
+	}
+
 
 	@SuppressLint("NewApi")
 	public static String getUriFilePath(Context context, Uri uri) {
@@ -99,5 +114,69 @@ public class Tools {
 	public static String getCurrentTimeStr() {
 		Date date = new Date(System.currentTimeMillis());
 		return DATE_FORMAT.format(date);
+	}
+
+	public static String LoadString(Context context, String resName) {
+		if (context == null) {
+			Log.w("Tools", "LoadString context is null");
+		}
+		String str = "";
+		int strId = getResourceId(context, "string", resName);
+		if (strId > 0) {
+			str = context.getResources().getString(strId);
+		}
+		return str;
+	}
+
+
+	public static int getResourceId(Context context, String resType, String resName) {
+		if (context == null) {
+			Log.w("Tools", "getResourceId context is null");
+		}
+
+		try {
+			int sourceId = context.getResources().getIdentifier(resName, resType, context.getPackageName());
+			return sourceId;
+		} catch (Exception var4) {
+			var4.printStackTrace();
+			return 0;
+		}
+	}
+
+	public static int getResourceId(Context context, String resClassAndName) {
+		if (context == null) {
+			Log.w("Tools", "getResourceId context is null");
+		}
+
+		try {
+			String[] strs = resClassAndName.split("\\.");
+			if (strs.length == 3) {
+				String resType = strs[1];
+				String resName = strs[2];
+				return getResourceId(context, resType, resName);
+			}
+		} catch (Exception var5) {
+		}
+
+		return 0;
+	}
+
+	public static String toHexEncoding(int color) {
+		String R, G, B, A;
+		StringBuffer sb = new StringBuffer();
+		R = Integer.toHexString(Color.red(color)).toUpperCase();
+		G = Integer.toHexString(Color.green(color)).toUpperCase();
+		B = Integer.toHexString(Color.blue(color)).toUpperCase();
+		A = Integer.toHexString(Color.alpha(color)).toUpperCase();
+		R = R.length() == 1 ? "0" + R : R;
+		G = G.length() == 1 ? "0" + G : G;
+		B = B.length() == 1 ? "0" + B : B;
+		A = A.length() == 1 ? "0" + A : A;
+		sb.append("#");
+		sb.append(R);
+		sb.append(G);
+		sb.append(B);
+		sb.append(A);
+		return sb.toString();
 	}
 }
