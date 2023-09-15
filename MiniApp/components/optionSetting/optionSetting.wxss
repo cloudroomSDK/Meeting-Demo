@@ -1,0 +1,151 @@
+.animate-slide {
+    transform: translateY(0);
+    opacity: 1;
+    transition: all .3s;
+}
+.animate-slide-in {
+    transform: translateY(100%);
+    opacity: 0;
+}
+.page {
+	position: fixed;
+	z-index: 9999;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, .8);
+}
+.page .option {
+	height: 900rpx;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	background-color: #fff;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+}
+
+.header {
+	width: 100%;
+	border-bottom: 2rpx solid #777777;
+}
+.header .swiper-tab {
+	width: 85%;
+	text-align: center;
+	line-height: 80rpx;
+	height: 80rpx;
+}
+
+.header .swiper-tab-list {
+	font-size: 30rpx;
+	display: inline-block;
+	width: 33.33%;
+	color: #777777;
+}
+
+.header .swiper-tab .active {
+	color: #da7c0c;
+	border-bottom: 5rpx solid #da7c0c;
+}
+.header .icon {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 40rpx;
+	height: 20rpx;
+	padding: 30rpx;
+	overflow: hidden;
+}
+
+.header .arrow {
+	position: relative;
+	display: block;
+    width: 0;
+    height: 0;
+    border: 20rpx solid;
+    border-color: #777 transparent transparent transparent;
+}
+.header .arrow::after{
+    content: '';
+    position: absolute;
+	top: -22rpx;
+    left: -20rpx;
+    border: 20rpx solid;
+    border-color: #fff transparent transparent transparent;
+}
+
+.swiper-box {
+	display: block;
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+	flex: 1;
+}
+
+.swiper-box .swiper-item {
+	padding: 40rpx;
+	box-sizing: border-box;
+	overflow-y: auto;
+}
+
+.swiper-box .section {
+	margin-bottom: 60rpx;
+}
+
+.swiper-box .radio-group {
+	display: flex;
+	flex-flow: wrap;
+}
+
+.swiper-box .radio-group .radio {
+	flex: 1;
+	word-break: keep-all;
+}
+
+.swiper-box .inviteBox {
+	display: flex;
+	font-size: 34rpx;
+	line-height: 100rpx;
+	align-items: center;
+}
+
+.swiper-box .inviteBox .inviteId {
+	/* flex: 1; */
+	margin-right: 20rpx;
+}
+
+.swiper-box .inviteBox .input {
+	flex: 1;
+}
+
+.swiper-box .inviteList {
+	height: 100%;
+}
+
+.swiper-box .inviteList .item {
+	border-bottom: 1px dashed #ccc;
+	padding-bottom: 10rpx;
+}
+
+.swiper-box .inviteBox .btn,
+.swiper-box .inviteList .btn {
+	background-color: #39abfb;
+	line-height: 60rpx;
+	border-radius: 50rpx;
+	color: #fff;
+	height: 60rpx;
+}
+
+.swiper-box .inviteList .btn {
+	display: block;
+	margin-top: 20rpx;
+	width: 150rpx;
+}
+
+.btn::after {
+	border: 0 none;
+}
+switch {
+	float: right;
+}

@@ -1,0 +1,70 @@
+<!-- 设置界面 开始 -->
+<view class="loginSet">
+	<view class="title">
+		设置
+	</view>
+	<view class="logset_hide">
+		<view class="form">
+			<view class="form_input">
+				<text class="text">服务器:</text>
+				<input type="text" id="server_add" value="{{serverAddr}}" bindinput='svrAddrInput'></input>
+			</view>
+			<block wx:if='{{!useToken}}'>
+				<view class="form_input">
+					<text class="text">App ID :</text>
+					<input type="text" value="{{AppID}}" bindinput='AppIDInput' placeholder="默认账号"></input>
+				</view>
+				<view class="form_input">
+					<text class="text">App Secret :</text>
+					<input type="password" id="comp_pswd" value="{{AppSecret}}" bindinput='pswdInput'></input>
+				</view>
+			</block>
+			<block wx:else>
+				<view class="long_text">
+					<text class="text">令 牌：</text>
+					<textarea class="textarea" maxlength='-1' value="{{token}}" placeholder="请输入令牌" name="" id=""
+						bindinput='tokenInput'></textarea>
+				</view>
+			</block>
+
+			<view class="form_input">
+				<text class="text">第三方鉴权 :</text>
+				<input type="text" value="{{userAuthCode}}" bindinput='userAuthCodeInput'
+					placeholder="未启用第三方鉴权则无需填写"></input>
+			</view>
+		</view>
+		<view class="option">
+			<view class="option_item">
+				<text>动态令牌鉴权：</text>
+				<switch color='#39abfb' class="tui-fr" checked="{{useToken}}" bindchange="useTokenSwitch" />
+			</view>
+			<view class="option_item">
+				<text>入会开启摄像头：</text>
+				<switch color='#39abfb' class="tui-fr" checked="{{enterMeetOpenVideo}}"
+					bindchange="enterMeetOpenVideoSwitch" />
+			</view>
+			<view class="option_item">
+				<text>入会开启麦克风：</text>
+				<switch color='#39abfb' class="tui-fr" checked="{{enterMeetOpenMic}}"
+					bindchange="enterMeetOpenMicSwitch" />
+			</view>
+			<view class="option_item">
+				<text>推流调试：</text>
+				<switch color='#39abfb' class="tui-fr" checked="{{pusherDebug}}" bindchange="pusherDebugSwitch" />
+			</view>
+			<view class="option_item">
+				<text>拉流调试：</text>
+				<switch color='#39abfb' class="tui-fr" checked="{{playerDebug}}" bindchange="playerDebugSwitch" />
+			</view>
+			<view class="option_item">
+				<text>小程序调试：</text>
+				<switch color='#39abfb' class="tui-fr" checked="{{wxDebug}}" bindchange="wxDebugSwitch" />
+			</view>
+		</view>
+		<view class="btn_box">
+			<view class="btn save_btn" bindtap='loginSetSave'>保存</view>
+			<view class="btn recover_btn" bindtap='resetLoginCfg'>恢复默认</view>
+		</view>
+	</view>
+</view>
+<!-- 设置界面 结束 -->

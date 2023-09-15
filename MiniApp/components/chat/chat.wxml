@@ -1,0 +1,27 @@
+<!-- 聊天界面 开始 -->
+<view class="page animate-slide {{show ? '' :'animate-slide-in'}}" catchtap='hide'>
+	<view class='chat_main' catchtap=' '>
+        <view class='title'>
+            <view class="icon" catchtap='hide'><i class="arrow"></i></view>
+            <text>聊天</text>
+        </view>
+		<scroll-view scroll-y scroll-into-view='{{toView}}' class='scrollView' style='height: {{scrollHeight}};'>
+			<block wx:key='index' wx:for='{{msgList}}' wx:for-index="index">
+				<!-- 单个消息1 客服发出（左） -->
+				<view wx:if='{{item.fromUserId!==myUID}}' id='msg-{{index}}' style='display: flex; padding: 2vw 11vw 2vw 2vw;'>
+					<view class='leftMsg'>{{item.nickname}} : {{item.text}}</view>
+				</view>
+				<!-- 单个消息2 用户发出（右） -->
+				<view wx:else id='msg-{{index}}' style='display: flex; justify-content: flex-end; padding: 2vw 2vw 2vw 11vw;'>
+					<view class='rightMsg'>我 : {{item.text}}</view>
+				</view>
+			</block>
+		</scroll-view>
+
+		<view class='inputRoom'>
+			<input class='input' bindconfirm='sendClick' value='{{msgInput}}' confirm-type='send' bindinput='imMsgInput'></input>
+			<text class='sendMsgBtn' bindtap='sendMsg'>发送</text>
+		</view>
+	</view>
+</view>
+<!-- 聊天界面 结束 -->

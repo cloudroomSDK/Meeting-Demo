@@ -1,0 +1,124 @@
+/* ***************************** 登录设置界面 ***************************** */
+
+.loginSet {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.loginSet .title {
+	background-color: #2fabff;
+	text-align: center;
+	font-size: 40rpx;
+	height: 100rpx;
+	line-height: 100rpx;
+	color: #fff;
+	position: relative;
+}
+
+.loginSet .title text {
+	background-color: transparent;
+	position: absolute;
+	right: 40rpx;
+	top: 50%;
+	transform: translateY(-50%);
+	font-size: 32rpx;
+	height: 52rpx;
+	line-height: 52rpx;
+	width: 120rpx;
+	border: 1rpx solid #fff;
+	border-radius: 30rpx;
+}
+
+.loginSet .logset_hide {
+	width: 600rpx;
+	margin: 0 auto;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+}
+
+.form {
+	flex: 4;
+	display: flex;
+	justify-content: space-around;
+	flex-direction: column;
+}
+
+.form .long_text .textarea {
+	width: 100%;
+	border: 1px solid #d3d3d3;
+	border-radius: 8px;
+}
+
+.form .form_input {
+	height: 92rpx;
+	width: 100%;
+	line-height: 92rpx;
+	border: 1px solid #d3d3d3;
+	border-radius: 38px;
+	overflow: hidden;
+}
+
+.form .form_input .text {
+	float: left;
+	width: 150rpx;
+	font-size: 24rpx;
+	color: #aeaeae;
+	line-height: 92rpx;
+	margin-left: 30rpx;
+	margin-right: 30rpx;
+	text-align-last: justify;
+}
+
+.form .form_input input {
+	float: left;
+	outline: none;
+	border: none;
+	width: 340rpx;
+	height: 100%;
+	/* line-height: 100%; */
+	text-align: left;
+	font-size: 24rpx;
+	color: #555;
+	border-radius: 0;
+}
+
+.option {
+	flex: 3;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+}
+
+.option .option_item {
+	float: left;
+	min-width: 50%;
+}
+
+.btn_box {
+	flex: 2;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+
+}
+
+.btn_box .btn {
+	height: 92rpx;
+	line-height: 92rpx;
+	border-radius: 38px;
+	text-align: center;
+}
+
+.btn_box .save_btn {
+	border: 1px solid #39abfb;
+	background-color: #39abfb;
+	color: #fff;
+}
+
+.btn_box .recover_btn {
+	border: 1px solid #39abfb;
+	color: #39abfb;
+}

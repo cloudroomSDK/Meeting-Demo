@@ -1,0 +1,3 @@
+<view class="screenMark"  wx:if='{{showCanvas}}'>
+	<canvas type='2d' canvas-id="canvas" class="canvas" id="canvas" bindtouchstart='touchstart' bindtouchmove='touchmove' bindtouchend='touchend' bindtouchcancel='touchcancel' binderror='error'></canvas>
+</view>

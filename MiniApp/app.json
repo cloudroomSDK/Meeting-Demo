@@ -1,0 +1,23 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/meeting/meeting",
+    "pages/setting/setting"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "会议Demo",
+    "navigationBarTextStyle": "black"
+  },
+  "requiredBackgroundModes": [
+    "audio",
+    "video"
+  ],
+  "networkTimeout": {
+    "request": 5000,
+    "connectSocket": 5000
+  },
+  "debug": false,
+  "sitemapLocation": "sitemap.json"
+}

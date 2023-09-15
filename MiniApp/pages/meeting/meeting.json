@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "视频会议Demo",
+  "usingComponents": {
+    "RTCVideoPlayer": "/utils/RTCSDK/components/RTCVideoPlayer/RTCVideoPlayer",
+    "RTCVideoPusher": "/utils/RTCSDK/components/RTCVideoPusher/RTCVideoPusher",
+    "RTCAudioPlayer": "/utils/RTCSDK/components/RTCAudioPlayer/RTCAudioPlayer",		
+    "RTCScreenMarkV4": "/utils/RTCSDK/components/RTCScreenMarkV4/RTCScreenMarkV4",
+    "OptionSetting":"/components/optionSetting/optionSetting",
+    "chat":"/components/chat/chat"
+  }
+}

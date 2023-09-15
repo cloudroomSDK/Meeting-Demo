@@ -1,0 +1,16 @@
+<view hidden='{{!isShow}}'>
+	<view class="modal">
+		<view class='modal-content'>
+			<!-- <view class='modal-top'>
+        <view class='header'>{{modalTitle}}</view>
+      </view> -->
+			<view class='modal-body'>
+				<text> {{modalMsg}}</text>
+			</view>
+			<view class='modal-footer'>
+				<text class='cancle' catchtap='_cancelEvent' data-fn="{{cancel}}">取消</text>
+				<text class='sure' catchtap='_confirmEvent' data-fn="{{confirm}}">确定</text>
+			</view>
+		</view>
+	</view>
+</view>

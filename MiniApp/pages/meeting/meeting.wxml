@@ -1,0 +1,99 @@
+<wxs module="m1" src='./meeting.wxs'></wxs>
+<!-- 会议界面 开始 -->
+<view id="page_meeting" class="meeting_touch">
+	<view class="page_meet_head por">
+		<view class="page_meet_header">
+			<text id="meetNickName">昵称:{{myUserInfo.nickname}}</text>
+			<text id="page_meet_id">房间号:{{curMeetId}}</text>
+		</view>
+		<view class="page_meet_record {{recordViewClass}}" bindtap='toggleCloudRecord'>
+			<view id="recordBtn">
+				<text>{{recordBtnText}}</text>
+			</view>
+		</view>
+	</view>
+	<view class="page_meet_cont por">
+		<view class="page_meet_view">
+			<view class="page_meet_video">
+				<!-- 屏幕共享或者影音共享 -->
+				<view class="page_media_share" wx:if='{{mediaLayout}}'>
+					<RTCVideoPlayer id="mediaPlayer" data-key="mediaPlayer" config='{{RTCMediaPlayer}}' debug='{{playerDebug}}' bindlongpress='longpressScreen'>
+						<view class='nickname'>{{mediaMemberInfo.nickname}}</view>
+						<!-- 标注组件 -->
+						<RTCScreenMarkV4 wx:if='{{RTCMediaPlayer.type=="screen"}}' config='{{RTCMediaPlayer}}' class='screenMarkUI'>
+						</RTCScreenMarkV4>
+					</RTCVideoPlayer>
+				</view>
+
+				<!-- 会议视频布局 -->
+				<view class="page_screen screen{{m1.getNum(openVideoList.length + curCamStatus)}}">
+					<view class='{{mediaLayout ? "hideMyCam" : ""}}' hidden='{{!curCamStatus}}'>
+						<!-- 推流组件，麦克风声音也是从推流组件输出，就算只开启麦克风，也要渲染该组件 -->
+						<RTCVideoPusher config='{{RTCVideoPusher}}' debug='{{pusherDebug}}'>
+							<view class='nickname'>我</view>
+						</RTCVideoPusher>
+					</view>
+
+					<!-- wx:key一定要绑定唯一，否则成员离开之后有可能造成他数组后面的成员黑屏 -->
+					<view wx:for='{{openVideoList}}' wx:if='{{ index + curCamStatus <= 8}}' wx:key='camKey' data-info="{{item.memberInfo}}" hidden='{{mediaLayout}}'>
+						<RTCVideoPlayer id="{{item.camKey}}" data-key="{{item.camKey}}" config='{{item.videoConfig}}' wx:if='{{item}}' debug='{{playerDebug}}' bindlongpress='longpressScreen'>
+							<view class='nickname'>{{item.memberInfo.nickname}}</view>
+						</RTCVideoPlayer>
+					</view>
+					<view wx:if='{{openVideoList.length + curCamStatus === 0}}' class="noCamToast">
+						等待成员开启摄像头
+					</view>
+				</view>
+
+			</view>
+			<view class='page_meet_audio'>
+				<!-- 音频播放组件 -->
+				<RTCAudioPlayer config='{{RTCAudioPlayer}}' debug='{{false}}' wx:if='{{RTCAudioPlayer}}'></RTCAudioPlayer>
+			</view>
+			<view class="page_screen_share"></view>
+			<view class="page_meet_tools">
+				<view class="page_meet_tool">
+					<li bindtap='closeMic'>
+						<image wx:if='{{curMicStatus}}' src="/image/m_meet_voice.png"></image>
+						<image wx:else src="/image/m_meet_voice_close.png">
+						</image>
+						<view>{{curMicStatus?'关闭麦克风':'打开麦克风'}}</view>
+					</li>
+					<li bindtap='closeVideo'>
+						<image wx:if='{{curCamStatus}}' src="/image/m_meet_camera.png"></image>
+						<image wx:else src="/image/m_meet_camera_close.png">
+						</image>
+						<view>{{curCamStatus?'关闭摄像头':'打开摄像头'}}</view>
+					</li>
+					<li bindtap='toggleCam'>
+						<image src="/image/m_meet_transform.png"></image>
+						<view>切换摄像头</view>
+					</li>
+					<li bindtap='toggleBeautify'>
+						<image src="/image/m_meet_resolution.png"></image>
+						<view>{{!!isBeautify?'关闭美颜':'打开美颜'}}</view>
+					</li>
+					<li bindtap='toggleChat'>
+						<i class='chatNum' wx:if='{{chatCount}}'>{{chatCount > 99 ? 99 + '+' : chatCount}}</i>
+						<image src="/image/m_meet_chat.png"></image>
+						<view>聊天</view>
+					</li>
+					<li style="float: right;" bindtap='toggleOption'>
+						<image src="/image/m_meet_option.png"></image>
+						<view>选项</view>
+					</li>
+				</view>
+				<view class="page_meet_close" bindtap='exitMeeting'>
+					<image src="/image/m_meet_close.png"></image>
+				</view>
+			</view>
+		</view>
+	</view>
+</view>
+<!-- 会议界面 结束 -->
+
+
+<!-- 选项设置 -->
+<OptionSetting id='optionSetting' bind:toggle='toggleOption' show='{{showSetting}}'></OptionSetting>
+<!-- 聊天组件 -->
+<chat id='chat' bind:toggle='toggleChat' show='{{showChat}}'></chat>

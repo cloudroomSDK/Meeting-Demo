@@ -1,0 +1,143 @@
+/* ***************************** 登录界面 ***************************** */
+
+#page_login {
+	height: 100%;
+	width: 700rpx;
+	margin: 0 auto;
+}
+
+.login_cont {
+	height: 100%;
+}
+
+.login_cont .setting {
+	height: 72rpx;
+	position: relative;
+	margin-bottom: 10rpx;
+}
+.login_cont .setting image {
+	width: 72rpx;
+	height: 72rpx;
+	float: right;
+}
+
+.login_cont .login_form {
+	width: 100%;
+	height: auto;
+	box-sizing: border-box;
+	border-radius: 10rpx;
+	position: relative;
+}
+
+.login_cont .login_form .form_label {
+	width: 462rpx;
+	height: 56rpx;
+	line-height: 56rpx;
+	text-align: left;
+	color: #39abfb;
+	font-size: 56rpx;
+	margin-bottom: 44rpx;
+}
+
+.login_cont .login_form .form_dec text {
+	display: inline-block;
+	width: 100%;
+	line-height: 48rpx;
+	text-align: left;
+	color: #808080;
+	font-size: 28rpx;
+	font-weight: 500;
+}
+
+.login_cont .form_input {
+	height: 92rpx;
+	margin-top: 30rpx;
+	box-sizing: border-box;
+	border: 1px solid #d3d3d3;
+	border-radius: 76rpx;
+	overflow: hidden;
+}
+
+.login_cont .login_form>.form_input input {
+	display: inline-block;
+	outline: none;
+	border: none;
+	padding-left: 30rpx;
+	padding-right: 46rpx;
+	width: 624rpx;
+	height: 100%;
+	line-height: 38rpx;
+	text-align: left;
+	font-size: 28rpx;
+	vertical-align: middle;
+	color: #555;
+}
+
+.login_cont .login_form .enmeet_btn {
+	margin-top: 34rpx;
+	height: 94rpx;
+	background-color: #39abfb;
+	color: #fff;
+	text-align: center;
+	font-size: 32rpx;
+	line-height: 94rpx;
+	border-radius: 38px;
+}
+
+.login_cont .login_form .enmeet_btn.disabled {
+	background-color: #ccc;
+}
+
+.login_cont .login_form .login_order {
+	height: 140rpx;
+	line-height: 140rpx;
+	text-align: center;
+}
+
+.login_cont .login_form .login_order .line {
+	display: inline-block;
+	width: 274rpx;
+	border-top: 1px solid #ccc;
+}
+
+.login_order .text {
+	color: #999;
+	vertical-align: -8%;
+	font-size: 26rpx;
+	padding-left: 24rpx;
+	padding-right: 24rpx;
+}
+
+.login_cont .login_form .crmeet_btn {
+	height: 92rpx;
+	color: #39abfb;
+	text-align: center;
+	font-size: 32rpx;
+	line-height: 92rpx;
+	border: 1px solid #39abfb;
+	border-radius: 38px;
+	box-sizing: border-box;
+}
+
+.login_cont .login_form .crmeet_btn.disabled {
+	background-color: #ccc;
+	border-color: #ccc;
+	color: #fff;
+}
+
+button::after {
+	border: 0 none;
+}
+
+.userId {
+	height: 200rpx;
+	line-height: 200rpx;
+	color: #39abfb;
+	text-align: center;
+}
+
+.login_cont .login_form .verson {
+	text-align: center;
+	color: #39abfb;
+	font-size: 28rpx;
+}

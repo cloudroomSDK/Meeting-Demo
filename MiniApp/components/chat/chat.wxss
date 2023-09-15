@@ -1,0 +1,119 @@
+.animate-slide {
+    transform: translateY(0);
+    opacity: 1;
+    transition: all .3s;
+}
+.animate-slide-in {
+    transform: translateY(100%);
+    opacity: 0;
+}
+
+.page {
+	background-color: rgba(0, 0, 0, .8);
+    bottom: 0;
+    z-index: 9999;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+}
+.page .chat_main {
+    position: absolute;
+    bottom: 0;
+    height: 80%;
+	width: 100%;
+    background-color: #f1f1f1;
+    display: flex;
+    flex-direction: column;
+	/* white-space: normal; */
+	word-break: break-all;
+}
+.page .chat_main .title {
+	position: relative;
+	height: 80rpx;
+	text-align: center;
+	line-height: 80rpx;
+	border-bottom: 1px solid #e1e1e1;
+}
+.page .chat_main .title .icon {
+	position: absolute;
+	right: 0;
+	width: 40rpx;
+	height: 20rpx;
+	padding: 30rpx;
+	overflow: hidden;
+}
+
+.page .chat_main .title .arrow {
+	position: relative;
+	display: block;
+    width: 0;
+    height: 0;
+    border: 20rpx solid;
+    border-color: #3e3e3e transparent transparent transparent;
+}
+.page .chat_main .title .arrow::after{
+    content: '';
+    position: absolute;
+	top: -22rpx;
+    left: -20rpx;
+    border: 20rpx solid;
+    border-color: #f1f1f1 transparent transparent transparent;
+}
+
+.page .chat_main .scrollView {
+    flex: 1;
+    box-sizing: border-box;
+	overflow: hidden;
+}
+
+.inputRoom {
+	width: 100vw;
+	height: 16vw;
+	border-top: 1px solid #cdcdcd;
+	background-color: #f1f1f1;
+	display: flex;
+	align-items: center;
+}
+
+.inputRoom .input {
+	width: 76vw;
+	height: 9.33vw;
+	background-color: #fff;
+	border-radius: 40rpx;
+	margin-left: 2vw;
+	padding: 0 3vw;
+	font-size: 28rpx;
+	color: #444;
+}
+
+.leftMsg {
+	font-size: 35rpx;
+	color: #444;
+	line-height: 7vw;
+	padding: 2vw 2.5vw;
+	background-color: #fff;
+	margin-left: 1.6vw;
+	border-radius: 10rpx;
+}
+
+.rightMsg {
+	font-size: 35rpx;
+	color: #444;
+	line-height: 7vw;
+	padding: 2vw 2.5vw;
+	background-color: #96EB6A;
+	margin-right: 1.6vw;
+	border-radius: 10rpx;
+}
+
+.sendMsgBtn {
+	background-color: #96eb6a;
+	height: 9.33vw;
+	padding: 0 2vw;
+	line-height: 9.33vw;
+	margin-left: 2vw;
+	border-radius: 20rpx;
+
+	color: #3e3e3e;
+	font-size: 30rpx;
+}

@@ -1,0 +1,42 @@
+<!-- 登录界面 开始 -->
+<view id="page_login">
+	<view class="login_cont">
+		<view class="setting">
+			<image src='/image/setting.png' bindtap='loginSetShow'></image>
+		</view>
+		<view class="login_form">
+			<view class="form_label">请输入房间号</view>
+			<view class="form_dec">
+				<text>如果该房间存在，您将自动加入正在进行的房间；</text>
+				<text>如果该房间不存在，请点击下面的【创建房间】按钮，</text>
+				<text>创建并自动加入到一个新的房间；</text>
+			</view>
+			<view class="form_input">
+				<input type="number" id="g_meet_id" placeholder="请输入房间号" value="{{meetingId}}"
+					bindinput='meetingIDInput' focus='{{false}}' bindfocus='meetIdFocus' maxlength='8'></input>
+			</view>
+			<button disabled="{{!SDKlogin}}" class="enmeet_btn {{SDKlogin?'':'disabled'}}"
+				bindtap='enterMeet'>进入房间</button>
+			<view class="login_order">
+				<text class="line"></text>
+				<text class="text">或者</text>
+				<text class="line"></text>
+			</view>
+			<button disabled="{{!SDKlogin}}" class="crmeet_btn {{SDKlogin?'':'disabled'}}"
+				bindtap='creatMeeting'>创建房间</button>
+			<view class="userId">
+				<text wx:if='{{SDKlogin && UID}}'>UID: {{UID}}</text>
+			</view>
+			<view class="verson">
+				<view>Demo版本:
+					<text id="verson">{{demoVer}}</text></view>
+				<view>SDK版本:
+					<text id="verson">{{sdkVer}}</text></view>
+			</view>
+		</view>
+	</view>
+</view>
+<!-- 登录界面 结束 -->
+
+<!-- 自定义模态框 -->
+<myModal id='modal'></myModal>

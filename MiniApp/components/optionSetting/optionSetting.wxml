@@ -1,0 +1,105 @@
+<view class="page animate-slide {{show ? '' :'animate-slide-in'}}" catchtap='hide'>
+	<view class='option' catchtap=' '>
+		<view class='header'>
+			<view class="swiper-tab">
+				<view class="swiper-tab-list {{currentTab==0 && 'active'}}" data-current="0" bindtap="swichNav">视频</view>
+				<view class="swiper-tab-list {{currentTab==1 && 'active'}}" data-current="1" bindtap="swichNav">云端录制</view>
+				<view class="swiper-tab-list {{currentTab==2 && 'active'}}" data-current="2" bindtap="swichNav">邀请</view>
+			</view>
+			<view class="icon" catchtap='hide'>
+				<i class="arrow"></i>
+			</view>
+		</view>
+		<swiper current="{{currentTab}}" class="swiper-box" duration="300" bindchange="bindChange">
+			<!-- 视频设置 -->
+			<swiper-item class='swiper-item'>
+				<view class="section radio">
+					<view class="key">美颜类型(打开美颜才生效)</view>
+					<view class="value">
+						<radio-group class="radio-group" bindchange="beautyStyleChange">
+							<radio color='#39abfb' wx:for-items="{{beautyStyleList}}" wx:key="name" value="{{item.name}}" checked="{{item.checked}}" class="radio">
+								<text>{{item.value}}</text>
+							</radio>
+						</radio-group>
+					</view>
+				</view>
+				<view class="section radio">
+					<view class="key">滤镜</view>
+					<view class="value">
+						<radio-group class="radio-group" bindchange="fliterChange">
+							<radio color='#39abfb' wx:for-items="{{filterList}}" wx:key="name" value="{{item.name}}" checked="{{item.checked}}" class="radio">
+								<text>{{item.value}}</text>
+							</radio>
+						</radio-group>
+					</view>
+				</view>
+				<view class="section slider">
+					<view class="key">最小码率</view>
+					<view class="value">
+						<slider activeColor='#39abfb' bindchange="minRateChange" min="100" max="{{maxRateRate}}" value='{{minRateRate}}' step='100' show-value />
+					</view>
+				</view>
+				<view class="section slider">
+					<view class="key">最大码率</view>
+					<view class="value">
+						<slider activeColor='#39abfb' bindchange="maxRateChange" min="{{minRateRate}}" max="1500" step='100' value='{{maxRateRate}}' show-value />
+					</view>
+				</view>
+				<view class="section slider">
+					<text>远端显示镜像</text>
+					<switch color='#39abfb' checked="{{remoteMirror}}" bindchange="changeRemoteMirror" />
+				</view>
+				<view class="section slider">
+					<view>
+						<text>本地镜像</text>
+						<radio-group bindchange="checkLocalMirror">
+							<label class="" wx:for="{{localMirrorList}}" wx:key="value">
+								<view class="">
+									<radio color='#39abfb' value="{{item.value}}" checked="{{item.checked}}" /> <text class="">{{item.name}}</text>
+								</view>
+							</label>
+						</radio-group>
+					</view>
+				</view>
+			</swiper-item>
+			<!-- 云端录制 -->
+			<swiper-item class='swiper-item'>
+				<view class="section slider">
+					<view class="key">帧率</view>
+					<view class="value">
+						<slider activeColor='#39abfb' bindchange="frameRateChange" min="1" max="30" show-value value='{{frameRate}}' />
+					</view>
+				</view>
+				<view class="section radio">
+					<view class="key">分辨率</view>
+					<view class="value">
+						<radio-group class="radio-group" bindchange="resolutionChange">
+							<radio color='#39abfb' wx:for-items="{{resolutionList}}" wx:key="name" value="{{item.name}}" checked="{{item.checked}}" class="radio">
+								<text>{{item.value}}</text>
+							</radio>
+						</radio-group>
+					</view>
+				</view>
+				<view class="section slider">
+					<text>同时生成MP3文件</text>
+					<switch color='#39abfb' checked="{{recordMP3}}" bindchange="recordMP3Change" />
+				</view>
+			</swiper-item>
+			<!-- 杂项 -->
+			<swiper-item class='swiper-item'>
+				<view class="inviteBox">
+					<text class="inviteId">受邀者: </text>
+					<input class="input" bindinput='inviteUIDChange' adjust-position='true' placeholder="输入被邀请人的UID" />
+					<button class="btn" bindtap='inviteBtn'>邀请</button>
+				</view>
+
+				<scroll-view class="inviteList" scroll-y='true'>
+					<view wx:for='{{inviteList}}' class="item" wx:key='inviteID'>
+						<view class="inviteId">邀请ID: {{item.inviteID}}</view>
+						<view class="content"><text>受邀者: {{item.inviteUID}}</text>。<text>{{item.desc}}</text><button class="btn" wx:if='{{item.desc === "发送邀请成功，等待对方答应中"}}' bindtap='cancelInvite' data-inviteid='{{item.inviteID}}'>取消</button></view>
+					</view>
+				</scroll-view>
+			</swiper-item>
+		</swiper>
+	</view>
+</view>
