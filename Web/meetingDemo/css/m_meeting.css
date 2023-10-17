@@ -1,0 +1,987 @@
+@charset "utf-8";
+@import "../../static/css/m_common.css";
+
+@media only screen and (max-width: 1080px),
+only screen and (max-device-width:1080px) {
+
+   html,
+   body {
+      font-size: 28.799999999999997px;
+   }
+}
+
+@media only screen and (max-width: 960px),
+only screen and (max-device-width:960px) {
+
+   html,
+   body {
+      font-size: 25.6px;
+   }
+}
+
+@media only screen and (max-width: 800px),
+only screen and (max-device-width:800px) {
+
+   html,
+   body {
+      font-size: 21.333333333333332px;
+   }
+}
+
+@media only screen and (max-width: 720px),
+only screen and (max-device-width:720px) {
+
+   html,
+   body {
+      font-size: 19.2px;
+   }
+}
+
+@media only screen and (max-width: 640px),
+only screen and (max-device-width:640px) {
+
+   html,
+   body {
+      font-size: 17.066666666666666px;
+   }
+}
+
+@media only screen and (max-width: 600px),
+only screen and (max-device-width:600px) {
+
+   html,
+   body {
+      font-size: 16px;
+   }
+}
+
+@media only screen and (max-width: 540px),
+only screen and (max-device-width:540px) {
+
+   html,
+   body {
+      font-size: 14.399999999999999px;
+   }
+}
+
+@media only screen and (max-width: 480px),
+only screen and (max-device-width:480px) {
+
+   html,
+   body {
+      font-size: 12.8px;
+   }
+}
+
+@media only screen and (max-width: 414px),
+only screen and (max-device-width:414px) {
+
+   html,
+   body {
+      font-size: 11.040000000000001px;
+   }
+}
+
+@media only screen and (max-width: 400px),
+only screen and (max-device-width:400px) {
+
+   html,
+   body {
+      font-size: 10.666666666666666px;
+   }
+}
+
+@media only screen and (max-width: 375px),
+only screen and (max-device-width:375px) {
+
+   html,
+   body {
+      font-size: 10px;
+   }
+}
+
+@media only screen and (max-width: 360px),
+only screen and (max-device-width:360px) {
+
+   html,
+   body {
+      font-size: 9.6px;
+   }
+}
+
+@media only screen and (max-width: 320px),
+only screen and (max-device-width:320px) {
+
+   html,
+   body {
+      font-size: 8.533333333333333px;
+   }
+}
+
+@media only screen and (max-width: 240px),
+only screen and (max-device-width:240px) {
+
+   html,
+   body {
+      font-size: 6.4px;
+   }
+}
+
+body {
+   font-size: 0.8rem;
+}
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+   display: block;
+}
+
+body,
+html {
+   margin: 0;
+   padding: 0;
+   width: 100%;
+   height: 100%;
+   overflow: hidden;
+   background-color: #fff;
+}
+
+input::-ms-clear {
+   display: none;
+}
+
+a,
+a:hover,
+a:visited,
+a:link,
+a:active {
+   color: #fff;
+   font-size: 1rem;
+   text-decoration: none;
+   outline: none;
+}
+
+::-webkit-scrollbar {
+   width: 0px;
+   background-color: #fff;
+   display: none;
+}
+
+/* ***************************** 登录界面 ***************************** */
+
+#page_login {
+   height: 100%;
+   /* width: 30rem; */
+   width: 100%;
+   margin: 0 auto;
+}
+
+#page_login::-webkit-scrollbar {
+   display: none;
+}
+
+.login_cont {
+   height: 100%;
+   width: 100%;
+}
+
+.setting {
+   height: 3rem;
+   position: relative;
+   margin-bottom: 3.5rem;
+}
+
+.setting .icon.icon-setting {
+   position: absolute;
+   right: 2rem;
+   top: 2rem;
+   width: 3rem;
+   height: 3rem;
+   background-image: url("../image/setting.png");
+   background-repeat: no-repeat;
+   background-size: 3rem;
+}
+
+.login_top_logo {
+   position: absolute;
+   top: 5.5rem;
+   left: 50%;
+   transform: translateX(-50%);
+}
+
+.login_top_logo .login_logo {
+   width: 6rem;
+   height: 8rem;
+}
+
+.login_top_logo .login_key1 {
+   width: 100%;
+   height: 1.5rem;
+   margin-top: 0.5rem;
+   line-height: 1.5rem;
+   text-align: center;
+   font-size: 0.8rem;
+   color: #39abfb;
+}
+
+.login_top_logo .login_key2 {
+   width: 100%;
+   height: 1rem;
+   line-height: 1rem;
+   text-align: center;
+   font-size: 0.7rem;
+   color: #39abfb;
+}
+
+.login_cont .login_form {
+   box-sizing: border-box;
+   position: absolute;
+   left: 50%;
+   transform: translateX(-50%);
+   width: 90%;
+   height: auto;
+   border: 1px solid #fff;
+   border-radius: 5px;
+   background-color: #fff;
+}
+
+.login_cont .login_form .form_label {
+   width: 19.25rem;
+   height: 2.3rem;
+   line-height: 2.3rem;
+   text-align: left;
+   color: #39abfb;
+   font-size: 2.3rem;
+   margin-bottom: 1.8rem;
+}
+
+.login_cont .login_form .form_dec span {
+   display: inline-block;
+   width: 100%;
+   line-height: 2rem;
+   text-align: left;
+   color: #808080;
+   font-size: 1.1rem;
+   font-weight: 500;
+}
+
+.login_cont .form_input {
+   margin-top: 3rem;
+   height: 10rem;
+   width: 100%;
+   box-sizing: border-box;
+   overflow: hidden;
+}
+
+.login_cont .login_form>.form_input input {
+   display: inline-block;
+   margin-top: 1rem;
+   padding-left: 1.9rem;
+   padding-right: 1.9rem;
+   width: 100%;
+   height: 3.8rem;
+   box-sizing: border-box;
+   outline: none;
+   border: 1px solid #D3D3D3;
+   border-radius: 38px;
+   text-align: left;
+   font-size: 1.2rem;
+   line-height: 0.05rem;
+   vertical-align: middle;
+   color: #555;
+}
+
+.login_cont .login_form>.form_input input::-webkit-input-placeholder {
+   color: #999;
+   font-size: 0.8rem;
+   line-height: 1.6rem;
+}
+
+#g_meet_pwd {
+   display: none;
+}
+
+.login_cont .login_form .enmeet_btn {
+   margin-top: 1.4rem;
+   height: 3.9rem;
+   background-color: #39abfb;
+   color: #fff;
+   text-align: center;
+   font-size: 1.2rem;
+   line-height: 3.9rem;
+   border-radius: 38px;
+   cursor: pointer;
+}
+
+.login_cont .login_form .login_order {
+   height: 5rem;
+   line-height: 5rem;
+   text-align: center;
+}
+
+.login_cont .login_form .login_order .line {
+   display: inline-block;
+   width: 9rem;
+   border-top: 1px solid #ccc;
+}
+
+.login_order .text {
+   color: #999;
+   vertical-align: -8%;
+   font-size: 1.1rem;
+   padding-left: 1rem;
+   padding-right: 1rem;
+}
+
+.login_cont .login_form .crmeet_btn {
+   height: 3.8rem;
+   color: #39abfb;
+   text-align: center;
+   font-size: 1.2rem;
+   line-height: 3.8rem;
+   border: 1px solid #39abfb;
+   border-radius: 38px;
+   cursor: pointer;
+   box-sizing: border-box;
+}
+
+.login_cont .login_form .verson {
+   text-align: center;
+   color: #39abfb;
+   font-size: 1.5rem;
+   margin-top: 4rem;
+}
+
+
+.loginSet {
+   display: none;
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   background-color: #fff;
+}
+
+.loginSet .title {
+   height: 5rem;
+   background-color: #2fabff;
+   text-align: center;
+   font-size: 1.8rem;
+   line-height: 5rem;
+   color: #fff;
+   position: relative;
+}
+
+.loginSet .title button {
+   background-color: transparent;
+   font-size: 1.2rem;
+   position: absolute;
+   right: 2.5rem;
+   top: 50%;
+   border: 0;
+   color: #fff;
+   margin-top: -0.6rem;
+   line-height: 1.2rem;
+}
+
+.loginSet .logset_hide {
+   width: 27rem;
+   margin: 0 auto;
+   margin-top: 5rem;
+}
+
+.loginSet .logset_hide .form_input {
+   position: relative;
+   height: 3.8rem;
+   border: 1px solid #d3d3d3;
+   border-radius: 38px;
+   margin-bottom: 1.25rem;
+}
+
+.logset_hide .form_input>label {
+   font-size: 0.9rem;
+   color: #aeaeae;
+   margin-left: 1.9rem;
+}
+
+.logset_hide .form_input input {
+   display: inline-block;
+   outline: none;
+   border: none;
+   width: 17.75rem;
+   height: 100%;
+   line-height: 100%;
+   text-align: left;
+   font-size: 0.9rem;
+   color: #555;
+}
+
+.logset_hide .form_input .protocaltype {
+   display: inline-block;
+   width: 17.75rem;
+   height: 100%;
+   line-height: 100%;
+   text-align: left;
+   font-size: 0.9rem;
+   color: #555;
+}
+
+.logset_hide .form_input .protocaltype>label {
+   height: 3.8rem;
+   line-height: 3.8rem;
+}
+
+.logset_hide .form_input input[type="radio"] {
+   height: 1.8rem;
+   width: 2.5rem;
+   vertical-align: middle;
+}
+
+#udpProtocal {
+   margin-right: 1.5rem;
+}
+
+.logset_hide .recover_btn {
+   height: 3.8rem;
+   border: 1px solid #39abfb;
+   line-height: 3.8rem;
+   color: #39abfb;
+   border-radius: 38px;
+   text-align: center;
+   margin-top: 5.75rem;
+}
+
+/* ***************************** 会议界面 ***************************** */
+
+#page_meeting {
+   display: none;
+   width: 100%;
+   height: 100%;
+   position: relative;
+   background-color: #fff;
+   overflow: auto;
+}
+
+#page_meeting .page_meet_head {
+   height: 5%;
+   position: relative;
+   text-align: center;
+}
+
+#page_meeting .page_meet_head .net-state-icon {
+   position: absolute;
+   left: 0.5rem;
+   top: 0;
+   height: 100%;
+   width: 2.5rem;
+}
+
+.page_meet_head .net-state-icon.fine {
+   display: block;
+   background: url('../image/m_meet_net_fine.svg') center center/100% 100% no-repeat;
+}
+
+.page_meet_head .net-state-icon.midium {
+   display: block;
+   background: url('../image/m_meet_net_midium.svg') center center/100% 100% no-repeat;
+}
+
+.page_meet_head .net-state-icon.bad {
+   display: block;
+   background: url('../image/m_meet_net_bad.svg') center center/100% 100% no-repeat;
+}
+
+.page_meet_head .net-state-icon.none {
+   display: none;
+}
+
+#page_meeting .page_meet_head .page_meet_header {
+   position: absolute;
+   left: 50%;
+   top: 50%;
+   transform: translate(-50%, -50%);
+}
+
+.page_meet_logo {
+   width: auto;
+   height: 2.5rem;
+   text-align: right;
+   color: #2fabff;
+   font-size: 2rem;
+   line-height: 2.5rem;
+   top: 1.4rem;
+   margin-left: 1.5rem;
+}
+
+.page_meet_logo img {
+   position: absolute;
+   left: -3.5rem;
+   top: -0.25rem;
+}
+
+.page_meet_cont {
+   width: 100%;
+   height: 95%;
+}
+
+.page_meet_view {
+   display: flex;
+   flex-direction: column;
+   width: 100%;
+   height: 100%;
+   background-color: #fff;
+   z-index: 1;
+   border-radius: 0 0 5px 5px;
+   overflow: hidden;
+}
+
+.page_meet_view .page_meet_video {
+   width: 100%;
+   flex: 1;
+   position: relative;
+   box-sizing: border-box;
+   overflow: hidden;
+}
+
+.page_meet_video .page_screen {
+   background-color: #1d1e22;
+   position: absolute;
+   width: 100%;
+   height: 100%;
+}
+
+.page_meet_video .page_screen .wait-text {
+   line-height: 1rem;
+   position: absolute;
+   left: 50%;
+   top: 50%;
+   transform: translate(-50%, -50%);
+}
+
+.page_meet_video .page_screen>div {
+   text-align: center;
+   color: #3c3c3c;
+   float: left;
+   background-color: #171717;
+   border: 1px solid #2B3035;
+   box-sizing: border-box;
+   text-align: center;
+   font-size: 0.9rem;
+   display: none;
+}
+
+.page_meet_video .page_screen.screenOne>div {
+   width: 100%;
+   height: 100%;
+   line-height: 25.3rem;
+}
+
+.page_meet_video .page_screen.screenTwo {
+   flex-direction: column;
+}
+
+.page_meet_video .page_screen.screenTwo>div {
+   box-sizing: border-box;
+   line-height: 12.65rem;
+   width: 100%;
+   height: 50%;
+}
+
+.page_meet_video .page_screen.screenFour>div {
+   box-sizing: border-box;
+   width: 50%;
+   height: 50%;
+   line-height: 12.5rem;
+   position: relative;
+}
+
+.page_meet_video .page_screen.screenNine>div {
+   width: 33.33%;
+   height: 33.33%;
+   line-height: 8.4rem;
+   position: relative;
+}
+
+.page_meet_video .page_chat_box {
+   display: none;
+   position: absolute;
+   z-index: 10;
+   width: 100%;
+   height: 9.1rem;
+   left: 0.5rem;
+   bottom: 0;
+}
+
+.page_meet_video .page_chat_box>ul {
+   width: 100%;
+   height: 100%;
+   overflow-x: hidden;
+   overflow-y: scroll;
+}
+
+.page_meet_video .page_chat_box>ul span {
+   display: inline-block;
+   width: auto;
+   line-height: 1.7rem;
+   color: #7ee6ff;
+   font-size: 0.9rem;
+   padding: 0.1rem 0.2rem 0.1rem 0.2rem;
+   border-radius: 10px;
+}
+
+/* ***************************** 聊天界面 ***************************** */
+
+.page_meet_view .page_screen_share {
+   display: none;
+   flex: 1;
+   background: #1d1e22;
+   width: 100%;
+   height: 25.2rem;
+   position: relative;
+}
+
+.page_meet_view .page_meet_chat {
+   position: absolute;
+   /* bottom: 0; */
+   display: none;
+   height: 100%;
+   width: 100%;
+   /* box-sizing: border-box; */
+   border-bottom: 1px solid #ccc;
+   /* background: #fff; */
+   z-index: 10;
+}
+
+.page_meet_view .page_meet_chat .chat_msg_input {
+   position: absolute;
+   bottom: 0;
+   height: 4rem;
+   width: 100%;
+   box-sizing: border-box;
+   border-bottom: 1px solid #ccc;
+   background: #fff;
+   z-index: 10;
+}
+
+
+.page_meet_view .page_meet_chat .chat_msg_input .icon-arrow {
+   position: absolute;
+   width: 2.2rem;
+   height: 2.2rem;
+   top: 50%;
+   margin: -1.1rem 1rem;
+   background: url("../image/arrow_bottom.png") center / 2.2rem 2.2rem no-repeat;
+}
+
+
+.page_meet_view .page_meet_chat input {
+   padding-left: 4rem;
+   padding-right: 1rem;
+   width: 85%;
+   font-size: 1.4rem;
+   text-align: left;
+   line-height: 4rem;
+   border: none;
+   outline: none;
+   box-sizing: border-box;
+}
+
+.page_meet_view .page_meet_chat span {
+   display: inline-block;
+   margin-left: 0.5rem;
+   width: 3.5rem;
+   height: 2rem;
+   margin-top: 0.2rem;
+   text-align: center;
+   line-height: 2rem;
+   background-color: #2fabff;
+   color: #fff;
+   font-size: 0.7rem;
+   border-radius: 4px;
+   cursor: pointer;
+}
+
+.page_meet_view .page_meet_tools {
+   position: relative;
+   flex-basis: 13rem;
+   width: 100%;
+   background-color: #162332;
+}
+
+.page_meet_tools .page_meet_tool {
+   width: 100%;
+   /* height: 17rem; */
+   padding: 0.5rem 0;
+}
+
+.page_meet_tools .page_meet_tool li {
+   float: left;
+   list-style-type: none;
+   width: 33.33%;
+   height: 6rem;
+   cursor: pointer;
+   text-align: center;
+}
+
+.page_meet_tools .page_meet_tool img {
+   display: inline-block;
+   width: 4rem;
+   height: 4rem;
+   /* margin-top: 0.6rem; */
+}
+
+.page_meet_tools .page_meet_tool p {
+   height: 0.8rem;
+   line-height: 0.8rem;
+   color: #fff;
+   font-size: 0.8rem;
+}
+
+.page_meet_tools .page_meet_close {
+   position: absolute;
+   width: 4.5rem;
+   height: 4.5rem;
+   left: 50%;
+   top: 55%;
+   transform: translateX(-50%);
+   background: url("../image/m_meet_close.png") no-repeat center center/4.5rem 4.5rem;
+}
+
+
+/****************************** 浏览器提示 ***************************/
+
+.page_hint {
+   position: fixed;
+   left: 0;
+   top: 0;
+   width: 100%;
+   height: 100%;
+   z-index: 999;
+}
+
+.page_hint .shadow {
+   width: 100%;
+   height: 100%;
+   background-color: #000;
+   opacity: 0.3;
+}
+
+.page_hint .hint-box {
+   position: absolute;
+   left: 50%;
+   top: 50%;
+   transform: translate(-50%, -50%);
+   background-color: #fff;
+   width: 25rem;
+}
+
+.page_hint .hint-box .hint-title {
+   height: 3rem;
+   background-color: #f8f8f8;
+   line-height: 3rem;
+   font-size: 1.2rem;
+   padding-left: 0.75rem;
+   position: relative;
+}
+
+.page_hint .hint-box .hint-title .icon-close {
+   position: absolute;
+   width: 1rem;
+   height: 1rem;
+   top: 0;
+   right: 0;
+   padding: 1rem;
+}
+
+.page_hint .hint-box .hint-title .icon-close i {
+   display: block;
+   width: 1rem;
+   height: 1rem;
+   background: url("../image/close_page.png") no-repeat;
+   background-size: 1rem 1rem;
+}
+
+.page_hint .hint-box .hint-content {
+   min-height: 5rem;
+   padding: 1rem 0.75rem;
+   font-size: 1rem;
+}
+
+.page_hint .hint-box .hint-footer .close-btn {
+   float: right;
+   border-color: #4898d5;
+   background-color: #2e8ded;
+   color: #fff;
+   height: 3rem;
+   line-height: 3rem;
+   margin: 0.3rem 0.3rem;
+   padding: 0 1.5rem;
+   border: 1px solid #dedede;
+   border-radius: 30px;
+   font-weight: 400;
+   cursor: pointer;
+   text-decoration: none;
+   font-size: 1.3rem;
+}
+
+
+/* 让加载层居中 */
+.layui-layer-loading .layui-layer-content {
+   position: absolute !important;
+   left: 50% !important;
+   transform: translateX(-50%) !important;
+}
+
+/* 修改tiplayer提示层最小宽度 */
+.layui-layer-dialog {
+   min-width: 150px !important;
+}
+
+/* 修改tiplayer提示层文字水平居中 */
+.layui-layer-dialog .layui-layer-content {
+   text-align: center !important;
+}
+
+.mask {
+   position: fixed;
+   background-color: rgba(0, 0, 0, 0.4);
+}
+
+.alert-wrapper,
+.mask {
+   left: 0px;
+   right: 0px;
+   top: 0px;
+   bottom: 0px;
+   width: 100%;
+   height: 100%;
+}
+
+.alert-wrapper {
+   z-index: 9999;
+   position: absolute;
+}
+
+.alert-wrapper .alert-box {
+   position: absolute;
+   width: 19rem;
+   height: 11rem;
+   left: 0;
+   right: 0;
+   top: 0;
+   bottom: 0;
+   margin: auto;
+   background: #eee;
+   border: 1px solid rgba(0, 0, 0, .2);
+   -webkit-box-shadow: 0 0.3rem 0.75rem 0 rgba(0, 0, 0, .15);
+   box-shadow: 0px 0.3rem 0.75rem 0px rgba(0, 0, 0, 0.15);
+   border-radius: 5px;
+}
+
+.alert-wrapper .alert-box.alert-box-1 {
+   width: 28rem;
+}
+
+.alert-wrapper .alert-header {
+   position: relative;
+   height: 1.2rem;
+}
+
+.alert-wrapper .alert-body {
+   padding-bottom: 2.1rem;
+}
+
+.alert-wrapper .alert-footer {
+   position: absolute;
+   left: 0px;
+   right: 0px;
+   bottom: 0px;
+   padding: 0 0.8rem 0.8rem;
+   height: 1.3rem;
+   text-align: right;
+}
+
+.alert-wrapper .alert-footer .btn {
+   font-size: 0.8rem;
+   width: 5rem;
+   height: 1.5rem;
+   line-height: 1.5rem;
+   text-align: center;
+   background-color: #29ab91;
+   color: #fff;
+   border: none;
+   box-shadow: 0px 0.4rem 0.75rem -0.4rem rgba(7, 107, 242, 0.6);
+   letter-spacing: 0.041999999999999996rem;
+   border-radius: 15px;
+}
+
+.alert-wrapper .alert-footer .btn.btn-cancle {
+   background-color: #e3e6ec;
+   color: #313c4c;
+}
+
+.f-mgr-10 {
+   margin-right: 0.5rem;
+}
+
+.check-compatibility {
+   padding: 2.25rem 0.8rem 2.1rem;
+   font-family: Microsoft yahei;
+   font-size: 0.9rem;
+   color: #313c4c;
+   line-height: 1rem;
+}
+
+.icon-tip {
+   position: relative;
+   top: 0.25rem;
+   display: inline-block;
+   width: 1.5rem;
+   height: 1.5rem;
+   margin-right: 0.4rem;
+   background: url("../image/wrapper_tip.png") 50% no-repeat;
+   background-size: 1.1rem 1.1rem;
+}
+
+.check-compatibility .tip-content {
+   display: inline-block;
+   width: 24rem;
+   vertical-align: top;
+}
+
+.check-compatibility .c1,
+.check-compatibility .c2,
+.check-compatibility .c3 {
+   margin-bottom: 0.5rem;
+   display: block;
+}
+
+.alert-wrapper .alert-header .title {
+   margin-left: 0.8rem;
+   margin-top: 0.5rem;
+   font-family: Microsoft yahei;
+   font-size: 0.9rem;
+   color: #29ab91;
+   line-height: 0.7rem;
+}
+
+.alert-wrapper .alert-header .close {
+   position: absolute;
+   right: 0.55rem;
+   top: 0px;
+   width: 0.7rem;
+   height: 0.7rem;
+   cursor: pointer;
+   background: url("../image/close_page.png") no-repeat;
+   background-size: 0.7rem 0.7rem;
+}
