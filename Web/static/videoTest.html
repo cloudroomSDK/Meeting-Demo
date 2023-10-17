@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>视频参数测试</title>
+    <script src="./js/vue@2_dist.js"></script>
+    <script src="./js/vconsole.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+        }
+
+        video {
+            height: 200px;
+            width: 100%;
+            background-color: #ccc;
+            transform: rotateY(180deg);
+        }
+
+        .info {
+            padding: 0 10px;
+            height: 100px;
+            font-size: 12px;
+            overflow: auto;
+        }
+
+        .constraints {
+            background-color: #ddd;
+        }
+
+        .settings {
+            background-color: #ccc;
+        }
+
+        .tools {
+            padding: 0 20px;
+        }
+
+        p {
+            margin: 0;
+            width: 100%;
+            height: 14px;
+            overflow: hidden;
+            text-align: left;
+            font-size: 12px;
+            line-height: 14px;
+            word-wrap: break-word;
+            word-break: break-all;
+        }
+
+        button {
+            margin: 5px 5px;
+            width: 50px;
+            height: 30px;
+        }
+
+        label {
+            height: 40px;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="video-box">
+            <video autoplay ref="video"></video>
+        </div>
+        <div class="info-box">
+            <div class="constraints info">
+                <!-- <p>audio: {{constraints.audio}}</p>
+                <p v-if="constraints.video == true">video: true</p>
+                <p v-else v-for="(value, key) in constraints.video">
+                    {{key}}: {{value}}
+                </p> -->
+                {{JSON.stringify(constraints)}}
+            </div>
+            <div class="settings info">
+                <p v-for="(value, key) in realVideoSettings">
+                    {{key}}: {{value}}
+                </p>
+            </div>
+        </div>
+        <div class="tools">
+            <div>
+                <button @click="reset">重置</button>
+                <button @click="change">前/后</button>
+            </div>
+            <div>
+                <button class='ratio-btn' v-for="item in ratioList" :key=item.value
+                    @click=getRatio(item.value)>{{item.text}}</button>
+            </div>
+            <div>
+                <label>
+                    高度：
+                    <input type="text" v-model="height">
+                    <button @click="getHeight">确定</button>
+                </label>
+                <label>
+                    宽度：
+                    <input type="text" v-model="width">
+                    <button @click="getWidth">确定</button>
+                </label>
+                <label>
+                    帧率：
+                    <input type="text" v-model="fps">
+                    <button @click="getFps">确定</button>
+                </label>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    var vcon = new VConsole();
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            videoSrcObject: null,
+            height: null,
+            width: null,
+            fps: null,
+            ratio: null,
+            videoStream: null,
+            videoTrack: null,
+            facingMode: 'user',
+            ratioList: [{
+                value: 1,
+                text: '1:1',
+            }, {
+                value: 4 / 3,
+                text: '4:3',
+            }, {
+                value: 16 / 9,
+                text: '16:9',
+            }, {
+                value: 9 / 16,
+                text: '9:16',
+            }, {
+                value: 3 / 4,
+                text: '3:4',
+            },],
+            constraints: {
+                video: true,
+                audio: false
+            },
+            realVideoSettings: {},
+            camList: []
+        },
+        created() {
+            navigator.mediaDevices.enumerateDevices().then(arr => {
+                console.log(arr);
+                this.camList = arr.filter(item => {
+                    return item.kind === 'videoinput'
+                });
+                console.log(this.camList);
+            })
+            this.openVideo(this.constraints);
+        },
+        mounted() { },
+        watch: {
+            videoSrcObject(val) {
+                this.$refs.video.srcObject = val;
+            },
+            videoTrack(track) {
+                if (track !== null) this.realVideoSettings = track.getSettings();
+            }
+        },
+        methods: {
+            // 重置
+            reset(videoConstraints) {
+                console.log(videoConstraints);
+                this.videoTrack.stop();
+                this.videoSrcObject = null;
+                this.height = null;
+                this.width = null;
+                this.fps = null;
+                this.ratio = null;
+                this.constraints = {
+                    audio: false,
+                    video: true
+                };
+                this.realVideoSettings = {};
+                this.videoStream = null;
+                this.videoTrack = null;
+                this.openVideo({
+                    audio: false,
+                    video: true
+                });
+            },
+            // 打开摄像头
+            openVideo() {
+                console.log(`打开摄像头：\r\n${JSON.stringify(this.constraints)}`);
+                navigator.mediaDevices.getUserMedia(this.constraints).then(this.gotVideoStream)
+                    .catch(this.getVideoStreamErr);
+            },
+            // 前后摄像头切换
+            change() {
+                if (!navigator.userAgent.includes('Mobile')) return;
+
+                this.facingMode = this.facingMode === 'user' ? 'environment' : 'user';
+
+                this.videoTrack.stop();
+                if (this.constraints.video == true) this.constraints.video = {};
+                this.constraints.video.facingMode = this.facingMode;
+
+                // this.constraints = {
+                //     audio: false,
+                //     video: {
+                //         facingMode: this.facingMode
+                //     }
+                // }
+
+                this.openVideo(this.constraints);
+
+                // this.reset({
+                //     facingMode: this.facingMode
+                // })
+            },
+            // 比例
+            getRatio(value) {
+                const vcons = {
+                    aspectRatio: {
+                        ideal: value
+                    }
+                }
+
+                this.applyVideoConstraints(vcons);
+            },
+            // 高度
+            getHeight() {
+                const height = this.height;
+                const vcons = {
+                    height: {
+                        ideal: height
+                    }
+                }
+                this.applyVideoConstraints(vcons);
+            },
+            // 宽度
+            getWidth() {
+                const width = this.width;
+                const vcons = {
+                    width: {
+                        ideal: width
+                    }
+                }
+                this.applyVideoConstraints(vcons);
+            },
+            // 帧率
+            getFps() {
+                const fps = this.fps;
+                const vcons = {
+                    frameRate: {
+                        ideal: fps
+                    }
+                }
+                this.applyVideoConstraints(vcons);
+            },
+            // 设置视频参数
+            applyVideoConstraints(videoConstraints) {
+                if (this.constraints.video == true) this.constraints.video = {};
+                for (var key in videoConstraints) {
+                    if (videoConstraints[key].ideal !== undefined && !videoConstraints[key].ideal) {
+                        delete this.constraints.video[key];
+                        return
+                    }
+                    this.constraints.video[key] = videoConstraints[key];
+                }
+
+                try {
+                    if (videoConstraints.width && !!this.constraints.video.aspectRatio) delete this.constraints
+                        .video.height;
+                    if (videoConstraints.height && !!this.constraints.video.aspectRatio) delete this.constraints
+                        .video.width;
+                    delete this.constraints.video.facingMode;
+                } catch (error) {
+                    console.error(error);
+                }
+
+                console.log(`设置参数：\r\n${JSON.stringify(this.constraints.video)}`);
+                this.videoTrack.applyConstraints(this.constraints.video).then(this.applyVideoConstraintsSuccess)
+                    .catch(this.applyVideoConstraintsErr)
+            },
+            // 获取媒体流出错
+            getVideoStreamErr(err) {
+                console.error(err);
+            },
+            // 获取媒体流成功
+            gotVideoStream(stream) {
+                console.log(stream);
+                this.videoSrcObject = stream;
+                this.videoStream = stream;
+                this.videoTrack = stream.getVideoTracks()[0];
+                window.videoTrack = this.videoTrack;
+            },
+            // 设置参数出错
+            applyVideoConstraintsErr(err) {
+                console.error(err);
+            },
+            // 设置参数成功
+            applyVideoConstraintsSuccess(e) {
+                this.realVideoSettings = this.videoTrack.getSettings();
+            }
+        },
+    })
+</script>
+
+</html>
