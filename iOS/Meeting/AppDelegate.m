@@ -66,7 +66,7 @@
     // FIXME:WARNING: QApplication was not created in the main() thread.QObject::connect: No such slot MeetRecordImpl::slot_SetScreenShare(bool)
     SdkInitDat *sdkInitData = [[SdkInitDat alloc] init];
     // TODO:必须指定日志文件路径,才能产生日志文件,并能够上传 added by king 201711061904
-    [sdkInitData setSdkDatSavePath:[PathUtil searchPathInCacheDir:@"CloudroomVideoSDK"]];
+    [sdkInitData setSdkDatSavePath:[PathUtil searchPathInCacheDir:@"CRVideoSDK"]];
 //    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
 //    [sdkInitData setSdkDatSavePath:docDir];
     [sdkInitData setShowSDKLogConsole:YES];

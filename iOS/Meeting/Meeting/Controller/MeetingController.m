@@ -458,9 +458,9 @@
     [self _updateVideoInfo];
     
     // 设置默认分辨率: 360*360
-    [SDKUtil setRatio:CGSizeMake(360, 360)];
+//    [SDKUtil setRatio:CGSizeMake(640, 360)];
     // 设置默认帧率: 15
-    [SDKUtil setFps:15];
+//    [SDKUtil setFps:15];
     // 设置默认优先级: 画质优先
     [SDKUtil setPriority:25 min:22];
     
