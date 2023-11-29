@@ -109,6 +109,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		164A714B2B15D1A200DAD72B /* AppConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppConfig.h; sourceTree = "<group>"; };
 		16625FCA2864736D0008806F /* CallKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CallKit.framework; path = System/Library/Frameworks/CallKit.framework; sourceTree = SDKROOT; };
 		16DB906C28D5C8ED0094ACF6 /* IQTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQTextView.m; sourceTree = "<group>"; };
 		16DB906D28D5C8ED0094ACF6 /* IQTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQTextView.h; sourceTree = "<group>"; };
@@ -589,6 +590,7 @@
 				C21770151E4D55F000B79F5C /* PreMeeting */,
 				C2E06BAD1E4C8C52000D8718 /* Meeting */,
 				C2E06BAC1E4C8C48000D8718 /* Other */,
+				164A714B2B15D1A200DAD72B /* AppConfig.h */,
 				C2E06B7B1E4C8C14000D8718 /* AppDelegate.h */,
 				C2E06B7C1E4C8C14000D8718 /* AppDelegate.m */,
 				C2176FBF1E4D4ABE00B79F5C /* Meeting.pch */,

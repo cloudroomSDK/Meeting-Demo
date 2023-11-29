@@ -185,6 +185,7 @@ enum  AAA{a,b};
     
     if ([NSString stringCheckEmptyOrNil:account]) {
         [HUDUtil hudShow:@"账号不能为空!" delay:3 animated:YES];
+        [self _handleSettings];
         return;
     }
     
@@ -232,7 +233,6 @@ enum  AAA{a,b};
     UIStoryboard *preMeeting = [UIStoryboard storyboardWithName:@"PMeeting" bundle:nil];
     PreSettingsController *vc = [preMeeting instantiateViewControllerWithIdentifier:@"PreSettingsController"];
     if(@available(iOS 13.0, *)) {
-        
         vc.modalPresentationStyle = UIModalPresentationFullScreen;
     }
     [self.navigationController pushViewController:vc animated:YES];

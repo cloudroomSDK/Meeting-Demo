@@ -8,6 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSString * const KEY_server;
+extern NSString * const KEY_account;
+extern NSString * const KEY_pswd;
+extern NSString * const KEY_nickname;
+extern NSString * const KEY_datEncType;
+extern NSString * const KEY_rsaPublicKey;
+
 @interface CRSDKHelper : NSObject
 
 @property (nonatomic, copy, readonly) NSString *server; /**< 服务器地址 */
