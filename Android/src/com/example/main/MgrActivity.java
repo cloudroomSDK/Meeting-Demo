@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -236,14 +237,16 @@ public class MgrActivity extends BaseActivity {
 				.getDefaultSharedPreferences(this);
 		// 获取配置的服务器地址
 		String server = sharedPreferences.getString(SettingActivity.KEY_SERVER,
-				SettingActivity.DEFAULT_SERVER);
+				SDKConfig.DEFAULT_SERVER);
 		// 获取配置的账号密码
 		String appID = sharedPreferences.getString(
-				SettingActivity.KEY_APPID, SettingActivity.DEFAULT_APPID);
+				SettingActivity.KEY_APPID, SDKConfig.DEFAULT_APPID);
 		String appSecret = sharedPreferences.getString(SettingActivity.KEY_APPSECRET,
-				SettingActivity.DEFAULT_APPSECRET);
+				SDKConfig.DEFAULT_APPSECRET);
+
 		// 登录私有账号昵称，正式商用建议使用有意义的不重复账号
-		String privAcnt = "Android_" + USERID_RANDOM;
+//		String privAcnt = "Android_" + USERID_RANDOM;
+		String privAcnt = "Android_" + Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 		String nickName = privAcnt;
 
 		// 检查服务器地址是否为空

@@ -59,7 +59,7 @@ public class DemoApp extends Application {
         SharedPreferences sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(this);
         String datEncType = sharedPreferences.getString(SettingActivity.KEY_DATENC_TYPE,
-                SettingActivity.DEFAULT_DATENC_TYPE);
+                SDKConfig.DEFAULT_DATENC_TYPE);
         int datEncTypeInt = Integer.parseInt(datEncType);
 
 		// SDK初始化数据对象

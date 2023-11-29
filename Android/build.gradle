@@ -27,6 +27,7 @@ dependencies {
     implementation "com.tencent.bugly:crashreport:2.1.9"
     implementation "com.tencent.bugly:nativecrashreport:3.0"
     implementation 'com.google.code.gson:gson:2.7'
+    implementation "com.squareup.okhttp3:logging-interceptor:3.8.1"
 }
 
 android {
@@ -35,10 +36,7 @@ android {
         main {
             manifest.srcFile 'AndroidManifest.xml'
             java.srcDirs = [ 'src', 'java']
-            aidl.srcDirs = [ 'src', 'aidl']
             res.srcDirs = [ 'res']
-            resources.srcDirs = ['src']
-            renderscript.srcDirs = ['src']
             assets.srcDirs = ['assets']
             jniLibs.srcDirs = ['libs']
        }
@@ -50,11 +48,6 @@ android {
         versionCode 160
         ndk {
             abiFilters "armeabi-v7a"
-        }
-        externalNativeBuild {
-            cmake {
-                arguments '-DANDROID_STL=c++_static', '-DANDROID_PLATFORM=android-16', '-DANDROID_TOOLCHAIN=clang'
-            }
         }
     }
     android.applicationVariants.all { variant ->
@@ -71,5 +64,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }

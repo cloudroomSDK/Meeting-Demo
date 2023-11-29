@@ -53,7 +53,7 @@
 }
 
 
-############CloudroomVideoSDK»ìÏýÅäÖÃ  begin############
+############CloudroomVideoSDKï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  begin############
 -dontshrink
 -dontoptimize
 -ignorewarnings
@@ -78,4 +78,4 @@
 -keep class org.qtproject.qt5.android.bearer.** { *; }
 -keep class org.qtproject.qt5.android.accessibility.** { *; }
 
-############CloudroomVideoSDK»ìÏýÅäÖÃ  end############
+############CloudroomVideoSDKï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  end############

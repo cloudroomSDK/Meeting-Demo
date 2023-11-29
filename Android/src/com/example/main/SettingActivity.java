@@ -46,11 +46,6 @@ public class SettingActivity extends BaseActivity {
 	public static final String KEY_APPSECRET = "password";
 	public static final String KEY_DATENC_TYPE = "datEncType";
 
-	public static final String DEFAULT_SERVER = "sdk.cloudroom.com";
-	public static final String DEFAULT_APPID = "demo@cloudroom.com";
-	public static final String DEFAULT_APPSECRET = MD5Util.MD5("123456");
-	public static final String DEFAULT_DATENC_TYPE = "1";
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -70,10 +65,10 @@ public class SettingActivity extends BaseActivity {
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(this);
 
-		String server = sharedPreferences.getString(KEY_SERVER, DEFAULT_SERVER);
+		String server = sharedPreferences.getString(KEY_SERVER, SDKConfig.DEFAULT_SERVER);
 		String appID = sharedPreferences.getString(KEY_APPID,
-				DEFAULT_APPID);
-		String appSecret = sharedPreferences.getString(KEY_APPSECRET, DEFAULT_APPSECRET);
+				SDKConfig.DEFAULT_APPID);
+		String appSecret = sharedPreferences.getString(KEY_APPSECRET, SDKConfig.DEFAULT_APPSECRET);
 
 		mServerEditText.setText(server);
 		mAppIDEditText.setText(appID);
@@ -86,7 +81,7 @@ public class SettingActivity extends BaseActivity {
 		try {
 			ArrayList<String> datEncTypeStrs = UITool.getStringArray(this, R.array.datenc_types);
 			String datEncType = sharedPreferences.getString(KEY_DATENC_TYPE,
-					DEFAULT_DATENC_TYPE);
+					SDKConfig.DEFAULT_DATENC_TYPE);
 			mDatEncTV.setText(datEncTypeStrs.get(Integer.parseInt(datEncType)));
 		} catch (Exception e) {
 		}
@@ -118,11 +113,11 @@ public class SettingActivity extends BaseActivity {
 			finish();
 			break;
 		case R.id.btn_restore:
-			mServerEditText.setText(DEFAULT_SERVER);
-			mAppIDEditText.setText(DEFAULT_APPID);
-			mAppSecretEditText.setText(DEFAULT_APPSECRET);
+			mServerEditText.setText(SDKConfig.DEFAULT_SERVER);
+			mAppIDEditText.setText(SDKConfig.DEFAULT_APPID);
+			mAppSecretEditText.setText(SDKConfig.DEFAULT_APPSECRET);
 			ArrayList<String> datEncTypeStrs = UITool.getStringArray(this, R.array.datenc_types);
-			mDatEncTV.setText(datEncTypeStrs.get(Integer.parseInt(DEFAULT_DATENC_TYPE)));
+			mDatEncTV.setText(datEncTypeStrs.get(Integer.parseInt(SDKConfig.DEFAULT_DATENC_TYPE)));
 			saveAndFinish();
 			break;
 		case R.id.tv_datenc_type:
@@ -177,13 +172,13 @@ public class SettingActivity extends BaseActivity {
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		String oldAppSecret = sharedPreferences
-				.getString(KEY_APPSECRET, DEFAULT_APPSECRET);
+				.getString(KEY_APPSECRET, SDKConfig.DEFAULT_APPSECRET);
 		String oldAppID = sharedPreferences.getString(KEY_APPID,
-				DEFAULT_APPID);
+				SDKConfig.DEFAULT_APPID);
 		String oldServer = sharedPreferences.getString(KEY_SERVER,
-				DEFAULT_SERVER);
+				SDKConfig.DEFAULT_SERVER);
 		String oldDatEncType = sharedPreferences.getString(KEY_DATENC_TYPE,
-				DEFAULT_DATENC_TYPE);
+				SDKConfig.DEFAULT_DATENC_TYPE);
 
 		Editor editor = sharedPreferences.edit();
 
@@ -196,7 +191,7 @@ public class SettingActivity extends BaseActivity {
 
 		if(!oldAppSecret.equals(appSecret)) {
 			// 判断是否恢复默认
-			if (!DEFAULT_APPSECRET.equals(appSecret)) {
+			if (!SDKConfig.DEFAULT_APPSECRET.equals(appSecret)) {
 				appSecret = MD5Util.MD5(appSecret);
 			}
 			if (TextUtils.isEmpty(appSecret)) {
