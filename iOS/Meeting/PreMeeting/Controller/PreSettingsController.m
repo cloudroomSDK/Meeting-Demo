@@ -105,9 +105,7 @@ NSString *const kAppIDPlaceholder = @"请配置appID";
         return;
     }
     // 不保存默认展示
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    NSString *accountCache = [userDefaults stringForKey:KEY_account];
-    if (accountCache.length <= 0 && [account isEqualToString:kAppIDDefaultShow]) {
+    if ([account isEqualToString:kAppIDDefaultShow] || [account isEqualToString:KDefaultAppID]) {
         account = nil;
         pswd = nil;
     }
@@ -130,9 +128,7 @@ NSString *const kAppIDPlaceholder = @"请配置appID";
 - (void)reloadConfigView {
     CRSDKHelper *meetingHelper = [CRSDKHelper shareInstance];
     
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    NSString *account = [userDefaults stringForKey:KEY_account];
-    if (account.length <= 0 && [KDefaultAppID isEqualToString:meetingHelper.account] && KDefaultAppID.length > 0) {
+    if ([KDefaultAppID isEqualToString:meetingHelper.account] && KDefaultAppID.length > 0) {
         _bottomView.userTextField.text = kAppIDDefaultShow;
     } else {
         _bottomView.userTextField.text = meetingHelper.account;
