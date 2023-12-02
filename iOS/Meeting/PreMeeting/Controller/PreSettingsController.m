@@ -16,6 +16,10 @@
 #import "NSString+K.h"
 #import "SDKUtil.h"
 #import "AppDelegate.h"
+#import "AppConfig.h"
+
+NSString *const kAppIDDefaultShow = @"默认appID";
+NSString *const kAppIDPlaceholder = @"请配置appID";
 
 @interface PreSettingsController ()
 
@@ -72,12 +76,7 @@
         [NSString stringCheckEmptyOrNil:meetingHelper.datEncType]) {
         [self _handleReset];
     } else {
-        _bottomView.serverTextField.text = meetingHelper.server;
-        _bottomView.userTextField.text = meetingHelper.account;
-        _bottomView.paswdTextField.text = meetingHelper.pswd;
-        _bottomView.rsaTextField.text = meetingHelper.rsaPublicKey;
-        NSString* value = [self.datEncTypeView.dataSource objectAtIndex:meetingHelper.datEncType.integerValue];
-        [_bottomView.datEncTypeBtn setTitle:value forState:UIControlStateNormal];
+        [self reloadConfigView];
     }
 }
 
@@ -86,8 +85,7 @@
     NSString *account = _bottomView.userTextField.text;
     NSString *pswd = _bottomView.paswdTextField.text;
     NSString* rsaPublicKey = _bottomView.rsaTextField.text;
-
-    
+        
     NSUInteger datEncType = [self.datEncTypeView.dataSource indexOfObject:_bottomView.datEncTypeBtn.currentTitle];
     if(datEncType < 0) {
         return;
@@ -106,9 +104,14 @@
         [HUDUtil hudShow:@"密码不能为空!" delay:3 animated:YES];
         return;
     }
+    // 不保存默认展示
+    if ([account isEqualToString:kAppIDDefaultShow] || [account isEqualToString:KDefaultAppID]) {
+        account = nil;
+        pswd = nil;
+    }
     
     CRSDKHelper *meetingHelper = [CRSDKHelper shareInstance];
-    [meetingHelper writeAccount:account pswd:pswd server:server datEncType:[NSString stringWithFormat:@"%d", datEncType]];
+    [meetingHelper writeAccount:account pswd:pswd server:server datEncType:[NSString stringWithFormat:@"%lu", (unsigned long)datEncType]];
     meetingHelper.rsaPublicKey = rsaPublicKey;
     
     [[CloudroomVideoMgr shareInstance] logout];
@@ -119,8 +122,18 @@
     CRSDKHelper *meetingHelper = [CRSDKHelper shareInstance];
     [meetingHelper resetInfo];
     
+    [self reloadConfigView];
+}
+
+- (void)reloadConfigView {
+    CRSDKHelper *meetingHelper = [CRSDKHelper shareInstance];
+    
+    if ([KDefaultAppID isEqualToString:meetingHelper.account] && KDefaultAppID.length > 0) {
+        _bottomView.userTextField.text = kAppIDDefaultShow;
+    } else {
+        _bottomView.userTextField.text = meetingHelper.account;
+    }
     _bottomView.serverTextField.text = meetingHelper.server;
-    _bottomView.userTextField.text = meetingHelper.account;
     _bottomView.paswdTextField.text = meetingHelper.pswd;
     _bottomView.rsaTextField.text = meetingHelper.rsaPublicKey;
     NSString* value = [self.datEncTypeView.dataSource objectAtIndex:meetingHelper.datEncType.integerValue];

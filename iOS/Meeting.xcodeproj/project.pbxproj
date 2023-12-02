@@ -109,6 +109,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		164A714B2B15D1A200DAD72B /* AppConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppConfig.h; sourceTree = "<group>"; };
 		16625FCA2864736D0008806F /* CallKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CallKit.framework; path = System/Library/Frameworks/CallKit.framework; sourceTree = SDKROOT; };
 		16DB906C28D5C8ED0094ACF6 /* IQTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQTextView.m; sourceTree = "<group>"; };
 		16DB906D28D5C8ED0094ACF6 /* IQTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQTextView.h; sourceTree = "<group>"; };
@@ -589,6 +590,7 @@
 				C21770151E4D55F000B79F5C /* PreMeeting */,
 				C2E06BAD1E4C8C52000D8718 /* Meeting */,
 				C2E06BAC1E4C8C48000D8718 /* Other */,
+				164A714B2B15D1A200DAD72B /* AppConfig.h */,
 				C2E06B7B1E4C8C14000D8718 /* AppDelegate.h */,
 				C2E06B7C1E4C8C14000D8718 /* AppDelegate.m */,
 				C2176FBF1E4D4ABE00B79F5C /* Meeting.pch */,
@@ -962,12 +964,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 93XFE92JTW;
+				DEVELOPMENT_TEAM = 93XFE92JTW;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/../../Framework/",
@@ -983,11 +983,10 @@
 				MARKETING_VERSION = 4.3.20;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.cloudroom.Meeting;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cloudroom.CRMeeting;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "e23f9ce0-1713-4f71-bf46-4cb94010788e";
+				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = cloudroom_com_debug;
 			};
 			name = Release;
 		};

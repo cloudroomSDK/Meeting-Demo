@@ -7,13 +7,14 @@
 //
 
 #import "CRSDKHelper.h"
+#import "AppConfig.h"
 
-static NSString * const KEY_server = @"server";
-static NSString * const KEY_account = @"account";
-static NSString * const KEY_pswd = @"pswd";
-static NSString * const KEY_nickname = @"nickname";
-static NSString * const KEY_datEncType = @"datEncType";
-static NSString * const KEY_rsaPublicKey = @"rsaPublicKey";
+NSString * const KEY_server = @"server";
+NSString * const KEY_account = @"account";
+NSString * const KEY_pswd = @"pswd";
+NSString * const KEY_nickname = @"nickname";
+NSString * const KEY_datEncType = @"datEncType";
+NSString * const KEY_rsaPublicKey = @"rsaPublicKey";
 
 @interface CRSDKHelper ()
 
@@ -66,14 +67,14 @@ static CRSDKHelper *shareInstance;
 #pragma mark - public method
 - (void)writeAccount:(NSString *)account pswd:(NSString *)pswd server:(NSString *)server datEncType:(NSString*)datEncType
 {
-    _account = account;
-    _pswd = pswd;
+    if (account.length > 0) _account = account;
+    if (pswd.length > 0) _pswd = pswd;
     _server = server;
     self.datEncType = datEncType;
     
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setObject:_account forKey:KEY_account];
-    [userDefaults setObject:_pswd forKey:KEY_pswd];
+    [userDefaults setObject:account forKey:KEY_account];
+    [userDefaults setObject:pswd forKey:KEY_pswd];
     [userDefaults setObject:_server forKey:KEY_server];
     [userDefaults setObject:_datEncType forKey:KEY_datEncType];
     [userDefaults synchronize];
@@ -113,9 +114,10 @@ static CRSDKHelper *shareInstance;
 
 - (void)resetInfo;
 {
-    [self writeAccount:@"demo@cloudroom.com" pswd:@"123456" server:@"sdk.cloudroom.com" datEncType:@"1"];
-//    self.rsaPublicKey = @"MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAI/Wu/TXQlcLmW5Yxh99W1S76X4X4QSx5F6OhMIiZ/q8z3Wc0Q69udgaJrQR+AREGquyO61By6TieeiyaaGWKAsCAwEAAQ==";
+    [self writeAccount:nil pswd:nil server:@"sdk.cloudroom.com" datEncType:@"1"];
     self.rsaPublicKey = @"";
     [self readInfo];
+    _account = KDefaultAppID;
+    _pswd = KDefaultAppSecret;
 }
 @end
