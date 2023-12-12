@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using AxnpcloudroomvideosdkLib;
 
-namespace Meeting_WPF
+namespace SDKDemo
 {
     public partial class VideoUI : UserControl
     {
@@ -23,7 +23,7 @@ namespace Meeting_WPF
 
             label_mic.BringToFront();
             label_mic.Size = new Size(22, 16);
-            label_mic.Image = Meeting_WPF.Properties.Resources.mic_closed;
+            label_mic.Image = SDKDemo.Properties.Resources.mic_closed;
             label_mic.Visible = false;
             label_mic.ImageAlign = ContentAlignment.MiddleCenter;
 
@@ -117,18 +117,18 @@ namespace Meeting_WPF
             int status = App.CRVideo.VideoSDK.getAudioStatus(userID);
             if (status == (int)ASTATUS.ACLOSE)
             {
-                label_mic.Image = Meeting_WPF.Properties.Resources.mic_closed;
+                label_mic.Image = SDKDemo.Properties.Resources.mic_closed;
                 return;
             }
 
             if (level == 0)
-                label_mic.Image = Meeting_WPF.Properties.Resources.mic_0;
+                label_mic.Image = SDKDemo.Properties.Resources.mic_0;
             else if (level <= 3)
-                label_mic.Image = Meeting_WPF.Properties.Resources.mic_1;
+                label_mic.Image = SDKDemo.Properties.Resources.mic_1;
             else if (level <= 6)
-                label_mic.Image = Meeting_WPF.Properties.Resources.mic_2;
+                label_mic.Image = SDKDemo.Properties.Resources.mic_2;
             else
-                label_mic.Image = Meeting_WPF.Properties.Resources.mic_3;
+                label_mic.Image = SDKDemo.Properties.Resources.mic_3;
         
         }
 
@@ -141,11 +141,11 @@ namespace Meeting_WPF
 
             if (newStatus == (int)ASTATUS.ACLOSE)
             {
-                label_mic.Image = Meeting_WPF.Properties.Resources.mic_closed;   
+                label_mic.Image = SDKDemo.Properties.Resources.mic_closed;   
             }
             else if (newStatus == (int)ASTATUS.AOPEN || newStatus == (int)ASTATUS.AOPENING)
             {
-                label_mic.Image = Meeting_WPF.Properties.Resources.mic_0;
+                label_mic.Image = SDKDemo.Properties.Resources.mic_0;
             }        
             else
             {

@@ -11,7 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Meeting_WPF
+namespace SDKDemo
 {
     /// <summary>
     /// InputWnd.xaml 的交互逻辑

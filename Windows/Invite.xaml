@@ -1,4 +1,4 @@
-﻿<Window x:Class="Meeting_WPF.Invite"
+﻿<Window x:Class="SDKDemo.Invite"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="邀请" Height="280" Width="600" Closing="Window_Closing" ShowInTaskbar="False" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">

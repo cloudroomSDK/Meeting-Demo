@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Meeting_WPF
+namespace SDKDemo
 {
     public class CRError
     {

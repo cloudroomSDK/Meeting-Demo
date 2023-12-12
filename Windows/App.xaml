@@ -1,4 +1,4 @@
-﻿<Application x:Class="Meeting_WPF.App"
+﻿<Application x:Class="SDKDemo.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     StartupUri="Login.xaml">

@@ -1,7 +1,7 @@
-﻿<Window x:Class="Meeting_WPF.MeetingMainWin"
+﻿<Window x:Class="SDKDemo.MeetingMainWin"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:Meeting_WPF"   
+    xmlns:local="clr-namespace:SDKDemo"   
     Title="Meeting" Width="1280" Height="720"  WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" Closing="Window_Closing" ContentRendered="Window_ContentRendered" SizeToContent="Manual">
 
     <Window.Resources>

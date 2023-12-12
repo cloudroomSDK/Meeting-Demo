@@ -7,7 +7,7 @@ using System.Windows.Controls;
 using Newtonsoft.Json.Linq;
 using System.Text.RegularExpressions;
 
-namespace Meeting_WPF
+namespace SDKDemo
 {
     /// <summary>
     /// VideoSetWin.xaml 的交互逻辑

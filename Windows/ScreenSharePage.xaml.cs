@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using System.Windows.Forms;
 using System.ComponentModel;
 
-namespace Meeting_WPF
+namespace SDKDemo
 {
     /// <summary>
     /// ScreenSharePage.xaml 的交互逻辑

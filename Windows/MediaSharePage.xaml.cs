@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Meeting_WPF
+namespace SDKDemo
 {
     /// <summary>
     /// MediaSharePage.xaml 的交互逻辑

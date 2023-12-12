@@ -1,4 +1,4 @@
-﻿<Window x:Class="Meeting_WPF.StartMeetingWin"
+﻿<Window x:Class="SDKDemo.StartMeetingWin"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="启动会议" Height="500" Width="620" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Closed="Window_Closed">

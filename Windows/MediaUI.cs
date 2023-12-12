@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Meeting_WPF
+namespace SDKDemo
 {
     public partial class MediaUI : UserControl
     {

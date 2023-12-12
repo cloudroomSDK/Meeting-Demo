@@ -1,7 +1,7 @@
 ﻿using System.Windows.Forms;
 using AxnpcloudroomvideosdkLib;
 
-namespace Meeting_WPF
+namespace SDKDemo
 {
     public partial class CRVideoSDK : UserControl
     {

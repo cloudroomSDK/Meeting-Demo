@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using AxnpcloudroomvideosdkLib;
 using System.Drawing.Drawing2D;
 
-namespace Meeting_WPF
+namespace SDKDemo
 {
     public partial class ScreenShareUI : UserControl
     {

@@ -7,7 +7,7 @@ using System.IO;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 
-namespace Meeting_WPF
+namespace SDKDemo
 {
     /// <summary>
     /// Window1.xaml 的交互逻辑
@@ -19,8 +19,6 @@ namespace Meeting_WPF
         private string mNickname = "";
         private string mUserID = "";
         private int mMeetID = 0;
-
-        private string mActiveXVersion = "2.2";             //程序使用的ocx组件版本
 
         public Login()
         {
@@ -145,8 +143,8 @@ namespace Meeting_WPF
             int selectedType = Convert.ToInt32(iniFile.ReadValue("Cfg", "AuthType", "0"));
             if(selectedType == 0)
             {
-                string account = iniFile.ReadValue("Cfg", "LastAccount", "demo@cloudroom.com");
-                string password = iniFile.ReadValue("Cfg", "LastPwd", App.getMD5Value("123456"));
+                string account = iniFile.ReadValue("Cfg", "LastAccount", AccountInfo.TEST_AppID);
+                string password = iniFile.ReadValue("Cfg", "LastPwd", App.getMD5Value(AccountInfo.TEST_AppSecret));
                 App.CRVideo.VideoSDK.login(account, password, Nickname, myUserID, "", ""); 
             }
             else

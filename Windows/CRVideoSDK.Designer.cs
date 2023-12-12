@@ -1,4 +1,4 @@
-﻿namespace Meeting_WPF
+﻿namespace SDKDemo
 {
     partial class CRVideoSDK
     {

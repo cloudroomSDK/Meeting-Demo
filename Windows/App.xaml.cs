@@ -3,7 +3,7 @@ using System.Text;
 using System.Windows;
 using System.Security.Cryptography;
 
-namespace Meeting_WPF
+namespace SDKDemo
 {
     /// <summary>
     /// App.xaml 的交互逻辑

@@ -1,4 +1,4 @@
-﻿<Window x:Class="Meeting_WPF.updateToken"
+﻿<Window x:Class="SDKDemo.updateToken"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Token即将失效,请及时更新Token！" Height="300" Width="300" WindowStartupLocation="CenterScreen">

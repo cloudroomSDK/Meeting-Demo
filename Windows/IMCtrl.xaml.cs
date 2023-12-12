@@ -14,7 +14,7 @@ using System.Windows.Shapes;
 using Newtonsoft.Json;
 using AxnpcloudroomvideosdkLib;
 
-namespace Meeting_WPF
+namespace SDKDemo
 {
     /// <summary>
     /// IMCtrl.xaml 的交互逻辑

@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using AxnpcloudroomvideosdkLib;
 using Newtonsoft.Json;
 
-namespace Meeting_WPF
+namespace SDKDemo
 {
     /// <summary>
     /// StartMeetingWin.xaml 的交互逻辑
@@ -34,6 +34,8 @@ namespace Meeting_WPF
 
             tb_loginInfo.Text = "欢迎 " + mNickName + " ...";
 
+            IniFile iniFile = new IniFile(Directory.GetCurrentDirectory() + "/meeting.ini");
+            edt_MeetID.Text = iniFile.ReadValue("Cfg", "lastMeetingID", "");
         }
 
         private void initDelegate( bool isInit)
@@ -163,11 +165,12 @@ namespace Meeting_WPF
         private void EnterMeeting(int meetID)
         {
             Console.WriteLine("enter meeting:{0} ...", meetID);
-
             Login.Instance.MeetID = meetID;
+            edt_MeetID.Text = meetID.ToString();
+            IniFile iniFile = new IniFile(Directory.GetCurrentDirectory() + "/meeting.ini");
+            iniFile.WriteValue("Cfg", "lastMeetingID", edt_MeetID.Text);
 
             meetingMainWin = new MeetingMainWin(this);//创建会议主窗体
-     
             App.CRVideo.VideoSDK.enterMeeting3(meetID);
         }
 

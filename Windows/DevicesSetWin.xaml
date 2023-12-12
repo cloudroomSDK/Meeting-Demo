@@ -1,7 +1,7 @@
 ﻿<Window
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="Meeting_WPF.DevicesSetWin"
+    xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="SDKDemo.DevicesSetWin"
     Title="音视频设置" Height="280" Width="560" ResizeMode="NoResize" WindowStyle="SingleBorderWindow" ShowInTaskbar="False" WindowStartupLocation="CenterScreen" Closing="Windows_closing">
     <Grid x:Name="grid_devices">
         <Grid.RowDefinitions>

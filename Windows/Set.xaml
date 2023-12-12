@@ -1,4 +1,4 @@
-﻿<Window x:Class="Meeting_WPF.Set"
+﻿<Window x:Class="SDKDemo.Set"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="设置" Height="398.4" Width="488.2" ResizeMode="NoResize" WindowStyle="SingleBorderWindow" WindowStartupLocation="CenterScreen" Closing="Window_Closing">

@@ -1,4 +1,4 @@
-﻿<Window x:Class="Meeting_WPF.InputWnd"
+﻿<Window x:Class="SDKDemo.InputWnd"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="InputWnd" Height="100" Width="495.522" WindowStartupLocation="CenterScreen">

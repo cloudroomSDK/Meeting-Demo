@@ -6,7 +6,7 @@ using System.Windows.Controls;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 
-namespace Meeting_WPF
+namespace SDKDemo
 {
     /// <summary>
     /// Set.xaml 的交互逻辑
@@ -24,8 +24,12 @@ namespace Meeting_WPF
             IniFile iniFile = new IniFile(Directory.GetCurrentDirectory() + "/meeting.ini");  //获取当前根目录
             edtServer.Text = iniFile.ReadValue("Cfg", "LastServer", "sdk.cloudroom.com");
             cbHttpType.SelectedIndex = Convert.ToInt32(iniFile.ReadValue("Cfg", "HttpType", "2"));
-            edtAccount.Text = iniFile.ReadValue("Cfg", "LastAccount", "默认APPID");
-            edtPassword.Password = iniFile.ReadValue("Cfg", "LastPwd", "****");
+            edtAccount.Text = iniFile.ReadValue("Cfg", "LastAccount", "");
+            edtPassword.Password = iniFile.ReadValue("Cfg", "LastPwd", "");
+            if( edtAccount.Text=="" )
+            {
+                setDefAcnt();
+            }
 
             cbType.SelectionChanged += AuthTypeChanged;
             int selectedIndex = Convert.ToInt32(iniFile.ReadValue("Cfg", "AuthType", "0"));
@@ -68,15 +72,29 @@ namespace Meeting_WPF
                 edtPassword.Visibility = System.Windows.Visibility.Hidden;
             }
         }
+
+        private void setDefAcnt()
+        {
+            if( AccountInfo.TEST_AppID=="" )
+            {
+                edtAccount.Text = "";
+                edtPassword.Password = "";
+            }
+            else
+            {
+                edtAccount.Text = "默认APPID";
+                edtPassword.Password = "*";
+            }
+        }
+
         //默认设置
         private void btnDefault_Clicked(object sender, RoutedEventArgs e)
         {
             proxyType.SelectedIndex = 0;
             edtServer.Text = "sdk.cloudroom.com";
             cbType.SelectedIndex = 0;
-            edtAccount.Text = "默认APPID";
-            edtPassword.Password = "****";
             sdkParamEdt.Text = "";
+            setDefAcnt();
 
             save2File();
         }

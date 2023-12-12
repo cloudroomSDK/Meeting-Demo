@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 
-namespace Meeting_WPF
+namespace SDKDemo
 {
     /// <summary>
     /// CircleProgressBar.xaml 的交互逻辑

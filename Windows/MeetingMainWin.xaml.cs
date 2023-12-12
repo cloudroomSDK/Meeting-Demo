@@ -7,7 +7,7 @@ using AxnpcloudroomvideosdkLib;
 using Newtonsoft.Json;
 using System.Windows.Forms;
 
-namespace Meeting_WPF
+namespace SDKDemo
 {
     /// <summary>
     /// MeetingMainWin.xaml 的交互逻辑

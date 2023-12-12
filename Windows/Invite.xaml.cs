@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 using System.Timers;
 
 
-namespace Meeting_WPF
+namespace SDKDemo
 {
     public class inviteInfo : INotifyPropertyChanged
     {

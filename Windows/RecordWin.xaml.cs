@@ -11,7 +11,7 @@ using System.Windows.Media;
 using System.Windows.Controls;
 using System.Text.RegularExpressions;
 
-namespace Meeting_WPF
+namespace SDKDemo
 {
     /// <summary>
     /// Record.xaml 的交互逻辑

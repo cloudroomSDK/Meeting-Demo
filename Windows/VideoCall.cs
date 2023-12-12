@@ -3,7 +3,7 @@ using System.Drawing;
 using System;
 using Newtonsoft.Json;
 
-namespace Meeting_WPF
+namespace SDKDemo
 {
     
     enum VCALLSDK_ERR_DEF //错误枚举定义

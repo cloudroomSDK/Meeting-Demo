@@ -11,7 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Data;
 using System.IO;
 
-namespace Meeting_WPF
+namespace SDKDemo
 {
     /// <summary>
     /// VideoWallPage.xaml 的交互逻辑

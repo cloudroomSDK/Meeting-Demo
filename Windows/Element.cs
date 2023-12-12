@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Meeting_WPF
+namespace SDKDemo
 {
     enum Style { // pen style
         SolidLine = 1,
