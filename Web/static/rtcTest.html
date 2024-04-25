@@ -333,6 +333,7 @@
             ]
         },
         created() {
+            console.log(navigator.userAgent);
             if (navigator.userAgent.includes('Mobile')) {
                 this.resolutionList = [{
                     width: 96,
