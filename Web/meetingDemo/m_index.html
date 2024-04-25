@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <script type="text/javascript">
+    window.__CRKEY = 'CRDEMO';
     var protocol = window.location.protocol;
     var host = window.location.host;
     var isLocal = false;
@@ -215,7 +216,7 @@
     <script type="text/javascript" src="../static/lib/mobileSelector/js/mPicker.min.js"></script>
     <script type="text/javascript" src="../static/lib/layui/layui.js"></script>
 
-<script src="../SDK/RTCSDKV2.min.js?v=6628"></script></body>
+<script src="../SDK/RTCSDKV2.min.js?v=e0be"></script></body>
 
 <script>
 
@@ -256,7 +257,7 @@
     var gm_videoCfg = {
         size: 1, // 视频尺寸 标清
         fps: 15, //	帧率：视频帧率（5~30）
-        ratio: 3 // 比例 1:1
+        // ratio: 3 // 比例 1:1
     }
 
 
@@ -371,7 +372,7 @@
         var cfg = {}
         cfg.size = gm_videoCfg.size;
         cfg.fps = gm_videoCfg.fps;
-        cfg.ratio = 3;
+        // cfg.ratio = 3;
         CRVideo_SetVideoCfg(cfg)
     }
     //用于选择分辨率
@@ -792,12 +793,7 @@
             g_is_init = true
             //登录
             CRVideo_SetServerAddr($('#serverAddr').val());
-            let account = g_appID,
-                secret = md5(g_appSecret);
-            if (g_appID === '默认appID') account = `demo@${window.__CRName}.com`;
-            if (g_appSecret === '默认appSecret') secret = 'e10adc3949ba59abbe56e057f20f883e';
-            if (g_appSecret.length == 32) secret = g_appSecret;
-            CRVideo_Login(account, secret, g_nick_name, g_user_id, "");
+            CRVideo_Login(g_appID, g_appSecret == '默认appSecret' || g_appSecret.length == 32 ? g_appSecret : md5(g_appSecret), g_nick_name, g_user_id, "");
             return;
         }, err => {
             tipLayer(`SDK初始化失败：${err}`);
@@ -837,12 +833,7 @@
         console.log(`登录服务器失败，错误码：${sdkErr}, cookie:${cookie}`);
         if (!!cookie && cookie.includes('reLogin') && cookie.split('_')[1] <= 10) {
             setTimeout(() => {
-                let account = g_appID,
-                    secret = md5(g_appSecret);
-                if (g_appID === '默认appID') account = `demo@${window.__CRName}.com`;
-                if (g_appSecret === '默认appSecret') secret = 'e10adc3949ba59abbe56e057f20f883e';
-                if (g_appSecret.length == 32) secret = g_appSecret;
-                CRVideo_Login(account, secret, g_nick_name, g_user_id, `reLogin_${++g_reLoginTimes}`);
+                CRVideo_Login(g_appID, g_appSecret == '默认appSecret' || g_appSecret.length == 32 ? g_appSecret : md5(g_appSecret), g_nick_name, g_user_id, `reLogin_${++g_reLoginTimes}`);
             }, 2000);
             return;
         } else if (!!cookie && cookie.includes('reLogin') && cookie.split('_')[1] > 10) {
@@ -1039,12 +1030,7 @@
             clearTimeout(g_reLoginTimer);
             g_reLoginTimer = setTimeout(() => {
                 console.log(`重新登录...`);
-                let account = g_appID,
-                    secret = md5(g_appSecret);
-                if (g_appID === '默认appID') account = `demo@${window.__CRName}.com`;
-                if (g_appSecret === '默认appSecret') secret = 'e10adc3949ba59abbe56e057f20f883e';
-                if (g_appSecret.length == 32) secret = g_appSecret;
-                CRVideo_Login(account, secret, g_nick_name, g_user_id, `reLogin_${++g_reLoginTimes}`);
+                CRVideo_Login(g_appID, g_appSecret == '默认appSecret' || g_appSecret.length == 32 ? g_appSecret : md5(g_appSecret), g_nick_name, g_user_id, `reLogin_${++g_reLoginTimes}`);
             }, 5000);
         }
     }
@@ -1393,7 +1379,9 @@
             clearTimeout(shareUItimer);
             $(".page_screen_share").hide();
             $(".page_meet_video").show();
-            $(".page_screen_share").html('');
+        } else if (mainPage == 6) {
+            $(".page_screen_share").show();
+            $(".page_meet_video").hide();
         }
     }
 

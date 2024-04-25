@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <script type="text/javascript">
+    window.__CRKEY = 'CRDEMO';
     var protocol = window.location.protocol;
     var host = window.location.host;
     var isLocal = false;
-
     if (host.includes('127.0.0.1') || host.includes('localhost:') || protocol.includes('file')) isLocal = true;
 
     console.log(`isLocal: ${isLocal}`);
@@ -154,11 +154,11 @@
                                 </div>
                                 <div class="form_input form-account">
                                     <label for="cr_account">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AppID：</label>
-                                    <input type="text" id="cr_account" placeholder="默认账号" value="默认APPID" />
+                                    <input type="text" id="cr_account" placeholder="默认账号" value="默认appID" />
                                 </div>
                                 <div class="form_input form-password">
                                     <label for="comp_psdw">AppSecret：</label>
-                                    <input type="password" id="comp_psdw" placeholder="默认Secret" value="默认Secret" />
+                                    <input type="password" id="comp_psdw" placeholder="默认Secret" value="默认appSecret" />
                                 </div>
                                 <div class="form_input form-token" style="display: none;">
                                     <label for="loginToken">&emsp;&emsp;Token：</label>
@@ -669,12 +669,13 @@
         })
     </script>
 
-    <script type="text/javascript" src="../static/js/md5.js"></script>
-    <script type="text/javascript" src="../static/js/rem.min.js"></script>
+<script type="text/javascript" src="../static/js/md5.js"></script>
+<script type="text/javascript" src="../static/js/rem.min.js"></script>
 
-<script src="../SDK/RTCSDKV2.min.js?v=6628"></script></body>
+<script src="../SDK/RTCSDKV2.min.js?v=e0be"></script></body>
 
-<script  src="./js/wfs.js"></script>
+<script src="../static/js/base64.js"></script>
+<script src="./js/wfs.js"></script>
 <script src="./js/index.js"></script>
 
 </html>
