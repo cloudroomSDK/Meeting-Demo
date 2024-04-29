@@ -9,7 +9,7 @@
 	<key>provisioningProfiles</key>
 	<dict>
 		<key>com.cloudroom.Meeting</key>
-		<string>cloudroom_com_debug</string>
+		<string></string>
 	</dict>
 	<key>signingCertificate</key>
 	<string>iPhone Developer</string>
@@ -18,7 +18,7 @@
 	<key>stripSwiftSymbols</key>
 	<true/>
 	<key>teamID</key>
-	<string>93XFE92JTW</string>
+	<string></string>
 	<key>thinning</key>
 	<string>&lt;none&gt;</string>
 	<key>uploadBitcode</key>

@@ -57,8 +57,11 @@ static CRSDKHelper *shareInstance;
     }
     [self readInfo];
     if ([NSString stringCheckEmptyOrNil:self.account] ||
-        [NSString stringCheckEmptyOrNil:self.pswd] ||
-        [NSString stringCheckEmptyOrNil:self.server]) {
+        [NSString stringCheckEmptyOrNil:self.pswd]) {
+        _account = KDefaultAppID;
+        _pswd = KDefaultAppSecret;
+    }
+    if ([NSString stringCheckEmptyOrNil:self.server]) {
         [self resetInfo];
     }
     return self;
