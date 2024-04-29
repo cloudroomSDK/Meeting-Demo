@@ -465,6 +465,8 @@
     [SDKUtil setPriority:25 min:22];
     
     [[CloudroomVideoMeeting shareInstance] setSpeakerOut:YES];
+    
+    [[NSUserDefaults standardUserDefaults] setValue:[NSString stringWithFormat:@"%d", _meetInfo.ID] forKey:@"KLastEnterMeetingID"];
 }
 
 /**

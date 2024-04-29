@@ -36,7 +36,7 @@
 		BC3BC6D121527B1700675A57 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = BC3BC6D021527B1600675A57 /* libiconv.tbd */; };
 		BC90C1BE225B6A6D00B887DD /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC90C1BD225B6A6D00B887DD /* Security.framework */; };
 		BC90C1C0225B6A8500B887DD /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = BC90C1BF225B6A8500B887DD /* libc++.tbd */; };
-		BCB138552248A61100BB52E3 /* CustomCameraView..m in Sources */ = {isa = PBXBuildFile; fileRef = BCB138542248A61100BB52E3 /* CustomCameraView..m */; };
+		BCB138552248A61100BB52E3 /* CustomCameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCB138542248A61100BB52E3 /* CustomCameraView.m */; };
 		C204D9AD20F58D51001A18C6 /* MInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = C204D9AC20F58D51001A18C6 /* MInputView.m */; };
 		C2176FC51E4D4BE100B79F5C /* NSArray+K.m in Sources */ = {isa = PBXBuildFile; fileRef = C2176FC21E4D4BE100B79F5C /* NSArray+K.m */; };
 		C2176FC61E4D4BE100B79F5C /* NSString+K.m in Sources */ = {isa = PBXBuildFile; fileRef = C2176FC41E4D4BE100B79F5C /* NSString+K.m */; };
@@ -173,7 +173,7 @@
 		BC90C1BD225B6A6D00B887DD /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		BC90C1BF225B6A8500B887DD /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		BCB138532248A61000BB52E3 /* CustomCameraView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomCameraView.h; sourceTree = "<group>"; };
-		BCB138542248A61100BB52E3 /* CustomCameraView..m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomCameraView..m; sourceTree = "<group>"; };
+		BCB138542248A61100BB52E3 /* CustomCameraView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomCameraView.m; sourceTree = "<group>"; };
 		C204D9AB20F58D51001A18C6 /* MInputView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MInputView.h; sourceTree = "<group>"; };
 		C204D9AC20F58D51001A18C6 /* MInputView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MInputView.m; sourceTree = "<group>"; };
 		C2176FBF1E4D4ABE00B79F5C /* Meeting.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Meeting.pch; sourceTree = "<group>"; };
@@ -464,7 +464,7 @@
 				C2DE952220E9F528007225BA /* MContentView.h */,
 				C2DE952320E9F528007225BA /* MContentView.m */,
 				BCB138532248A61000BB52E3 /* CustomCameraView.h */,
-				BCB138542248A61100BB52E3 /* CustomCameraView..m */,
+				BCB138542248A61100BB52E3 /* CustomCameraView.m */,
 				C2CD165D1FBB0BE5001007A4 /* MeetingBtn.h */,
 				C2CD165E1FBB0BE5001007A4 /* MeetingBtn.m */,
 				C259169E20E4D20D00DBED18 /* MTopView.h */,
@@ -786,7 +786,7 @@
 				C2CD165F1FBB0BE5001007A4 /* MeetingBtn.m in Sources */,
 				C2DEC5F720F30A84009A6E43 /* MFrameView.m in Sources */,
 				16DB90B228D5CACA0094ACF6 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */,
-				BCB138552248A61100BB52E3 /* CustomCameraView..m in Sources */,
+				BCB138552248A61100BB52E3 /* CustomCameraView.m in Sources */,
 				C2CD164B1FBAC349001007A4 /* MeetingController.m in Sources */,
 				C2E06B7D1E4C8C14000D8718 /* AppDelegate.m in Sources */,
 				C2DEC5FA20F30A90009A6E43 /* MRatioView.m in Sources */,

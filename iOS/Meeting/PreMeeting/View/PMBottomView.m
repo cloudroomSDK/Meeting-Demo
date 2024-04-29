@@ -67,5 +67,10 @@
     _orLabel.font = [UIFont systemFontOfSize:12];
     
     _createBtn.type = PMRoundBtnTypeLight;
+    
+    NSString *meetID = [[NSUserDefaults standardUserDefaults] objectForKey:@"KLastEnterMeetingID"];
+    if (meetID.length == 8) {
+        _inputTextField.text = meetID;
+    }
 }
 @end
