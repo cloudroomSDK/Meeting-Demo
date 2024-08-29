@@ -2359,7 +2359,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * Generate MP4 Box
 */
 
-//import Hex from '../utils/hex';
 var MP4 = function () {
   function MP4() {
     _classCallCheck(this, MP4);

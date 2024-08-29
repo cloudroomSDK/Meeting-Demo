@@ -216,7 +216,7 @@
     <script type="text/javascript" src="../static/lib/mobileSelector/js/mPicker.min.js"></script>
     <script type="text/javascript" src="../static/lib/layui/layui.js"></script>
 
-<script src="../SDK/RTCSDKV2.min.js?v=e0be"></script></body>
+<script src="../SDK/RTCSDKV2.min.js?v=91c3"></script></body>
 
 <script>
 
@@ -943,8 +943,9 @@
                 })
             }
             // $('#CRSDKAudioBox').show();
-            // CRVideo_OpenMic(g_user_id);
-            // CRVideo_OpenVideo(g_user_id);
+            // 注意：华为鸿蒙系统，HWWebView 先开摄像头，再开麦克风，不显示摄像头画面，只能先开麦，再开摄像头
+            CRVideo_OpenMic(g_user_id);
+            CRVideo_OpenVideo(g_user_id);
 
         } else {
             console.log(`进入会议失败，错误码：${sdkErr}，cookie:${cookie}`);
@@ -1079,8 +1080,7 @@
             "CmdType": "IM",
             "IMMsg": msgText
         });
-        !window.isWebMeetingApp && CRVideo_SendMeetingCustomMsg(stringMsg); // SDK接口：发送房间内广播消息
-        !!window.isWebMeetingApp && CRVideo_SendIMMsg(msgText); // SDK接口：发送IM消息（已废弃，兼容旧版）
+        CRVideo_SendMeetingCustomMsg(stringMsg); // SDK接口：发送房间内广播消息
     }
 
     function hideTextMsgInput(e) {
@@ -1138,20 +1138,6 @@
             $("input[name=chat_msg]").val("");
         } else {
             alert(`消息发送失败！${errCode}`);
-        }
-    }
-
-    // 接收到IM消息的通知（旧接口，已废弃）
-    CRVideo_NotifyIMmsg.callback = function (fromUserID, msgElement, sendTime) {
-        console.log('(demo)recevied IM Msg : ' + fromUserID + " : " + msgElement);
-        if (!window.isWebMeetingApp) return;
-        var nickname = CRVideo_GetMemberNickName(fromUserID);
-        var htmlEle = "</br><span>" + nickname + ' <span style="color:#fff;">' + msgElement + "</span></span>"
-        $(".page_chat_box > ul").append(htmlEle);
-        $(".page_chat_box > ul")[0].scrollTop = $(".page_chat_box > ul")[0].scrollHeight; // 让滚动条自动滚动到底部
-
-        if ($(".page_chat_box").css("display") == "none") {
-            tipLayer("收到了新的聊天消息...", 1000);
         }
     }
     // 收到房间内广播消息
@@ -1313,7 +1299,7 @@
         shareUItimer = setTimeout(function () {
             $(".page_meet_video").hide();
             $(".page_screen_share").showFlex();
-        }, 2000)
+        }, 1000)
     }
 
     // SDK通知，影音共享结束
@@ -1373,17 +1359,17 @@
         }
     }
 
-    // 通知切换功能区
-    CRVideo_NotifySwitchToPage.callback = function (mainPage, subPage) {
-        if (mainPage == 8) {
-            clearTimeout(shareUItimer);
-            $(".page_screen_share").hide();
-            $(".page_meet_video").show();
-        } else if (mainPage == 6) {
-            $(".page_screen_share").show();
-            $(".page_meet_video").hide();
-        }
-    }
+    // 通知切换功能区（已废弃）
+    // CRVideo_NotifySwitchToPage.callback = function (mainPage, subPage) {
+        // if (mainPage == 8) {
+        //     clearTimeout(shareUItimer);
+        //     $(".page_screen_share").hide();
+        //     $(".page_meet_video").show();
+        // } else if (mainPage == 6) {
+        //     $(".page_screen_share").show();
+        //     $(".page_meet_video").hide();
+        // }
+    // }
 
     document.querySelectorAll('.disableSelect').forEach(item => {
         item.onselectstart = function (e) {
@@ -1398,10 +1384,8 @@
             $('.net-state-icon').removeClass('bad midium none').addClass('fine');
         } else if (score > 5) {
             $('.net-state-icon').removeClass('bad fine none').addClass('midium');
-        } else if (score >= 0) {
-            $('.net-state-icon').removeClass('fine midium none').addClass('bad');
         } else {
-            $('.net-state-icon').removeClass('fine midium bad').addClass('none');
+            $('.net-state-icon').removeClass('fine midium none').addClass('bad');
         }
     }
 

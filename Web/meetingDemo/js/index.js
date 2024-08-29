@@ -1141,7 +1141,10 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
     }
     // 处理userID带各种符号情况
     parseUserID(userID) {
-      return __MYBASE64.encode(userID).replace(/=/g, '');
+      // jq选择器 必须以字母 A-Z 或 a-z 开头
+      // 其后的字符：字母(A-Za-z)、数字(0-9)、连字符("-")、下划线("_")、冒号(":") 以及点号(".")
+      // 值对大小写敏感
+      return `_${md5(userID)}`;
     }
   }
   MeetingDemo.MemberMgr = new _memberM();
@@ -1336,7 +1339,6 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       const openedIDs = window.CRVideo_GetOpenedVideoIDs(member.userID) || []; // SDK接口：获取成员的当前打开的摄像头id集合
       const openedVideos = allVideoInfo.filter(item => openedIDs.includes(item.videoID)); // 从所有摄像头信息里过滤出打开的摄像头
       const videoUIs = []; //  可能有多个摄像头同时开启的情况，那就需要创建多个UI组件
-
       const newMemberAllVideos = [];
       if (member.allVideos) {
         // 如果是已经有了的，就更新一下，没有的就添加上去
@@ -1356,7 +1358,6 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
           const videoItem = newMemberAllVideos.find(item => item.userID == member.allVideos[i].userID && item.videoID == member.allVideos[i].videoID);
           if (!videoItem && member.allVideos[i].videoUI) member.allVideos[i].videoUI.destroy();
         }
-
         member.allVideos = newMemberAllVideos;
       } else {
         member.allVideos = openedVideos;
@@ -1378,7 +1379,6 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
             // video标签的自定义样式
             objectFit: 'cover' //object-fit属性，cover表示裁剪显示
           };
-
           // SDK接口：创建成员视频UI组件
           let videoUI = window.CRVideo_CreatVideoObj({
             // 可以传一个属性对象，都是video标签支持的属性
@@ -1774,10 +1774,6 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       CRVideo_MicEnergyUpdate.callback = (userID, oldLevel, newLevel) => {
         this.memberMicEnergyUpdate(userID, oldLevel, newLevel);
       };
-      // SDK接口：通知 流媒体连接错误
-      CRVideo_PeerConnectionError.callback = errDesc => {
-        this.peerConnectionError(errDesc);
-      };
       // SDK接口：通知 打开麦克风失败
       CRVideo_OpenMicFailed.callback = errDesc => {
         this.openMicFailed(errDesc);
@@ -1960,26 +1956,6 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         micVolume: vol
       });
     }
-    // 流媒体连接错误
-    peerConnectionError(errInfo) {
-      const { userID, nickName, camID, errDesc } = errInfo;
-      let tipContent = '';
-      if (userID == MeetingDemo.Login.userID) {
-        tipContent = `流媒体连接异常中断（${JSON.stringify(errInfo)}），是否尝试重新进入房间？`;
-      } else if (errDesc.includes('RemoteVideo')) {
-        tipContent = `用户：${nickName}，摄像头${camID}的视频连接异常中断！`;
-      }
-
-      MeetingDemo.modalLayer(`错误`, `${tipContent}</br>如果此错误频繁出现，请检查您和对方的网络。${JSON.stringify(errInfo)}`, {
-        btns: ['重新进入', '取消'],
-        btn1Callback() {
-          MeetingDemo.RoomMgr.enterMeetingFun(`reEnter_${++MeetingDemo.RoomMgr.reEnterTimes}`); // 进入房间
-        },
-        btn2Callback() {
-          // ...
-        }
-      });
-    }
     // 打开麦克风失败
     openMicFailed(err) {
       MeetingDemo.alertLayer(`打开麦克风失败：${err} </br>您的麦克风设备可能被占用或未授权访问，请检查后重新开关麦克风再试！`);
@@ -2077,8 +2053,6 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       // SDK接口：回调 开启屏幕共享结果
       CRVideo_StartScreenShareRslt.callback = sdkErr => {
         if (sdkErr == 0) {
-          // MeetingDemo.Sync.switchToPage(6);
-          // !!window.isWebMeetingApp && window.CRVideo_SwitchToPage(6, '0.0'); // SDK接口：切换功能区
           MeetingDemo.tipLayer(`当前正在共享自己的屏幕`);
         } else {
           this.isStarting = false;
@@ -2481,10 +2455,6 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         }
         if (jsonMsg.CmdType && jsonMsg.CmdType == 'IM') this.recivedChatMsg(fromUserID, jsonMsg.IMMsg);
       };
-      // SDK接口：通知  收到IM消息（已废弃，兼容旧版）
-      CRVideo_NotifyIMMsg.callback = (userID, text, sendTime) => {
-        this.recivedChatMsg(userID, unescape(text));
-      };
     }
     // 点击工具栏聊天按钮
     onClickChatBtn() {
@@ -2504,7 +2474,6 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         IMMsg: msgText
       });
       CRVideo_SendMeetingCustomMsg(stringMsg); // SDK接口：发送会议内广播消息
-      // CRVideo_SendIMMsg(msgText); // SDK接口：发送IM消息（已废弃，兼容旧版）
     }
     // 收到聊天消息
     recivedChatMsg(userID, textmsg) {

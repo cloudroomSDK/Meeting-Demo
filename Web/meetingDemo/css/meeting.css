@@ -658,7 +658,7 @@ a:active {
   cursor: pointer;
   border-radius: 1rem;
   background-color: rgba(255, 255, 255, 0.2);
-  transition: all 0.2s;
+  transition: all 0.3s ease;
   z-index: 2;
 }
 #page_meeting .main .page_meet_cont .page_meet_view .page_meet_video .page-btn img {
@@ -1292,7 +1292,7 @@ a:active {
   background-color: #ccc;
   box-sizing: border-box;
   overflow: hidden;
-  transition: all 0.1s ease;
+  transition: all 0.3s ease;
 }
 #page_meeting .bgimg-choose .img-choose-box .choose-list ul li .img-box {
   height: 100%;

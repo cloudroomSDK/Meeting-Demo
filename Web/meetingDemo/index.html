@@ -634,17 +634,6 @@
     <div class="open-channel-btn" onclick="MeetingDemo.CMD.onClickDataChannelBtn(this)">透明通道</div>
     <!-- 透明通道 结束 -->
 
-    <!-- 会议产品特殊处理，SDK开发者无须关注以下内容 -->
-    <script>
-        if (document.location.href.includes('/join/meeting/') || document.location.href.includes('type=meetapp')) window
-            .isWebMeetingApp = true;
-        if (!!window.isWebMeetingApp) {
-            const scriptEle = document.createElement('script');
-            scriptEle.src = "./js/meetDif.js";
-            document.querySelector('body').appendChild(scriptEle);
-        }
-    </script>
-
     <script type="text/javascript">
         // 设置rem根字体大小
         function setFontSize() {
@@ -672,7 +661,7 @@
 <script type="text/javascript" src="../static/js/md5.js"></script>
 <script type="text/javascript" src="../static/js/rem.min.js"></script>
 
-<script src="../SDK/RTCSDKV2.min.js?v=e0be"></script></body>
+<script src="../SDK/RTCSDKV2.min.js?v=91c3"></script></body>
 
 <script src="../static/js/base64.js"></script>
 <script src="./js/wfs.js"></script>
