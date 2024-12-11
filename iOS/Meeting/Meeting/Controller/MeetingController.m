@@ -186,14 +186,14 @@
 }
 
 // 屏幕共享操作通知
-- (void)notifyScreenShareStarted{
+- (void)notifyScreenShareStarted:(NSString *)shareId {
     [HUDUtil hudShow:@"屏幕共享已开始" delay:3 animated:YES];
     
     _contentView.shareStyle = YES;
     [self.shareView setHidden:NO];
 }
 
-- (void)notifyScreenShareStopped{
+- (void)notifyScreenShareStopped:(NSString *)oprUserID {
     [HUDUtil hudShow:@"屏幕共享已结束" delay:3 animated:YES];
     
     [self.shareView setHidden:YES];

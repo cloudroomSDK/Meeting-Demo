@@ -70,9 +70,9 @@
 //    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
 //    [sdkInitData setSdkDatSavePath:docDir];
     [sdkInitData setShowSDKLogConsole:YES];
-    [sdkInitData setNoCall:NO]; //配置不使用callserver
-    [sdkInitData setNoQueue:YES];
-    [sdkInitData setNoMediaDatToSvr:NO];
+    [sdkInitData.params setValue:@"0" forKey:@"noCall"];
+    [sdkInitData.params setValue:@"1" forKey:@"noQueue"];
+    [sdkInitData.params setValue:@"0" forKey:@"noMediaDatToSvr"];
     int datEncTypeInt = sdkHelper.datEncType.intValue;
     sdkInitData.datEncType = datEncTypeInt >= 1 ? @"1" : @"0";
     if(datEncTypeInt == 1) {

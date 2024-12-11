@@ -111,6 +111,7 @@
 /* Begin PBXFileReference section */
 		164A714B2B15D1A200DAD72B /* AppConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppConfig.h; sourceTree = "<group>"; };
 		16625FCA2864736D0008806F /* CallKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CallKit.framework; path = System/Library/Frameworks/CallKit.framework; sourceTree = SDKROOT; };
+		167FF8DF2C01E04200F61192 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		16DB906C28D5C8ED0094ACF6 /* IQTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQTextView.m; sourceTree = "<group>"; };
 		16DB906D28D5C8ED0094ACF6 /* IQTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQTextView.h; sourceTree = "<group>"; };
 		16DB906F28D5C8ED0094ACF6 /* IQUIView+IQKeyboardToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "IQUIView+IQKeyboardToolbar.h"; sourceTree = "<group>"; };
@@ -598,6 +599,7 @@
 				C2E06B861E4C8C14000D8718 /* LaunchScreen.storyboard */,
 				C2E06B891E4C8C14000D8718 /* Info.plist */,
 				C2E06B781E4C8C14000D8718 /* Supporting Files */,
+				167FF8DF2C01E04200F61192 /* PrivacyInfo.xcprivacy */,
 			);
 			path = Meeting;
 			sourceTree = "<group>";
