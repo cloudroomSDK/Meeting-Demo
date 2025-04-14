@@ -19,7 +19,6 @@ namespace SDKDemo
     /// <summary>
     /// IMCtrl.xaml 的交互逻辑
     /// </summary>
-    /// 
     public partial class IMCtrl : UserControl
     {
         public struct IMType

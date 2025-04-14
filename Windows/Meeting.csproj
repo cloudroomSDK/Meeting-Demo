@@ -290,7 +290,7 @@
     <Compile Include="MediaUI.Designer.cs">
       <DependentUpon>MediaUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="VideoCall.cs" />
+    <Compile Include="VideoSDKDef.cs" />
     <Compile Include="DevicesSetWin.xaml.cs">
       <DependentUpon>DevicesSetWin.xaml</DependentUpon>
     </Compile>

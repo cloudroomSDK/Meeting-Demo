@@ -5,6 +5,7 @@ using System.Windows.Data;
 using System.Windows.Media.Imaging;
 using AxnpcloudroomvideosdkLib;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Windows.Forms;
 
 namespace SDKDemo
@@ -126,6 +127,8 @@ namespace SDKDemo
                 App.CRVideo.VideoSDK.audioStatusChanged += audioStatusChanged;
                 App.CRVideo.VideoSDK.videoStatusChanged += videoStatusChanged;
                 App.CRVideo.VideoSDK.micEnergyUpdate += micEnergyUpdate;
+                App.CRVideo.VideoSDK.getMeetingAllAttrsSuccess += getMeetingAllAttrsSuccess;
+                App.CRVideo.VideoSDK.notifyMeetingAttrsChanged += notifyMeetingAttrsChanged;
 
             }
             else
@@ -147,6 +150,8 @@ namespace SDKDemo
                 App.CRVideo.VideoSDK.audioStatusChanged -= audioStatusChanged;
                 App.CRVideo.VideoSDK.videoStatusChanged -= videoStatusChanged;
                 App.CRVideo.VideoSDK.micEnergyUpdate -= micEnergyUpdate;
+                App.CRVideo.VideoSDK.getMeetingAllAttrsSuccess -= getMeetingAllAttrsSuccess;
+                App.CRVideo.VideoSDK.notifyMeetingAttrsChanged -= notifyMeetingAttrsChanged;
             }
         }
 
@@ -155,19 +160,11 @@ namespace SDKDemo
             this.Title = "会议ID: " + Convert.ToString(meetID);
 
             App.CRVideo.VideoSDK.setDNDStatus(1, "");   //入会成功后设置呼叫免打扰            
+            App.CRVideo.VideoSDK.getMeetingAllAttrs("");
 
             mVideoWall.initPage();
+            mVideoWall.Visibility = Visibility.Visible;
             mScreen.initPage();
-
-            int mainPage = App.CRVideo.VideoSDK.getCurrentMainPage(); //获取当前的主功能页
-            switch (mainPage)
-            {
-                case (int)MAIN_PAGE_TYPE.MAINPAGE_VIDEOWALL:
-                    mVideoWall.Visibility = Visibility.Visible;
-                    break;
-                default:
-                    break;
-            }
 
             List<MemberInfo> members = JsonConvert.DeserializeObject<List<MemberInfo>>(App.CRVideo.VideoSDK.getAllMembers());
             for(int i = 0; i < members.Count; i ++)
@@ -193,6 +190,46 @@ namespace SDKDemo
             mMemBerList.setAudioEnergy(e.p_userID, e.p_newLevel);
         }
 
+        private void getMeetingAllAttrsSuccess(object sender, ICloudroomVideoSDKEvents_getMeetingAllAttrsSuccessEvent e)
+        {
+            if (e.p_attrs == "")
+                return;
+
+            int newMode = -1;
+            JObject attrs = JObject.Parse(e.p_attrs);
+            JToken jValue = attrs.GetValue("VideoWallMode");
+            if (jValue != null)
+            {
+                newMode = jValue["value"].ToObject<int>();
+            }
+            if (newMode >= 0)
+            {
+                mVideoWall.notifyVideoWallMode(newMode);
+            }
+        }
+
+        private void notifyMeetingAttrsChanged(object sender, ICloudroomVideoSDKEvents_notifyMeetingAttrsChangedEvent e)
+        {
+            JObject adds = JObject.Parse(e.p_adds);
+            JObject updates = JObject.Parse(e.p_updates);
+
+            int newMode = -1;
+            JToken jValue = adds.GetValue("VideoWallMode");
+            if (jValue != null)
+            {
+                newMode = jValue["value"].ToObject<int>();
+            }
+            jValue = updates.GetValue("VideoWallMode");
+            if (jValue != null)
+            {
+                newMode = jValue["value"].ToObject<int>();
+            }
+
+            if (newMode >= 0)
+            {
+                mVideoWall.notifyVideoWallMode(newMode);
+            }
+        }
 
         //对方进入会话
         private void userEnterMeeting(object sender, ICloudroomVideoSDKEvents_userEnterMeetingEvent e)
@@ -505,25 +542,17 @@ namespace SDKDemo
 
         private void btn_tow_video(object sender, RoutedEventArgs e)
         {
-           int mode = App.CRVideo.VideoSDK.getVideoWallMode2();
-            if (mode != 2)
-                App.CRVideo.VideoSDK.setVideoWallMode2((int)VIDEOWALL_MODE.VLO_WALL2);
+            App.CRVideo.VideoSDK.addOrUpdateMeetingAttrs("{\"VideoWallMode\":\"2\"}", "{\"notifyAll\":1}", "");
         }
 
         private void btn_four_video(object sender, RoutedEventArgs e)
         {
-            int mode = App.CRVideo.VideoSDK.getVideoWallMode2();
-            if (mode != 4)
-                App.CRVideo.VideoSDK.setVideoWallMode2((int)VIDEOWALL_MODE.VLO_WALL4);
-       
+            App.CRVideo.VideoSDK.addOrUpdateMeetingAttrs("{\"VideoWallMode\":\"4\"}", "{\"notifyAll\":1}", "");
         }
 
         private void btn_six_video(object sender, RoutedEventArgs e)
         {
-            int mode = App.CRVideo.VideoSDK.getVideoWallMode2();
-            if (mode != 6)
-                App.CRVideo.VideoSDK.setVideoWallMode2((int)VIDEOWALL_MODE.VLO_WALL6);
-       
+            App.CRVideo.VideoSDK.addOrUpdateMeetingAttrs("{\"VideoWallMode\":\"6\"}", "{\"notifyAll\":1}", "");
         }
 
         private void btn_video_wall_menu(object sender, RoutedEventArgs e)

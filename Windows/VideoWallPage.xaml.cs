@@ -18,8 +18,9 @@ namespace SDKDemo
     /// </summary>
     public partial class VideoWallPage : System.Windows.Controls.UserControl
     {
-        private Dictionary<int, VideoUI> mVideoUIs = new Dictionary<int, VideoUI>();
+        private List<VideoUI> mVideoUIs = new List<VideoUI>();
         private Dictionary<string, string> mUserIndex = new Dictionary<string, string>();
+        private int videoWallMode = 2;
 
         private MeetingMainWin.VideoWallLayoutChangeEvent mLayoutChangeEvt;  //视频布局变化事件对象
 
@@ -51,9 +52,6 @@ namespace SDKDemo
                 App.CRVideo.VideoSDK.openVideoDevRslt += openVideoDevRslt;
                 App.CRVideo.VideoSDK.videoDevChanged += videoDevChanged;
                 App.CRVideo.VideoSDK.videoStatusChanged += videoStatusChanged;
-                App.CRVideo.VideoSDK.notifyVideoWallMode2 += notifyVideoWallMode2;
-                App.CRVideo.VideoSDK.notifyMainVideoChanged += notifyMainVideoChanged;
-             
             }
             else
             {
@@ -62,43 +60,23 @@ namespace SDKDemo
                 App.CRVideo.VideoSDK.openVideoDevRslt -= openVideoDevRslt;
                 App.CRVideo.VideoSDK.videoDevChanged -= videoDevChanged;
                 App.CRVideo.VideoSDK.videoStatusChanged -= videoStatusChanged;
-                App.CRVideo.VideoSDK.notifyVideoWallMode2 -= notifyVideoWallMode2;
-                App.CRVideo.VideoSDK.notifyMainVideoChanged -= notifyMainVideoChanged;
             }
         }
 
         public void updateWatchVideos()
         {
-            foreach (int i in mVideoUIs.Keys) //清空之前的视频显示信息
+            for (int i = 0; i < mVideoUIs.Count; i++ ) //清空之前的视频显示信息
             {
                 mVideoUIs[i].clear();
                 mVideoUIs[i].setVideo("", 0);
             }
 
             mLayoutChangeEvt.videoUIs.Clear();
-            //主视频放到前面，普通视频放到后面
             List<UserVideo> vidList = JsonConvert.DeserializeObject<List<UserVideo>>(App.CRVideo.VideoSDK.getWatchableVideos()); //获取所有可观看的摄像头列表         
-            for (int i = 0; i < vidList.Count; i++)
+            for (int i = 0; i < vidList.Count && i<mVideoUIs.Count; i++)
             {
-                UserVideo item = vidList[i];
-                if (item.userID == App.CRVideo.VideoSDK.mainVideo)
-                {
-                    vidList.RemoveAt(i);
-                    vidList.Insert(0, item); //将主视频放到list 最前头
-                    break;
-                }
-            }
-
-            for (int i = 0; i < vidList.Count; i++)
-            {
-                if (!mVideoUIs.ContainsKey(i))
-                {
-                    break;
-                }
-                int mode = App.CRVideo.VideoSDK.getVideoWallMode2(); 
                 UserVideo uVideo = vidList[i];
                 mVideoUIs[i].setVideo(uVideo.userID, uVideo.videoID, true);
-               
                 mLayoutChangeEvt.videoUIs.Add(new MeetingMainWin.VideoUI(uVideo.userID, uVideo.videoID));  
             }
 
@@ -107,22 +85,19 @@ namespace SDKDemo
 
         private void createVideoUIs(int videoCount)
         {
-            for (int i = 0; i < videoCount; i++)
+            for (int i = mVideoUIs.Count; i < videoCount; i++)
             {
-                if (!mVideoUIs.ContainsKey(i)) //如果视频窗口尚未创建，则先创建之
-                {
-                    VideoUI videoUI = new VideoUI();
-                    videoUI.Name = "video_" + i;
-                    WindowsFormsHost host = new WindowsFormsHost();
-                    host.Child = videoUI;
-                    host.Tag = i;   //对应的窗口序号
-                    host.Visibility = Visibility.Collapsed;    //先默认隐藏，等移动到正确的位置后再显示
-                    host.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
-                    host.VerticalAlignment = VerticalAlignment.Stretch;
-                    host.Margin = new Thickness(2, 2, 2, 2);
-                    grid_videos.Children.Add(host);
-                    mVideoUIs.Add(i, videoUI);
-                }
+                VideoUI videoUI = new VideoUI();
+                videoUI.Name = "video_" + i;
+                WindowsFormsHost host = new WindowsFormsHost();
+                host.Child = videoUI;
+                host.Tag = i;   //对应的窗口序号
+                host.Visibility = Visibility.Collapsed;    //先默认隐藏，等移动到正确的位置后再显示
+                host.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
+                host.VerticalAlignment = VerticalAlignment.Stretch;
+                host.Margin = new Thickness(2, 2, 2, 2);
+                grid_videos.Children.Add(host);
+                mVideoUIs.Add(videoUI);
             }
 
             updateWatchVideos();
@@ -281,7 +256,7 @@ namespace SDKDemo
         //麦克风音量波动
         public void micEnergyUpdate(object sender, ICloudroomVideoSDKEvents_micEnergyUpdateEvent e)
         {
-            foreach (var videoUI in mVideoUIs.Values)
+            foreach (var videoUI in mVideoUIs)
             {
                 videoUI.updateMicEnergy(e.p_userID, e.p_newLevel);                
             }
@@ -289,7 +264,7 @@ namespace SDKDemo
 
         private void audioStatusChanged(object sender, ICloudroomVideoSDKEvents_audioStatusChangedEvent e)
         {
-            foreach (var videoUI in mVideoUIs.Values)
+            foreach (var videoUI in mVideoUIs)
             {
                 videoUI.updateMicStatus(e.p_userID, e.p_newStatus);
             }
@@ -323,7 +298,7 @@ namespace SDKDemo
 
         public void notifyCloseAllMics(string userOperator)
         {
-            foreach (var videoUI in mVideoUIs.Values)
+            foreach (var videoUI in mVideoUIs)
             {
                 if(userOperator != videoUI.userID)
                 {
@@ -332,33 +307,25 @@ namespace SDKDemo
             }
         }
 
-        private void notifyVideoWallMode2(object sender, ICloudroomVideoSDKEvents_notifyVideoWallMode2Event e)
+        public void notifyVideoWallMode(int mode)
         {
-            if (e.p_model == (int)VIDEOWALL_MODE.VLO_WALL2)
+            videoWallMode = mode;
+            if (mode == (int)VIDEOWALL_MODE.VLO_WALL2)
             {
                 createVideoUIs(2);
                 setVideoLayout_2(mLayoutChangeEvt.videoRation); 
             }
-            else if (e.p_model == (int)VIDEOWALL_MODE.VLO_WALL4)
+            else if (mode == (int)VIDEOWALL_MODE.VLO_WALL4)
             {
                 createVideoUIs(4);
                 setVideoLayout_4(mLayoutChangeEvt.videoRation);
                 
             }
-            else if (e.p_model == (int)VIDEOWALL_MODE.VLO_WALL6)
+            else if (mode == (int)VIDEOWALL_MODE.VLO_WALL6)
             {
                 createVideoUIs(6);
                 setVideoLayout_6(mLayoutChangeEvt.videoRation);  
             }
-            else
-            {
-                Dispatcher.BeginInvoke(new messageBoxDelegate(BeginInvokeMessageBox), new object[] { "不支持显示的分屏模式:" + e.p_model });
-            }
-        }
-
-        private void notifyMainVideoChanged(object sender, EventArgs e)
-        {
-            updateWatchVideos();
         }
 
         public void unInitPage()
@@ -372,13 +339,12 @@ namespace SDKDemo
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             //界面尺寸变化，更新视频画面布局
-            int mode = App.CRVideo.VideoSDK.getVideoWallMode2();
-            if (mode == 4) 
+            if (videoWallMode == 4) 
             {
                 createVideoUIs(4);
                 setVideoLayout_4(mLayoutChangeEvt.videoRation);
             }
-            else if (mode == 6)
+            else if (videoWallMode == 6)
             {
                 createVideoUIs(6);
                 setVideoLayout_6(mLayoutChangeEvt.videoRation);
@@ -393,12 +359,11 @@ namespace SDKDemo
         private void LayoutChangeEvt_VideoRationChanged()
         {
             Console.WriteLine("videoRation:{0}", mLayoutChangeEvt.videoRation);
-            int mode = App.CRVideo.VideoSDK.getVideoWallMode2();
-            if (mode == 4)
+            if (videoWallMode == 4)
             {
                 setVideoLayout_4(mLayoutChangeEvt.videoRation);
             }
-            else if (mode == 6)
+            else if (videoWallMode == 6)
             {
                 setVideoLayout_6(mLayoutChangeEvt.videoRation);
             }

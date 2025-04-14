@@ -16,7 +16,6 @@ namespace SDKDemo
     {
 
         private static Login instance = null; //登陆界面使用单例模式
-        private string mNickname = "";
         private string mUserID = "";
         private int mMeetID = 0;
 
@@ -50,11 +49,6 @@ namespace SDKDemo
         public string myUserID
         {
             get { return mUserID; }
-        }
-
-        public string Nickname
-        {
-            get { return mNickname; }
         }
 
         public int MeetID 
@@ -137,7 +131,6 @@ namespace SDKDemo
             //配置服务器
             App.CRVideo.VideoSDK.serverAddr = iniFile.ReadValue("Cfg", "LastServer", "sdk.cloudroom.com");
 
-            mNickname = edtNickname.Text.Trim();    //昵称
             mUserID = edtNickname.Text.Trim();      //账号ID，此处采用登陆昵称，实际开发中按照自己的业务需求取值，需保证其在此会话参与者中的唯一性
 
             int selectedType = Convert.ToInt32(iniFile.ReadValue("Cfg", "AuthType", "0"));
@@ -145,12 +138,12 @@ namespace SDKDemo
             {
                 string account = iniFile.ReadValue("Cfg", "LastAccount", AccountInfo.TEST_AppID);
                 string password = iniFile.ReadValue("Cfg", "LastPwd", App.getMD5Value(AccountInfo.TEST_AppSecret));
-                App.CRVideo.VideoSDK.login(account, password, Nickname, myUserID, "", ""); 
+                App.CRVideo.VideoSDK.login(account, password, myUserID, "", ""); 
             }
             else
             {
                 string token = iniFile.ReadValue("Cfg", "Token", "");
-                App.CRVideo.VideoSDK.loginByToken(token, Nickname, myUserID, "", "");
+                App.CRVideo.VideoSDK.loginByToken(token, myUserID, "", "");
               
             }
             btnLogin.IsEnabled = false;

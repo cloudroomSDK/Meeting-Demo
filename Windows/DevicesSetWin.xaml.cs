@@ -26,13 +26,31 @@ namespace SDKDemo
         {
             return this.NAME;
         }
+    }
+
+    public class CAudioInfo
+    {
+        public string ID;
+        public string NAME;
+        public CAudioInfo(string id, string name)
+        {
+            this.ID = id;
+            this.NAME = name;
+        }
+        public override string ToString()
+        {
+            return this.NAME;
+        }
     } 
+
     public partial class DevicesSetWin : Window
     {
         private MeetingMainWin.VideoWallLayoutChangeEvent mLayoutChangeEvt = null;  //视频布局变化事件对象
+        private bool bInit = false;
         private bool mbExit = false;
         public DevicesSetWin(MeetingMainWin.VideoWallLayoutChangeEvent evt)
         {
+            bInit = true;
             InitializeComponent();
 
             mLayoutChangeEvt = evt;
@@ -45,33 +63,39 @@ namespace SDKDemo
             cmbMics.IsEnabled = false;
             cmbSpeakers.IsEnabled = false;
 
-            //获取麦克风和扬声器设备，用换行符拆分
+            //获取麦克风和扬声器设备
             AudioCfg aCfg = JsonConvert.DeserializeObject<AudioCfg>(App.CRVideo.VideoSDK.getAudioCfg());
-            string[] mics = App.CRVideo.VideoSDK.getAudioMicNames().Split(new Char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
-            string[] speakers = App.CRVideo.VideoSDK.getAudioSpkNames().Split(new Char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            List<AudioInfo> micDevs = JsonConvert.DeserializeObject<List<AudioInfo>>(App.CRVideo.VideoSDK.getAudioMics());
+            List<AudioInfo> spkDevs = JsonConvert.DeserializeObject<List<AudioInfo>>(App.CRVideo.VideoSDK.getAudioSpks());
 
-            //下拉列表加载设备
             cmbMics.Items.Clear();
-            cmbMics.Items.Add("默认设备");
+            CAudioInfo aDevInfo = new CAudioInfo("", "默认设备");
+            cmbMics.Items.Add(aDevInfo);
             cmbMics.SelectedIndex = 0;
-            for (int i = 0; i < mics.Length; i++)
+            //下拉列表加载设备
+            for (int i = 0; i < micDevs.Count; i++)
             {
-                cmbMics.Items.Add(mics[i]);
-                if ( mics[i]==aCfg.micName )
+                AudioInfo dev = micDevs[i];
+                aDevInfo = new CAudioInfo(dev.id, dev.name);
+                cmbMics.Items.Add(aDevInfo);
+                if ( aCfg.micID==aDevInfo.ID )
                 {
-                    cmbMics.Text = aCfg.micName;
+                    cmbMics.Text = aDevInfo.NAME;
                 }
             }
 
             cmbSpeakers.Items.Clear();
-            cmbSpeakers.Items.Add("默认设备");
+            aDevInfo = new CAudioInfo("", "默认设备");
+            cmbSpeakers.Items.Add(aDevInfo);
             cmbSpeakers.SelectedIndex = 0;
-            for (int i = 0; i < speakers.Length; i++)
+            for (int i = 0; i < spkDevs.Count; i++)
             {
-                cmbSpeakers.Items.Add(speakers[i]);
-                if (speakers[i] == aCfg.speakerName)
+                AudioInfo dev = spkDevs[i];
+                aDevInfo = new CAudioInfo(dev.id, dev.name);
+                cmbSpeakers.Items.Add(aDevInfo);
+                if (aCfg.spkID == aDevInfo.ID)
                 {
-                    cmbSpeakers.Text = aCfg.speakerName;
+                    cmbSpeakers.Text = aDevInfo.NAME;
                 }
             }
 
@@ -111,8 +135,8 @@ namespace SDKDemo
 
             //初始化音频设备
             AudioCfg cfg = new AudioCfg();
-            cfg.micName = "";           //""为使用系统默认设备
-            cfg.speakerName = "";       //同上
+            cfg.micID = "";           //""为使用系统默认设备
+            cfg.spkID = "";       //同上
             cfg.agc = Convert.ToInt16(Agc.IsChecked.Value);
             cfg.ans = Convert.ToInt16(Ans.IsChecked.Value);
             cfg.aec = Convert.ToInt16(Aec.IsChecked.Value);
@@ -127,6 +151,10 @@ namespace SDKDemo
 
             //是否开启多摄像头判断
             ckExtCameras.IsChecked = App.CRVideo.VideoSDK.getEnableMutiVideo(Login.Instance.myUserID) > 0;
+
+            bInit = false;
+            updateAudioCfg();
+            updateVideoCfg();
         }
 
         public void uninit()
@@ -213,8 +241,13 @@ namespace SDKDemo
 
         public void updateVideoCfg()
         {
+            if (bInit)
+            {
+                return;
+            }
+
             VideoCfg cfg = new VideoCfg();
-            cfg.sizeType = cmbVideoSize.SelectedIndex + 1;  //VIDEO_SHOW_SIZE从1开始
+            cfg.size = cmbVideoSize.Text;
             if (FpsCmBox.SelectedIndex >= 0)
             {
                 cfg.fps = Convert.ToInt32((string)FpsCmBox.SelectedItem);
@@ -233,7 +266,6 @@ namespace SDKDemo
                 cfg.qp_min = 22;
                 cfg.qp_max = 40;
             }
-            cfg.wh_rate = (mLayoutChangeEvt.videoRation == 4F/3F) ? 1 : (mLayoutChangeEvt.videoRation == 1F/1F ? 2 : 0);
             App.CRVideo.VideoSDK.setVideoCfg(JsonConvert.SerializeObject(cfg));
         }
 
@@ -282,9 +314,22 @@ namespace SDKDemo
         }
         private void updateAudioCfg()
         {
+            if (bInit)
+            {
+                return;
+            }
+
             AudioCfg cfg = new AudioCfg();
-            if (cmbMics.SelectedIndex>0) cfg.micName = (string)cmbMics.SelectedItem;
-            if (cmbSpeakers.SelectedIndex>0) cfg.speakerName = (string)cmbSpeakers.SelectedItem;
+            if (cmbMics.SelectedIndex > 0)
+            {
+                CAudioInfo v = (CAudioInfo)cmbMics.SelectedItem;
+                cfg.micID = v.ID;
+            }
+            if (cmbSpeakers.SelectedIndex > 0)
+            {
+                CAudioInfo v = (CAudioInfo)cmbSpeakers.SelectedItem;
+                cfg.spkID = v.ID;
+            }
             cfg.agc = Convert.ToInt16(Agc.IsChecked.Value);
             cfg.ans = Convert.ToInt16(Ans.IsChecked.Value);
             cfg.aec = Convert.ToInt16(Aec.IsChecked.Value);

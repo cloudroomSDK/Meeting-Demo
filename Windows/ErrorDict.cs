@@ -35,6 +35,13 @@ namespace SDKDemo
         private void initDict()
         {
             errorDict.Add(0, "没有错误");
+
+            errorDict.Add(-1, "ipcam url不正确");
+            errorDict.Add(-2, "cam已存在");
+            errorDict.Add(-3, "添加太多cam");
+            errorDict.Add(-4, "不支持的格式");
+            errorDict.Add(-5, "无效的屏幕id");
+
             errorDict.Add(1, "未知错误");
             errorDict.Add(2, "内存不足");
             errorDict.Add(3, "sdk内部错误");
@@ -89,6 +96,7 @@ namespace SDKDemo
             errorDict.Add(805, "余额不足");
             errorDict.Add(806, "业务权限未开启");
             errorDict.Add(807, "不能再次登录");
+            errorDict.Add(814, "图像为空");
 
             errorDict.Add(900, "抓屏失败");
             errorDict.Add(901, "单次录制达到最大时长(8h)");
@@ -112,10 +120,6 @@ namespace SDKDemo
             errorDict.Add(1201, "录制文件不存在");
             errorDict.Add(1202, "上传失败，失败原因参考日志");
             errorDict.Add(1203, "移除本地文件失败");
-
-            errorDict.Add(1300, "ipcam url不正确");
-            errorDict.Add(1301, "ipcam已存在");
-            errorDict.Add(1302, "添加太多ip cam");
 
             errorDict.Add(1400, "文件不存在");
             errorDict.Add(1401, "文件读失败");
