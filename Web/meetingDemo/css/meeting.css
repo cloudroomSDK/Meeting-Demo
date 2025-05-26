@@ -601,14 +601,6 @@ a:active {
 #page_meeting .main .page_meet_cont .page_meet_view .page_meet_video .page_screen .screenbox .deviceStatus .deviceIcon.devicePhoto:hover {
   background-image: url("../image/pc/meeting_takephoto_hover.png");
 }
-#page_meeting .main .page_meet_cont .page_meet_view .page_meet_video .page_screen .screenbox .deviceStatus .deviceIcon.deviceKickout {
-  background-image: url("../image/pc/meeting_kickout.png");
-  width: 0.17rem;
-  height: 0.17rem;
-}
-#page_meeting .main .page_meet_cont .page_meet_view .page_meet_video .page_screen .screenbox .deviceStatus .deviceIcon.deviceKickout:hover {
-  background-image: url("../image/pc/meeting_kickout_hover.png");
-}
 #page_meeting .main .page_meet_cont .page_meet_view .page_meet_video .page_screen .screenbox .deviceStatus .deviceIcon.deviceRename {
   background-image: url("../image/pc/meeting_rename.png");
   width: 0.17rem;
@@ -616,6 +608,22 @@ a:active {
 }
 #page_meeting .main .page_meet_cont .page_meet_view .page_meet_video .page_screen .screenbox .deviceStatus .deviceIcon.deviceRename:hover {
   background-image: url("../image/pc/meeting_rename_hover.png");
+}
+#page_meeting .main .page_meet_cont .page_meet_view .page_meet_video .page_screen .screenbox .deviceStatus .deviceIcon.watchStream {
+  background-image: url("../image/pc/meeting_watch_sub_stream.png");
+  width: 0.17rem;
+  height: 0.17rem;
+}
+#page_meeting .main .page_meet_cont .page_meet_view .page_meet_video .page_screen .screenbox .deviceStatus .deviceIcon.watchStream:hover {
+  background-image: url("../image/pc/meeting_watch_sub_stream_hover.png");
+}
+#page_meeting .main .page_meet_cont .page_meet_view .page_meet_video .page_screen .screenbox .deviceStatus .deviceIcon.deviceKickout {
+  background-image: url("../image/pc/meeting_kickout.png");
+  width: 0.17rem;
+  height: 0.17rem;
+}
+#page_meeting .main .page_meet_cont .page_meet_view .page_meet_video .page_screen .screenbox .deviceStatus .deviceIcon.deviceKickout:hover {
+  background-image: url("../image/pc/meeting_kickout_hover.png");
 }
 #page_meeting .main .page_meet_cont .page_meet_view .page_meet_video .page_screen.screenOne .screenbox {
   height: 100%;
@@ -1288,7 +1296,6 @@ a:active {
   width: 33.333%;
   font-size: 40px;
   text-align: center;
-  line-height: 225px;
   background-color: #ccc;
   box-sizing: border-box;
   overflow: hidden;
@@ -1297,6 +1304,13 @@ a:active {
 #page_meeting .bgimg-choose .img-choose-box .choose-list ul li .img-box {
   height: 100%;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+#page_meeting .bgimg-choose .img-choose-box .choose-list ul li .img-box p {
+  margin-top: 10px;
+  font-size: 20px;
 }
 #page_meeting .bgimg-choose .img-choose-box .choose-list ul li .img-box img {
   padding: 0;
@@ -1310,11 +1324,9 @@ a:active {
 }
 #page_meeting .bgimg-choose .img-choose-box .choose-list ul li:hover {
   border: 5px solid #1388d7;
-  line-height: 215px;
 }
 #page_meeting .bgimg-choose .img-choose-box .choose-list ul li.active {
   border: 5px solid #f14a47;
-  line-height: 215px;
 }
 #page_meeting .bgimg-choose .img-choose-box .footer-btns {
   display: flex;
@@ -1424,6 +1436,151 @@ a:active {
   background-color: #ccc;
   overflow: auto;
   font-size: 0.12rem;
+}
+#page_meeting .sub-stream-view {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  z-index: 999;
+  background-color: rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+}
+#page_meeting .sub-stream-view .sub-stream-view-main {
+  display: flex;
+  flex-direction: column;
+  width: 1100px;
+  height: 500px;
+  background-color: #fff;
+  overflow: hidden;
+}
+#page_meeting .sub-stream-view .sub-stream-view-main .header {
+  height: 30px;
+  background-color: #f1f3f9;
+}
+#page_meeting .sub-stream-view .sub-stream-view-main .header .title {
+  padding-left: 10px;
+  float: left;
+  height: 30px;
+  line-height: 30px;
+  font-size: 12px;
+}
+#page_meeting .sub-stream-view .sub-stream-view-main .header .close-btn {
+  margin-right: 5px;
+  height: 30px;
+  width: 30px;
+  float: right;
+  background-image: url('../image/pc/close-bold.png');
+  background-size: 50% 50%;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+}
+#page_meeting .sub-stream-view .sub-stream-view-main .video-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+#page_meeting .sub-stream-view .sub-stream-view-main .video-box .stream-type {
+  display: flex;
+  height: 20px;
+  line-height: 20px;
+  font-size: 12px;
+  color: #fd3f3f;
+  background-color: #fff;
+}
+#page_meeting .sub-stream-view .sub-stream-view-main .video-box .stream-type .type {
+  flex: 1;
+  text-align: center;
+}
+#page_meeting .sub-stream-view .sub-stream-view-main .video-box .video-content {
+  flex: 1;
+  display: flex;
+  width: 100%;
+}
+#page_meeting .sub-stream-view .sub-stream-view-main .video-box .video-content .video-item {
+  flex: 1;
+  height: 100%;
+  background-color: #000000;
+  border: 1px solid #fff;
+  box-sizing: border-box;
+}
+#page_meeting .invite-netcam-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  display: none;
+}
+#page_meeting .invite-netcam-panel .invite-netcam-box {
+  width: 4.5rem;
+  background: #fff;
+  border-radius: 0.1rem;
+  padding: 0.2rem;
+  box-shadow: 0 0 0.2rem rgba(0, 0, 0, 0.2);
+}
+#page_meeting .invite-netcam-panel .invite-netcam-box .header-title {
+  font-size: 0.18rem;
+  color: #333;
+  padding-bottom: 0.15rem;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+#page_meeting .invite-netcam-panel .invite-netcam-box .header-title .close-icon {
+  font-size: 0.24rem;
+  cursor: pointer;
+  color: #999;
+}
+#page_meeting .invite-netcam-panel .invite-netcam-box .header-title .close-icon:hover {
+  color: #666;
+}
+#page_meeting .invite-netcam-panel .invite-netcam-box .form-content {
+  padding: 0.2rem 0;
+}
+#page_meeting .invite-netcam-panel .invite-netcam-box .form-content .form-item {
+  margin-bottom: 0.15rem;
+}
+#page_meeting .invite-netcam-panel .invite-netcam-box .form-content .form-item label {
+  display: inline-block;
+  width: 1rem;
+  font-size: 0.14rem;
+  color: #666;
+}
+#page_meeting .invite-netcam-panel .invite-netcam-box .form-content .form-item input {
+  width: 3rem;
+  height: 0.32rem;
+  border: 1px solid #ddd;
+  border-radius: 0.04rem;
+  padding: 0 0.1rem;
+  font-size: 0.14rem;
+}
+#page_meeting .invite-netcam-panel .invite-netcam-box .form-content .form-item input:focus {
+  border-color: #3981FC;
+}
+#page_meeting .invite-netcam-panel .invite-netcam-box .footer-btns {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.1rem;
+}
+#page_meeting .invite-netcam-panel .invite-netcam-box .footer-btns .cr-btn {
+  padding: 0 0.2rem;
+  height: 0.32rem;
+  line-height: 0.32rem;
+}
+#page_meeting .invite-netcam-panel .invite-netcam-box .footer-btns .cr-btn.cancel-btn {
+  background: #ddd;
+}
+#page_meeting .invite-netcam-panel .invite-netcam-box .footer-btns .cr-btn.cancel-btn:hover {
+  background: #ccc;
 }
 .data-channel {
   display: none;

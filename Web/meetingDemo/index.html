@@ -138,9 +138,9 @@
                         </div>
                         <div class="login_set_mstype">
                             <span>流媒体协议：</span>
-                            <input id="msTypeUDPTCP" type="radio" name="msTypeSet" value=0>
+                            <input id="msTypeUDPTCP" type="radio" name="msTypeSet" value=0 checked>
                             <label for="msTypeUDPTCP">自适应</label>&ensp;
-                            <input id="msTypeUDP" type="radio" name="msTypeSet" value=1 checked>
+                            <input id="msTypeUDP" type="radio" name="msTypeSet" value=1>
                             <label for="msTypeUDP">UDP</label>&ensp;
                             <input id="msTypeTCP" type="radio" name="msTypeSet" value=2>
                             <label for="msTypeTCP">TCP</label>
@@ -154,11 +154,11 @@
                                 </div>
                                 <div class="form_input form-account">
                                     <label for="cr_account">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AppID：</label>
-                                    <input type="text" id="cr_account" placeholder="默认账号" value="默认appID" />
+                                    <input type="text" id="cr_account" placeholder="请输入appID" value="默认" />
                                 </div>
                                 <div class="form_input form-password">
                                     <label for="comp_psdw">AppSecret：</label>
-                                    <input type="password" id="comp_psdw" placeholder="默认Secret" value="默认appSecret" />
+                                    <input type="text" id="comp_psdw" placeholder="请输入appSecret" value="默认" />
                                 </div>
                                 <div class="form_input form-token" style="display: none;">
                                     <label for="loginToken">&emsp;&emsp;Token：</label>
@@ -289,19 +289,19 @@
                         <div class="page_set_main">
                             <div class="page_set_form item">
                                 <label>摄像头：</label>
-                                <select class="select" id="select_cam" onchange="MeetingDemo.Video.setDefaultVideo(this.value)"></select>
+                                <select class="select" id="select_cam" onchange="MeetingDemo.Video.setDefaultVideo(+this.value)"></select>
                             </div>
                             <div class="page_set_form item">
                                 <label>扬声器：</label>
-                                <select class="select" id="select_speaker" onchange="MeetingDemo.Audio.setAudioCongfig({speakerID:this.value})"></select>
+                                <select class="select" id="select_speaker" onchange="MeetingDemo.Audio.setAudioCongfig({speakerID:+this.value})"></select>
                             </div>
                             <div class="page_set_form item">
                                 <label>麦克风：</label>
-                                <select class="select" id="select_mic" onchange="MeetingDemo.Audio.setAudioCongfig({micID:this.value})"></select>
+                                <select class="select" id="select_mic" onchange="MeetingDemo.Audio.setAudioCongfig({micID:+this.value})"></select>
                             </div>
                             <div class="page_set_form item">
                                 <label>分屏数：</label>
-                                <select class="select" id="select_pageVideoNum" onchange="MeetingDemo.Video.setPageVideoNum({videoNum:this.value})">
+                                <select class="select" id="select_pageVideoNum" onchange="MeetingDemo.Video.setPageVideoNum({videoNum:+this.value})">
                                     <option value="1">自动调整，最多1分屏</option>
                                     <option value="2">自动调整，最多2分屏</option>
                                     <option value="4">自动调整，最多4分屏</option>
@@ -311,7 +311,7 @@
                             <div class="video_set item">
                                 <div class="video_set_form">
                                     <label>视频质量：</label>
-                                    <select class="select" id="select_size" onchange="MeetingDemo.Video.setVideoConfig({size:this.value})">
+                                    <select class="select" id="select_size" onchange="MeetingDemo.Video.setVideoConfig({size:+this.value})">
                                         <option value="1" selected="true">流畅360p</option>
                                         <option value="2">标清480p</option>
                                         <option value="3">高清720p</option>
@@ -322,7 +322,7 @@
                                 </div>
                                 <div class="video_set_form">
                                     <label>视频帧率：</label>
-                                    <select class="select" id="select_frame" onchange="MeetingDemo.Video.setVideoConfig({fps:this.value})">
+                                    <select class="select" id="select_frame" onchange="MeetingDemo.Video.setVideoConfig({fps:+this.value})">
                                         <option value="5">5帧/秒</option>
                                         <option value="10">10帧/秒</option>
                                         <option value="15" selected="true">15帧/秒</option>
@@ -341,8 +341,8 @@
                                 <div class="muti-cam">
                                     <input type="checkbox" id="mutiCam" onchange="MeetingDemo.Video.setEnableMutiVideo()"><label for="mutiCam"> 启用多摄像头</label>&emsp;
                                 </div>
-                                <div class="voice-energy">
-                                    <input type="checkbox" id="voiceTrack" onchange="MeetingDemo.RoomMgr.setMainVideoMode()"><label for="voiceTrack"> 语音激励模式</label>
+                                <div class="video-size">
+                                    <input type="checkbox" id="showVideSize" onchange="MeetingDemo.Video.clickIsShowVideoSize()"><label for="showVideSize"> 显示视频尺寸</label>&emsp;
                                 </div>
                             </div>
                             <div class="screen-area item h3">
@@ -363,10 +363,11 @@
                                 <label>麦克风音量：</label><input type="range" id="micVolInput" value="100" max="1000" min="0" onchange="MeetingDemo.Audio.setMicVol(this)"><span id="micVolStr">100</span>
                             </div>
                             <div class="set-buttons item">
-                                <button id="toggleVirtualBG" class="cr-btn cr-btn-xs" onclick="MeetingDemo.Video.onClickVBGBtn()">虚拟背景</button>
-                                <button id="addCanvasCamBtn" class="cr-btn cr-btn-xs" data-toggle=0 onclick="MeetingDemo.Video.onClickAddIPCamBtn(this)">添加网络摄像头</button>
+                                <button id="toggleVirtualBG" class="cr-btn cr-btn-xs" onclick="$('.bgimg-choose').show()">虚拟背景</button>
+                                <!-- <button id="addCanvasCamBtn" class="cr-btn cr-btn-xs" data-toggle=0 onclick="MeetingDemo.Video.onClickAddIPCamBtn(this)">添加网络摄像头</button> -->
                                 <button id="addCanvasCamBtn" class="cr-btn cr-btn-xs" data-toggle=0 onclick="MeetingDemo.Video.onClickAddCanvasCamBtn(this)">添加虚拟摄像头(图片)</button>
                                 <button id="addScreenCamBtn" class="cr-btn cr-btn-xs" data-toggle=0 onclick="MeetingDemo.Video.onClickAddScreenCamBtn(this)">添加桌面摄像头</button>
+                                <button id="inviteNetCam" class="cr-btn cr-btn-xs" data-toggle=0 onclick="$('.invite-netcam-panel').show();$('.page_open_set').hide()">邀请监控设备</button>
                             </div>
                         </div>
                     </div>
@@ -382,67 +383,12 @@
             </div>
             <div class="layui-tab layui-tab-card">
                 <ul class="layui-tab-title disableSelect">
-                    <li class="layui-this">单流</li>
-                    <li>合流</li>
+                    <li class="layui-this">合流</li>
+                    <li>单流</li>
                     <li>第三方云存储平台设置</li>
                 </ul>
                 <div class="layui-tab-content">
                     <div class="layui-tab-item layui-show">
-                        <div class="list-item">
-                            <label>
-                                <input type="checkbox" id="isMp4File" checked> 是否生成mp4文件
-                            </label>
-                        </div>
-                        <div class="list-item">
-                            <span>mp4文件中的音频内容: </span>
-                            <label>
-                                <input id="aStreamType0" type="radio" name="aStreamType" value=0> 自己的声音
-                            </label>&ensp;
-                            <label>
-                                <input id="aStreamType1" type="radio" name="aStreamType" value=1 checked> 所有人的声音
-                            </label>&ensp;
-                        </div>
-                        <div class="list-item">
-                            <span>mp4文件生成: </span>
-                            <label>
-                                <input id="subscribeVideos_all" type="radio" name="subscribeVideos" value=0 onchange="MeetingDemo.Mixer.updateUnaflowRecord('mp4', 0)" checked> 所有人的所有摄像头
-                            </label>&ensp;
-                            <label>
-                                <input id="subscribeVideos_all_default" type="radio" name="subscribeVideos" value=1 onchange="MeetingDemo.Mixer.updateUnaflowRecord('mp4', 1)"> 所有人的默认摄像头
-                            </label>&ensp;
-                            <label>
-                                <input id="subscribeVideos_myself_all" type="radio" name="subscribeVideos" value=2 onchange="MeetingDemo.Mixer.updateUnaflowRecord('mp4', 2)"> 自己的所有摄像头
-                            </label>&ensp;
-                            <label>
-                                <input id="subscribeVideos_myself_default" type="radio" name="subscribeVideos" value=3 onchange="MeetingDemo.Mixer.updateUnaflowRecord('mp4', 3)"> 自己的默认摄像头
-                            </label>&ensp;
-                            <p>说明: 每个摄像头对应一个mp4文件,默认摄像头是编号为-1的摄像头,可在录制中修改(mp4文件生成)参数</p>
-                        </div>
-                        <div class="list-item">
-                            <label>
-                                <input type="checkbox" id="isMp3File" checked> 是否生成mp3文件
-                            </label>
-                        </div>
-                        <div class="list-item">
-                            <span>mp3文件生成: </span>
-                            <label>
-                                <input id="subscribeAudios_self" type="radio" name="subscribeAudios" value=0 onchange="MeetingDemo.Mixer.updateUnaflowRecord('mp3', 0)"> 自己的麦克风
-                            </label>&ensp;
-                            <label>
-                                <input id="subscribeAudios_all" type="radio" name="subscribeAudios" value=1 checked onchange="MeetingDemo.Mixer.updateUnaflowRecord('mp3', 1)"> 所有人麦克风
-                            </label>&ensp;
-                            <p>说明: 每个人对应一个mp3文件,可在录制中修改(mp3文件生成)参数</p>
-                        </div>
-                        <div class="list-item btns-list">
-                            <button id="unaflowRecordBtn" class="cr-btn" onclick="MeetingDemo.Mixer.startRecord('unaflowRecord')">开始单流录制</button>
-                        </div>
-                        <div class="info-list">
-                            <ul class="file-info-list">
-                                <!-- <li>ID:xsdvso，FileName:xowsndosd.mp4，state:1</li> -->
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="layui-tab-item">
                         <div class="list-item">
                             <span>mp3的声道类型：</span>
                             <label>
@@ -482,6 +428,61 @@
                         </div>
                         <div class="list-item">
                             <div id="recordFilePath"></div>
+                        </div>
+                        <div class="info-list">
+                            <ul class="file-info-list">
+                                <!-- <li>ID:xsdvso，FileName:xowsndosd.mp4，state:1</li> -->
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="layui-tab-item">
+                        <div class="list-item">
+                            <label>
+                                <input type="checkbox" id="isMp4File" checked> 是否生成mp4文件
+                            </label>
+                        </div>
+                        <div class="list-item">
+                            <span>mp4文件中的音频内容: </span>
+                            <label>
+                                <input id="aStreamType0" type="radio" name="aStreamType" value=0> 自己的声音
+                            </label>&ensp;
+                            <label>
+                                <input id="aStreamType1" type="radio" name="aStreamType" value=1 checked> 所有人的声音
+                            </label>&ensp;
+                        </div>
+                        <div class="list-item">
+                            <span>mp4文件生成: </span>
+                            <label>
+                                <input id="subscribeVideos_all" type="radio" name="subscribeVideos" value=0 onchange="MeetingDemo.Mixer.updateUnaflowRecord('mp4', 0)" checked> 所有人的所有摄像头
+                            </label>&ensp;
+                            <label>
+                                <input id="subscribeVideos_all_default" type="radio" name="subscribeVideos" value=1 onchange="MeetingDemo.Mixer.updateUnaflowRecord('mp4', 1)"> 所有人的默认摄像头
+                            </label>&ensp;
+                            <label>
+                                <input id="subscribeVideos_myself_all" type="radio" name="subscribeVideos" value=2 onchange="MeetingDemo.Mixer.updateUnaflowRecord('mp4', 2)"> 自己的所有摄像头
+                            </label>&ensp;
+                            <label>
+                                <input id="subscribeVideos_myself_default" type="radio" name="subscribeVideos" value=3 onchange="MeetingDemo.Mixer.updateUnaflowRecord('mp4', 3)"> 自己的默认摄像头
+                            </label>&ensp;
+                            <p style="font-size: 12px;">说明: 每个摄像头对应一个mp4文件,默认摄像头是编号为-1的摄像头,可在录制中修改(mp4文件生成)参数</p>
+                        </div>
+                        <div class="list-item">
+                            <label>
+                                <input type="checkbox" id="isMp3File" checked> 是否生成mp3文件
+                            </label>
+                        </div>
+                        <div class="list-item">
+                            <span>mp3文件生成: </span>
+                            <label>
+                                <input id="subscribeAudios_self" type="radio" name="subscribeAudios" value=0 onchange="MeetingDemo.Mixer.updateUnaflowRecord('mp3', 0)"> 自己的麦克风
+                            </label>&ensp;
+                            <label>
+                                <input id="subscribeAudios_all" type="radio" name="subscribeAudios" value=1 checked onchange="MeetingDemo.Mixer.updateUnaflowRecord('mp3', 1)"> 所有人麦克风
+                            </label>&ensp;
+                            <p>说明: 每个人对应一个mp3文件,可在录制中修改(mp3文件生成)参数</p>
+                        </div>
+                        <div class="list-item btns-list">
+                            <button id="unaflowRecordBtn" class="cr-btn" onclick="MeetingDemo.Mixer.startRecord('unaflowRecord')">开始单流录制</button>
                         </div>
                         <div class="info-list">
                             <ul class="file-info-list">
@@ -532,41 +533,93 @@
                 </div>
                 <div class="choose-list">
                     <ul>
-                        <li onclick="MeetingDemo.Video.chooseVBImg(this)" class="active" data-type="0">
-                            <div class="img-box">
-                                无
-                            </div>
-                        </li>
-                        <li onclick="MeetingDemo.Video.chooseVBImg(this)" class="" data-type="1" data-color="#3333bb">
-                            <div class="img-box" style="background-color: #3333bb;"></div>
-                        </li>
-                        <li onclick="MeetingDemo.Video.chooseVBImg(this)" class="" data-type="1" data-color="#33bb33">
-                            <div class="img-box" style="background-color: #33bb33;"></div>
-                        </li>
                         <li onclick="MeetingDemo.Video.chooseVBImg(this)" id="vbImg1" data-type="2">
                             <div class="img-box">
-                                <img src="" alt="虚拟背景1">
+                                <img src="./image/pc/meeting_vb1.jpg" alt="虚拟背景1">
                             </div>
                         </li>
                         <li onclick="MeetingDemo.Video.chooseVBImg(this)" id="vbImg2" data-type="2">
                             <div class="img-box">
-                                <img src="" alt="虚拟背景2">
+                                <img src="./image/pc/meeting_vb2.jpg" alt="虚拟背景2">
                             </div>
                         </li>
                         <li onclick="MeetingDemo.Video.chooseVBImg(this)" id="vbImg3" data-type="2">
                             <div class="img-box">
-                                <img src="" alt="虚拟背景3">
+                                <img src="./image/pc/meeting_vb3.jpg" alt="虚拟背景3">
+                            </div>
+                        </li>
+                        <li onclick="MeetingDemo.Video.chooseVBImg(this)" class="" data-type="1" data-color="#00ff00">
+                            <div class="img-box" style="background-color: #00ff00;"></div>
+                        </li>
+                        <li onclick="MeetingDemo.Video.chooseVBImg(this)" class="" data-type="1" data-color="#000000">
+                            <div class="img-box" style="background-color: #000000;"></div>
+                        </li>
+                        <li onclick="MeetingDemo.Video.chooseVBImg(this)" data-type="3">
+                            <div class="img-box">
+                                背景虚化
+                                <p>
+                                    虚化强度：<input type="range" id="blurIntensitySlider" name="blurIntensitySlider" min="0" max="30" value="0" step="1" onchange="MeetingDemo.Video.onBlurIntensitySliderChange(this)" onclick="event.stopPropagation();">
+                                </p>
                             </div>
                         </li>
                     </ul>
                 </div>
                 <div class="footer-btns">
-                    <button class="cr-btn" onclick="MeetingDemo.Video.onClickVBConfirmBtn()">确定</button>
-                    <button class="cr-btn cancel-btn" onclick="MeetingDemo.Video.onClickVBCancelBtn()">取消</button>
+                    <button class="cr-btn" onclick="MeetingDemo.Video.onClickVBCloseBtn()">关闭虚拟背景</button>
+                    <button class="cr-btn cancel-btn" onclick="$('.bgimg-choose').hide()">取消</button>
                 </div>
             </div>
         </div>
         <!-- 虚拟背景图片选择面板 结束 -->
+        <!-- 大小流观看开始 -->
+        <div class="sub-stream-view">
+            <div class="sub-stream-view-main">
+                <div class="header">
+                    <div class="title">
+                        <span>大小流（<text id="subStreamUserName"></text>）</span>
+                    </div>
+                    <span class="close-btn" onclick="MeetingDemo.Video.closeSubStreamWindow()"></span>
+                </div>
+                <div class="video-box">
+                    <div class="stream-type">
+                        <span class="type level1">大流</span>
+                        <span class="type level2">小流</span>
+                    </div>
+                    <div class="video-content">
+                        <div class="video-item level1" id="subStreamVideo1"></div>
+                        <div class="video-item level2" id="subStreamVideo2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 大小流观看结束 -->
+        <!-- 邀请监控设备面板 开始 -->
+        <div class="invite-netcam-panel">
+            <div class="invite-netcam-box pa-center">
+                <div class="header-title">
+                    <span>邀请监控设备</span>
+                    <span class="close-icon" onclick="$('.invite-netcam-panel').hide()">×</span>
+                </div>
+                <div class="form-content">
+                    <div class="form-item">
+                        <label>设备URL：</label>
+                        <input type="text" id="netcamUrl" placeholder="请输入设备URL">
+                    </div>
+                    <div class="form-item">
+                        <label>设备UserID：</label>
+                        <input type="text" id="netcamUserId" placeholder="请输入设备UserID">
+                    </div>
+                    <div class="form-item">
+                        <label>设备名称：</label>
+                        <input type="text" id="netcamNickname" placeholder="请输入设备名称">
+                    </div>
+                </div>
+                <div class="footer-btns">
+                    <button class="cr-btn" id="confirmInviteNetcam" onclick="MeetingDemo.Video.inviteNetCam()">确定</button>
+                    <button class="cr-btn cancel-btn" onclick="$('.invite-netcam-panel').hide()">取消</button>
+                </div>
+            </div>
+        </div>
     </div>
     <!-- 会议界面 结束 -->
 
@@ -658,10 +711,10 @@
         })
     </script>
 
-<script type="text/javascript" src="../static/js/md5.js"></script>
-<script type="text/javascript" src="../static/js/rem.min.js"></script>
+    <script type="text/javascript" src="../static/js/md5.js"></script>
+    <script type="text/javascript" src="../static/js/rem.min.js"></script>
 
-<script src="../SDK/RTCSDKV2.min.js?v=91c3"></script></body>
+<script src="../SDK/RTCSDKV2.min.js?v=3df4"></script></body>
 
 <script src="../static/js/base64.js"></script>
 <script src="./js/wfs.js"></script>

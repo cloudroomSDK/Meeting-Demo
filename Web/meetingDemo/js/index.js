@@ -10,7 +10,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
     this.loadingIndex = null; // layui加载层索引，关闭加载层时需要
 
     // 会议中关闭页面弹出提示确认
-    window.addEventListener('beforeunload', e => {
+    window.addEventListener('beforeunload', (e) => {
       if (MeetingDemo.RoomMgr.isMeeting) {
         // 部分浏览器支持 event.preventDefault() + return 部分浏览器支持 event.returnValue
         const event = e || window.event;
@@ -26,9 +26,9 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
     });
 
     // 会议中确认关闭页面之后离开会议
-    window.addEventListener('unload', e => {
+    window.addEventListener('unload', (e) => {
       if (MeetingDemo.RoomMgr.isMeeting) {
-        CRVideo_ExitMeeting(); // SDK接口：退出房间
+        CRVideo_ExitMeeting('refresh'); // SDK接口：退出房间
         CRVideo_Logout(); // SDK接口：退出登录
         // 做一个耗时计算，让页面关的慢一点，确保离开房间的消息能发出去，这里触发方法，一定是在接口调用完之后再触发
         window.__fib(40);
@@ -49,7 +49,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
     $('#g_meet_id').val(localStorage.getItem('CRMEETINGDEMO_MEETID'));
 
     // 监听键盘事件
-    window.onkeypress = event => {
+    window.onkeypress = (event) => {
       var e = event || window.event || arguments.callee.caller.arguments[0];
       // 按下enter 键
       if (e && e.keyCode == 13) {
@@ -69,7 +69,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         yes: function (index, layero) {
           yesFun != undefined ? yesFun() : '';
           window.layer.close(index);
-        }
+        },
       });
     };
     // 弹出layui提示
@@ -82,7 +82,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         content: msg,
         closeBtn: 0,
         shade: 0,
-        time: timer
+        time: timer,
       });
     };
     // 弹出模态框
@@ -102,7 +102,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         },
         btn2: function (index) {
           btn2Callback();
-        }
+        },
       });
     };
     // 弹出输入框
@@ -111,7 +111,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         {
           formType: formType || 2,
           value: value || '', // 默认值
-          title: title || '请输入'
+          title: title || '请输入',
           // area: ['300px', '300px'] //自定义文本域宽高
         },
         function (value, index, elem) {
@@ -129,7 +129,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       }
       if (options == undefined) {
         options = {
-          time: 15000 // 最多15秒自动关闭
+          time: 15000, // 最多15秒自动关闭
         };
       }
       this.loadingIndex = window.layer.load(style, options);
@@ -139,11 +139,11 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       window.layer.close(this.loadingIndex);
     };
     // 移除弹出层
-    this.closeLayer = type => {
+    this.closeLayer = (type) => {
       window.layer.closeAll(type == undefined ? '' : type);
     };
     // 判断是否是数组类型
-    this.isArrayFn = value => {
+    this.isArrayFn = (value) => {
       if (typeof Array.isArray === 'function') {
         return Array.isArray(value);
       } else {
@@ -172,7 +172,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         day,
         hour,
         minute,
-        second
+        second,
       };
     };
     // 处理按下enter键
@@ -188,8 +188,8 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
     // 刷新分屏样式
     this.refreshScreenSplit = () => {
       let number = 0;
-      MeetingDemo.MemberMgr.members.forEach(member => {
-        member.allVideos.forEach(videoItem => {
+      MeetingDemo.MemberMgr.members.forEach((member) => {
+        member.allVideos.forEach((videoItem) => {
           if (videoItem.videoUI) {
             number++;
           }
@@ -252,8 +252,8 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       }
     };
     // 网络状态变化
-    window.CRVideo_NetStateChanged.callback = score => {
-      console.crlog(`[MeetingDemo] 网络质量变化：${score}`);
+    window.CRVideo_NetStateChanged.callback = (score) => {
+      // console.crlog(`[MeetingDemo] 网络质量变化：${score}`);
       if (score > 8) {
         $('.net-state-icon').removeClass('bad midium none').addClass('fine');
       } else if (score > 5) {
@@ -302,12 +302,6 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
             $('#loginTokeRadio').click();
           }
 
-          // 会议产品特有参数，SDK用户无需关注
-          if (paramsObj.pw) {
-            // 房间密码
-            $('#g_meet_pwd').val(paramsObj.pw);
-          }
-
           // url带服务器地址
           if (paramsObj.server) {
             this.server = paramsObj.server;
@@ -319,13 +313,14 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
             window.layer.prompt(
               {
                 formType: 0,
-                title: '请输入您的昵称'
+                title: '请输入您的昵称',
+                value: this.nickname,
               },
               function (value, index, elem) {
                 window.layer.close(index);
                 MeetingDemo.Login.nickname = value.toString();
-                MeetingDemo.Login.userID = `${value.toString()}_${Math.floor(Math.random() * 8999) + 1000}`;
-                $('#userInputName').val(value.toString());
+                MeetingDemo.Login.userID = `${MeetingDemo.Login.nickname}_${Math.floor(Math.random() * 899) + 100}`;
+                $('#userInputName').val(MeetingDemo.Login.nickname);
                 MeetingDemo.Login.initSDK('urlEnter'); // 页面加载完自动初始化并登录
               }
             );
@@ -333,7 +328,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
             // url带昵称，直接入会
           } else {
             this.nickname = paramsObj.nickname ? paramsObj.nickname : this.nickname;
-            this.userID = paramsObj.userid ? paramsObj.userid : `${this.nickname}_${Math.floor(Math.random() * 8999) + 1000}`;
+            this.userID = paramsObj.userid ? paramsObj.userid : `${this.nickname}_${Math.floor(Math.random() * 899) + 100}`;
             $('#userInputName').val(this.nickname);
             MeetingDemo.Login.initSDK('urlEnter'); // 页面加载完自动初始化并登录
           }
@@ -354,8 +349,8 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       this.token = this.storage.token || $('#loginToken').val(); // token鉴权方式登录的token
       this.protocol = this.storage.protocol || $('input[name=msTypeSet]:checked').val(); // 流媒体转发协议
       this.userAuthCode = this.storage.userAuthCode || $('#userAuthCode').val(); // 启用第三方鉴时的鉴权参数
-      this.userID = sessionStorage.getItem('CRMEETINGDEMO_UID') || `H5用户${Math.floor(Math.random() * 8999) + 1000}`; // 登录SDK系统的用户唯一ID
-      this.nickname = this.userID; // 登录昵称
+      this.nickname = sessionStorage.getItem('CRMEETINGDEMO_NICKNAME') || `H5用户${Math.floor(Math.random() * 899) + 100}`; // 登录昵称
+      this.userID = sessionStorage.getItem('CRMEETINGDEMO_UID') || `${this.nickname}_${Math.floor(Math.random() * 899) + 100}`; // 登录SDK系统的用户唯一ID
       this.isLogin = false; // 是否已经登录
       this.reLoginTimer = null; // 掉线重登计时器
       this.reLoginTimes = null; // 掉线重登重试次数
@@ -382,7 +377,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
           MeetingDemo.tipLayer(`登录成功：${UID}`);
         }
 
-        // 快捷测试vp8编码和h264编码
+        // 快捷测试vp8编码和h264编码（SDK内部测试用，开发者无需关注）
         if (UID.includes('H264')) __Rtc.rtc_codecs = 'H264';
         if (UID.includes('VP8')) __Rtc.rtc_codecs = 'VP8';
       };
@@ -401,7 +396,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
           MeetingDemo.alertLayer(`网络错误，多次尝试重登失败，您已掉线！请在网络恢复后刷新页面重新登录...`);
           return;
         } else {
-          sdkErr == 5 ? (sdkErr = '缺少必要参数') : sdkErr;
+          sdkErr == 5 ? (sdkErr = '参数错误') : sdkErr;
           sdkErr == 7 ? (sdkErr = '用户名或密码错误！') : sdkErr;
           sdkErr == 14 ? (sdkErr = '缺少第三方鉴权信息！') : sdkErr;
           sdkErr == 15 ? (sdkErr = '该项目没有启用第三方鉴权！') : sdkErr;
@@ -410,7 +405,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
           sdkErr == 18 ? (sdkErr = 'Token已过期！') : sdkErr;
           sdkErr == 20 ? (sdkErr = '鉴权appID不存在！') : sdkErr;
           sdkErr == 22 ? (sdkErr = '此appID非Token鉴权！') : sdkErr;
-          sdkErr == 202 ? (sdkErr = '登录服务器异常！') : sdkErr;
+          sdkErr == 202 ? (sdkErr = '网络异常！') : sdkErr;
           sdkErr == 204 ? (sdkErr = 'socket连接失败！') : sdkErr;
           MeetingDemo.removeLoading(); // 隐藏加载层
           MeetingDemo.alertLayer('登录服务器失败，请稍后再试: ' + sdkErr);
@@ -423,7 +418,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
             formType: 2,
             value: '',
             title: 'Token即将失效，请立即更新!',
-            area: ['200px', '180px'] //自定义文本域宽高
+            area: ['200px', '180px'], //自定义文本域宽高
           },
           function (value, index, elem) {
             // SDK接口：更新Token
@@ -433,7 +428,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         );
       };
       // SDK即可：通知 从服务器掉线了
-      CRVideo_LineOff.callback = sdkErr => {
+      CRVideo_LineOff.callback = (sdkErr) => {
         this.isLogin = false;
         $('.login_form').css('border', 'none');
         console.crlog(`[MeetingDemo] 从系统掉线了！错误码：${sdkErr}`);
@@ -447,13 +442,13 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
 
           $('#page_meeting').animate(
             {
-              width: '0px'
+              width: '0px',
             },
             300
           );
           $('#page_login').animate(
             {
-              width: '100%'
+              width: '100%',
             },
             300
           );
@@ -472,7 +467,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
     // 注册事件
     initDomEvent() {
       // 切换token登录或密码登录
-      $('input[name=login_set]').click(e => {
+      $('input[name=login_set]').click((e) => {
         const authType = e.target.value;
         if (authType === '1') {
           console.crlog(`[MeetingDemo] 切换成密码鉴权`);
@@ -488,7 +483,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       });
 
       // 输入昵称
-      $('#userInputName').change(e => {
+      $('#userInputName').change((e) => {
         this.nickname = e.target.value;
         this.userID = this.nickname;
         if (this.isLogin) {
@@ -508,9 +503,10 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         appSecret: this.appSecret,
         token: this.token,
         protocol: this.protocol,
-        userAuthCode: this.userAuthCode
+        userAuthCode: this.userAuthCode,
       };
       localStorage.setItem('CRMEETINGDEMO_LOGIN', JSON.stringify(storage));
+      sessionStorage.setItem('CRMEETINGDEMO_NICKNAME', this.nickname);
       sessionStorage.setItem('CRMEETINGDEMO_UID', this.userID);
     }
     // 点击登录设置
@@ -537,7 +533,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         // $(".login_cont").css("top", "-230px")
         $('.login_cont').animate(
           {
-            top: '-230px'
+            top: '-230px',
           },
           150
         );
@@ -547,7 +543,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         // $(".login_cont").css("top", "0")
         $('.login_cont').animate(
           {
-            top: '0px'
+            top: '0px',
           },
           150
         );
@@ -566,8 +562,8 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       $('#server_add').val(this.server);
       $('#loginPassRadio').click(); // 密码登录
       $('#msTypeUDP').click(); // UDP
-      $('#cr_account').val('默认appID');
-      $('#comp_psdw').val('默认appSecret');
+      $('#cr_account').val('默认');
+      $('#comp_psdw').val('默认');
       $('#userAuthCode').val('');
       $('#loginToken').val('');
     }
@@ -599,13 +595,13 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
     // 初始化SDK
     initSDK(enterType) {
       MeetingDemo.loadingLayer();
-      // SDK接口：初始化SDK (新增接口 CRVideo_SetSDKParams 来设置SDK参数，因此初始化时可以不用再传参)
       CRVideo_Init().then(
-        res => {
+        (res) => {
           this.isInit = true;
+          this.setSDKParams();
           this.loginSystem(enterType);
         },
-        errCode => {
+        (errCode) => {
           let errDesc = '';
           switch (errCode) {
             case 8001:
@@ -629,9 +625,15 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
             default:
               break;
           }
-          console.crlog(`[MeetingDemo] 初始化失败：${errCode}`);
-          MeetingDemo.tipLayer(`登录初始化失败：${errCode} ${errDesc}`);
-          MeetingDemo.removeLoading(); // 隐藏加载层
+          if (errCode === 8001 || errCode === 8002 || errCode === 8007) {
+            this.isInit = true;
+            this.setSDKParams();
+            this.loginSystem(enterType);
+          } else {
+            console.crlog(`[MeetingDemo] 初始化失败：${errCode}`);
+            MeetingDemo.tipLayer(`登录初始化失败：${errCode} ${errDesc}`);
+            MeetingDemo.removeLoading(); // 隐藏加载层
+          }
         }
       );
     }
@@ -639,21 +641,23 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
     setSDKParams() {
       // SDK接口：设置SDK参数
       CRVideo_SetSDKParams({
-        // isSDKConsole: false,
-        // isUploadLog: false,
         MSProtocol: this.protocol, // 媒体流传输协议 TCP UDP 详见文档
-        virtualBackgroundAssets: '../SDK/VirtualBackgroundSource' //虚拟背景资源路径
+        virtualBackgroundAssets: '../SDK/VirtualBackgroundSource', //虚拟背景资源路径
         // virtualBackgroundAssets: "https://cdn.jsdelivr.net/npm/@VirtualBackgroundSource/selfie_segmentation", //虚拟背景资源路径
         // virtualBackgroundAssets: "https://www.unpkg.com/@VirtualBackgroundSource/selfie_segmentation", //虚拟背景资源路径
-        // mediaSendBW: 6000, // 影音共享最大码率
-        // isRtcLog: false,
+        // svrTimeout: 120, // 与服务器通信超时时间 缺省为60s
+        // isHttp: true, // 是否使用http协议  缺省为false
+        // securityEnhancement: true, //是否开启安全增强（会有跨域问题，需配置跨域响应头） 缺省为false
+        // isSDKConsole: false, // 是否在控制台输出SDK日志  缺省为true
+        // isUploadLog: false, // 是否上传日志  缺省为true
+        // isRtcLog: false, // 是否输出RTC日志  缺省为true
+        // isCallSer: false, // 是否登录呼叫服务  缺省为true
       });
     }
     // 登录系统
     loginSystem(cookie) {
       // SDK接口：设置服务器地址
       CRVideo_SetServerAddr(this.server);
-      this.setSDKParams();
       this.isSetServer = true;
       const nickname = this.nickname,
         UID = this.userID,
@@ -664,7 +668,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         // appID鉴权
         let appID = this.appID,
           appSecret = this.appSecret;
-        if (appSecret.length == 32 || appSecret == '默认appSecret') {
+        if (appSecret.length == 32 || appSecret == '默认') {
           // SDK接口：使用账号密码登录系统
           CRVideo_Login(appID, appSecret, nickname, UID, code, cookie);
         } else {
@@ -697,7 +701,6 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       this.meetID = null; // 房间号
       this.isMeeting = false; // 当前是否正在会话中
       this.reEnterTimes = 0; // 进房间重试的次数
-      this.reEnterTimer = null; // 掉线重登定时器
     }
     registerCallback() {
       // SDK接口:回调 创建房间成功
@@ -717,39 +720,32 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         this.enterMeetingRslt(sdkErr, cookie);
       };
       // SDK接口：通知 房间被结束
-      CRVideo_MeetingStopped.callback = id => {
+      CRVideo_MeetingStopped.callback = (id) => {
         MeetingDemo.alertLayer('<p>当前房间已被关闭！</p><p>请重新创建房间或进入其它正在进行中的房间。</p>', () => {
           this.isMeeting = false;
           window.location.reload(); // 刷新当前页面
         });
       };
-      // SDK接口：通知 主视频模式变化
-      CRVideo_NotifyMainVideoModeChanged.callback = vMode => {
-        if (vMode == 1) {
-          // 语音激励模式
-          // MeetingDemo.tipLayer('已开启语音激励模式');
-        } else if (vMode == 2) {
-          // 跟随演示者模式
-          MeetingDemo.tipLayer('已关闭语音激励模式');
-        }
-      };
-      // SDK接口：通知 会议内主视频变化
-      CRVideo_NotifyMainVideoChanged.callback = UID => {
-        MeetingDemo.MemberMgr.members.forEach(member => {
-          if (member.userID == UID) {
-            console.crlog(`[MeetingDemo] 当前 ${member.nickname} 为主视频`);
-            MeetingDemo.tipLayer(`当前 ${member.nickname} 为主视频`);
-          }
-        });
-      };
       // SDK接口：通知 从房间中掉线了
       CRVideo_MeetingDropped.callback = () => {
         this.isMeeting = false;
-        this.reEnterTimer = setTimeout(() => {
-          MeetingDemo.tipLayer(`从房间中掉线了，正在第${this.reEnterTimes + 1}次尝试重新进入...`);
-          this.enterMeetingFun(`reEnter_${++this.reEnterTimes}`); // 进入房间
-        }, 3000);
-        return;
+
+        // // 自动重新入会
+        // setTimeout(() => {
+        //   MeetingDemo.tipLayer(`从房间中掉线了，正在第${++this.reEnterTimes}次尝试重新进入...`);
+        //   this.enterMeetingFun(`reEnter_${this.reEnterTimes}`); // 进入房间
+        // }, 0);
+
+        // 弹框提示掉线
+        MeetingDemo.modalLayer(`掉线`, `您已从房间中掉线，是否重新进入？`, {
+          btns: ['重进', '取消'],
+          btn1Callback() {
+            MeetingDemo.RoomMgr.enterMeetingFun(`reEnter_${++MeetingDemo.RoomMgr.reEnterTimes}`); // 进入房间
+          },
+          btn2Callback() {
+            MeetingDemo.RoomMgr.onClickCloseBtn();
+          },
+        });
       };
     }
     // 点击创建房间按钮
@@ -780,6 +776,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
     }
     // 进入房间的方法
     enterMeetingFun(cookie) {
+      if (!this.meetID) this.meetID = $('#g_meet_id').val() || null;
       // SDK接口：进入房间
       this.meetID && CRVideo_EnterMeeting3(this.meetID, cookie);
     }
@@ -804,8 +801,10 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         MeetingDemo.Video.setVideoConfig({
           size: +$('#select_size').val(),
           fps: +$('#select_frame').val(),
-          aspectRatio: $('#set_video_ratio').val()
+          aspectRatio: $('#set_video_ratio').val(),
         });
+        // 创建大小流视频组件
+        MeetingDemo.Video.createSubStreamVideoUI();
 
         // 打开自己的摄像头和麦克风
         MeetingDemo.Video.openVideo(MeetingDemo.Login.userID); // 打开自己的摄像头
@@ -817,18 +816,17 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         // 隐藏登录页面
         $('#page_login').animate(
           {
-            width: '0px'
+            width: '0px',
           },
           300
         );
         // 显示会话页面
         $('#page_meeting').animate(
           {
-            width: '100%'
+            width: '100%',
           },
           300
         );
-        MeetingDemo.Sync.getCurPage(); // 查询当前功能区
         setTimeout(() => {
           MeetingDemo.Mixer.getAllCloudMixerInfo();
           MeetingDemo.Mixer.updateInterflowRecord();
@@ -837,15 +835,15 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         // 进入房间失败
       } else {
         console.crlog(`[MeetingDemo] 进入房间失败，错误码：${sdkErr}，cookie:${cookie}`);
-        if (![1, 9, 205, 800, 801, 802, 805, 806].includes(sdkErr)) {
+        if (![1, 9, 201, 800, 801, 802, 805, 806].includes(sdkErr)) {
           // 通过cookie来判断是否是重登，如果是重登，网络恢复需要时间，可以多尝试几次
-          if (!!cookie && cookie.includes('reEnter') && cookie.split('_')[1] <= 10) {
-            this.reEnterTimer = setTimeout(() => {
-              MeetingDemo.tipLayer(`进入房间失败，正在第${this.reEnterTimes + 1}次尝试重新进入...`);
-              this.enterMeetingFun(`reEnter_${++this.reEnterTimes}`); // 进入房间
+          if (!!cookie && cookie.includes('reEnter') && cookie.split('_')[1] < 10) {
+            setTimeout(() => {
+              MeetingDemo.tipLayer(`进入房间失败，正在第${++this.reEnterTimes}次尝试重新进入...`);
+              this.enterMeetingFun(`reEnter_${this.reEnterTimes}`); // 进入房间
             }, 1000);
             return;
-          } else if (!!cookie && cookie.includes('reEnter') && cookie.split('_')[1] > 10) {
+          } else if (!!cookie && cookie.includes('reEnter') && cookie.split('_')[1] >= 10) {
             MeetingDemo.modalLayer(`失败`, `您已从房间中掉线，多次尝试重新进入房间失败，是否再次重试？`, {
               btns: ['重试', '取消'],
               btn1Callback() {
@@ -853,7 +851,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
               },
               btn2Callback() {
                 MeetingDemo.RoomMgr.onClickCloseBtn();
-              }
+              },
             });
           }
         } else {
@@ -865,7 +863,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
             case 9:
               errDesc = '登录状态异常';
               break;
-            case 205:
+            case 201:
               errDesc = '没有可用服务器';
               break;
             case 800:
@@ -891,28 +889,21 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         }
       }
     }
-    // 设置主视频模式（语音激励）
-    setMainVideoMode() {
-      if (!!$('#voiceTrack').prop('checked')) {
-        CRVideo_SetMainVideoMode(1, MeetingDemo.Login.userID); // 设置主视频模式  1 语音激励模式  2 跟随演示者  3 跟随特定参会者
-      } else {
-        CRVideo_SetMainVideoMode(2, MeetingDemo.Login.userID);
-      }
-    }
     // 退出房间
     exitMeeting(iskick) {
       $('#page_meeting').animate(
         {
-          width: '0px'
+          width: '0px',
         },
         300
       );
       $('#page_login').animate(
         {
-          width: '100%'
+          width: '100%',
         },
         300
       );
+      MeetingDemo.Video.closeSubStreamWindow();
 
       if (this.isMeeting) {
         // if (MeetingDemo.Record.isMyRecord) MeetingDemo.Record.stopRecord(); // 停止录制
@@ -963,7 +954,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       document.execCommand('copy');
       MeetingDemo.modalLayer('邀请参会', `会议链接已复制，去粘贴发送给别人吧！`, {
         btns: ['确定'],
-        btn1Callback() {}
+        btn1Callback() {},
       });
     }
   }
@@ -980,7 +971,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
     }
     registerCallback() {
       // SDK接口：通知 有新成员进入房间
-      CRVideo_UserEnterMeeting.callback = UID => {
+      CRVideo_UserEnterMeeting.callback = (UID) => {
         this.userEnter(UID);
       };
       // SDK接口：通知 有成员离开房间
@@ -989,7 +980,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       };
       // SDK接口：通知 成员昵称改变
       CRVideo_NotifyNickNameChanged.callback = (UID, oldName, newName) => {
-        this.members.forEach(item => {
+        this.members.forEach((item) => {
           if (item.userID == UID) item.nickname = newName;
         });
         if (UID == MeetingDemo.Login.userID) {
@@ -1011,7 +1002,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
     userLeft(UID, reson) {
       if (UID != MeetingDemo.Login.userID) {
         try {
-          const leftUser = this.members.find(item => {
+          const leftUser = this.members.find((item) => {
             return item.userID == UID;
           });
           MeetingDemo.tipLayer(`${leftUser.nickname} 离开房间...`, 2000);
@@ -1032,8 +1023,8 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
     // 刷新成员列表
     refreshAllmembersInfo() {
       const members = window.CRVideo_GetAllMembers(); // SDK接口：获取会议内所有成员信息
-      members.forEach(memberItem => {
-        const user = this.members.find(item => memberItem.userID == item.userID);
+      members.forEach((memberItem) => {
+        const user = this.members.find((item) => memberItem.userID == item.userID);
         if (user) {
           // 已经存在列表中的成员，更新状态
           user.audioStatus = memberItem.audioStatus;
@@ -1044,8 +1035,15 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         }
       });
       this.members.forEach((memberItem, index) => {
-        const user = members.find(item => item.userID == memberItem.userID);
-        if (!user) this.members.splice(index, 1); // 删除已经不在房间的成员
+        const user = members.find((item) => item.userID == memberItem.userID);
+        if (!user) {
+          if (memberItem.allVideos && memberItem.allVideos.length > 0) {
+            for (let i = 0; i < memberItem.allVideos.length; i++) {
+              memberItem.allVideos[i].videoUI.destroy();
+            }
+          }
+          this.members.splice(index, 1); // 删除已经不在房间的成员
+        }
       });
       console.crlog(`[MeetingDemo] 刷新成员列表：${JSON.stringify(this.members)}`);
     }
@@ -1058,6 +1056,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
                     <div data-title="开/关麦克风" class="deviceIcon deviceMic" onclick="MeetingDemo.Audio.onClickUserIconMic(this)"></div>
                     <div data-title="拍照" class="deviceIcon devicePhoto" onclick="MeetingDemo.Video.onClickUserIconSave(this)"></div>
                     <div data-title="修改昵称" class="deviceIcon deviceRename" onclick="MeetingDemo.MemberMgr.onClickRename(this)"></div>
+                    <div data-title="观看大小流" class="deviceIcon watchStream" onclick="MeetingDemo.Video.onClickWatchStream(this)"></div>
                     <div data-title="请出房间" class="deviceIcon deviceKickout" onclick="MeetingDemo.MemberMgr.onClickKickOut(this)"></div>
                 </div>`;
       const htmlEle = $(htmlStr)[0];
@@ -1069,7 +1068,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       const $deviceCam = $('[data-userid=' + parsedID + '] .deviceCam');
       const $deviceMic = $('[data-userid=' + parsedID + '] .deviceMic');
       const isSelf = UID == MeetingDemo.Login.userID ? true : false;
-      this.members.forEach(item => {
+      this.members.forEach((item) => {
         if (item.userID == UID) {
           if (item.videoStatus == 3) {
             // 开启
@@ -1099,19 +1098,19 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       window.layer.prompt(
         {
           formType: 0,
-          title: '请输入新昵称'
+          title: '请输入新昵称',
         },
         function (value, index, elem) {
           window.layer.close(index);
-          const user = window.CRVideo_GetAllMembers().find(item => MeetingDemo.MemberMgr.parseUserID(item.userID) == parsedID);
+          const user = window.CRVideo_GetAllMembers().find((item) => MeetingDemo.MemberMgr.parseUserID(item.userID) == parsedID);
           if (user) {
             const oldName = CRVideo_GetMemberNickName(user.userID);
             // SDK接口：修改成员昵称
             CRVideo_SetNickName(user.userID, value)
-              .then(res => {
+              .then((res) => {
                 MeetingDemo.tipLayer(`${oldName} 昵称已变更为：${res.newname}`);
               })
-              .catch(err => {
+              .catch((err) => {
                 console.log(`改名失败`);
               });
           }
@@ -1122,7 +1121,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
     onClickKickOut(dom) {
       const $this = $(dom);
       const parsedID = $this.parent().data('userid');
-      const user = window.CRVideo_GetAllMembers().find(item => MeetingDemo.MemberMgr.parseUserID(item.userID) == parsedID);
+      const user = window.CRVideo_GetAllMembers().find((item) => MeetingDemo.MemberMgr.parseUserID(item.userID) == parsedID);
       if (user) {
         if (user.userID == MeetingDemo.Login.userID) {
           MeetingDemo.tipLayer('不能踢自己！');
@@ -1130,10 +1129,10 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
           const nickname = CRVideo_GetMemberNickName(user.userID);
           // SDK接口：踢人
           CRVideo_Kickout(user.userID)
-            .then(res => {
+            .then(() => {
               MeetingDemo.tipLayer(`${nickname} 已被请出房间`);
             })
-            .catch(err => {
+            .catch((err) => {
               console.log(`将 ${nickname} 请出房间失败！${JSON.stringify(err)}`);
             });
         }
@@ -1164,13 +1163,13 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         backgroundColor: 'rgba(0, 0, 0, .7)',
         padding: '0 10px',
         borderRadius: '15px',
-        display: 'block'
+        display: 'block',
       };
       this.curVideoPage = 0; // 当前视频墙页码
-      this.pageVideoNum = $('#select_pageVideoNum').val(); // 分屏数
+      this.pageVideoNum = +$('#select_pageVideoNum').val(); // 分屏数
       this.vCamInfo = {
         // 当前虚拟摄像头信息
-        camNo: 0
+        camNo: 0,
         // type: 'img',
         // url: './image/aiman.png',
         // canvas,
@@ -1179,12 +1178,13 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       this.curPageVideos = []; // 当前视频墙展示的视频
       this.vbimgurl = '';
       this.ipCamCount = 0;
+      this.showVideoSize = false; // 视频组件是否显示视频尺寸
       $('.bgimg-choose').hide();
-      $('.choose-list li:first-child').addClass('active').siblings().removeClass('active');
+      $('.choose-list li').removeClass('active');
     }
     registerCallback() {
       // SDK接口：通知 成员的摄像头设备变化
-      CRVideo_VideoDevChanged.callback = UID => {
+      CRVideo_VideoDevChanged.callback = (UID) => {
         this.memberVideoDevChange(UID);
       };
       // SDK接口：通知 成员的摄像头状态变化
@@ -1196,8 +1196,8 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         // this.memberVideoDevChange(UID);
       };
       // SDK接口：通知 打开摄像头失败
-      CRVideo_OpenVideoFailed.callback = errDesc => {
-        this.openVideoFailed(errDesc);
+      CRVideo_OpenVideoFailed.callback = (errCode, errDesc, videoID) => {
+        this.openVideoFailed(errCode, errDesc, videoID);
       };
     }
     // 更新摄像头信息并展示
@@ -1214,6 +1214,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
           optionStr += `<option value=\"${videoList[i].videoID}\">${videoList[i].videoName}</option>`;
         }
       }
+      // console.log(optionStr);
       $('#select_cam').html(optionStr);
     }
     // 打开用户的摄像头
@@ -1224,19 +1225,21 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
     // 成员摄像头设备变化
     memberVideoDevChange(UID) {
       console.crlog(`[MeetingDemo] ${UID} 摄像头设备变化`);
-      MeetingDemo.MemberMgr.members.forEach(item => {
+      MeetingDemo.MemberMgr.members.forEach((item) => {
         if (item.userID == UID) {
           const allVideoInfo = window.CRVideo_GetAllVideoInfo(UID);
           const openedCams = window.CRVideo_GetOpenedVideoIDs(UID);
           if (openedCams.length !== item.allVideos.length) {
             // 数量有变化，得刷新视频墙
             this.refreshUserVideoWall(MeetingDemo.Video.curVideoPage);
+            // 判断是自己的摄像头，则更新录制参数（更新方法里面判断是否正在单流录制中）
+            if (UID == MeetingDemo.Login.userID) {
+              MeetingDemo.Mixer.updateUnaflowRecord('mp4', +$('input[name=subscribeVideos]:checked').val());
+            }
           } else {
             // 数量没有变化，只需要重新setVideo即可
             for (let i = 0; i < item.allVideos.length; i++) {
-              const openVideo = allVideoInfo.filter(videoItem => {
-                return videoItem.videoID == openedCams[i];
-              })[0];
+              const openVideo = allVideoInfo.find((item) => item.videoID == openedCams[i]);
               item.allVideos[i].videoUI.setVideo(UID, openedCams[i]);
               item.allVideos[i].videoID = openVideo.videoID;
               item.allVideos[i].videoName = openVideo.videoName;
@@ -1245,6 +1248,10 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         }
       });
       MeetingDemo.Mixer.updateInterflowRecord();
+      // 自己的摄像头，更新摄像头列表
+      if (UID === MeetingDemo.Login.userID) {
+        MeetingDemo.Video.updateVideoDevices();
+      }
     }
     // 刷新视频墙
     refreshUserVideoWall(page = 0) {
@@ -1260,11 +1267,11 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         MeetingDemo.MemberMgr.members.forEach((member, index) => {
           this.updateMemberVideoUI(member); // 成员视频UI组件处理
           // 取出所有需要显示的视频
-          member.allVideos.forEach(videoItem => {
+          member.allVideos.forEach((videoItem) => {
             allVideoArr.push({
               userID: videoItem.userID,
               videoID: videoItem.videoID,
-              videoUI: videoItem.videoUI
+              videoUI: videoItem.videoUI,
             });
           });
           setTimeout(() => {
@@ -1273,7 +1280,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         });
 
       // 不允许翻到空白页
-      if (page * this.pageVideoNum >= allVideoArr.length) return MeetingDemo.Video.lastPage();
+      if (page * this.pageVideoNum >= allVideoArr.length && page != 0) return MeetingDemo.Video.lastPage();
 
       // 找出本页this.pageVideoNum个视频
       const pageVideos = [];
@@ -1287,8 +1294,8 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       if (this.curPageVideos.length !== pageVideos.length) isChanged = true;
 
       // 没有显示在当前页面的视频，全部退订
-      allVideoArr.forEach(videoItem => {
-        if (!pageVideos.find(item => item.userID == videoItem.userID && item.videoID == videoItem.videoID)) videoItem.videoUI.setVideo(videoItem.userID, 0);
+      allVideoArr.forEach((videoItem) => {
+        if (!pageVideos.find((item) => item.userID == videoItem.userID && item.videoID == videoItem.videoID)) videoItem.videoUI.setVideo(videoItem.userID, 0);
       });
       this.curPageVideos = pageVideos;
       MeetingDemo.refreshScreenSplit(); // 刷新分屏样式
@@ -1324,11 +1331,11 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       }
       // 注册事件
       $('.deviceIcon').hover(
-        e => {
+        (e) => {
           const text = $(e.currentTarget).data('title');
           $(e.currentTarget).parent().children('.deviceIconText').html(text);
         },
-        e => {
+        (e) => {
           $(e.currentTarget).parent().children('.deviceIconText').html('');
         }
       );
@@ -1337,25 +1344,25 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
     updateMemberVideoUI(member) {
       const allVideoInfo = window.CRVideo_GetAllVideoInfo(member.userID); // SDK接口：获取成员的所有摄像头信息
       const openedIDs = window.CRVideo_GetOpenedVideoIDs(member.userID) || []; // SDK接口：获取成员的当前打开的摄像头id集合
-      const openedVideos = allVideoInfo.filter(item => openedIDs.includes(item.videoID)); // 从所有摄像头信息里过滤出打开的摄像头
+      const openedVideos = allVideoInfo.filter((item) => openedIDs.includes(item.videoID)); // 从所有摄像头信息里过滤出打开的摄像头
       const videoUIs = []; //  可能有多个摄像头同时开启的情况，那就需要创建多个UI组件
       const newMemberAllVideos = [];
       if (member.allVideos) {
         // 如果是已经有了的，就更新一下，没有的就添加上去
         for (var i = 0; i < openedVideos.length; i++) {
-          const videoItem = member.allVideos.find(item => item.userID == openedVideos[i].userID && item.videoID == openedVideos[i].videoID);
+          const videoItem = member.allVideos.find((item) => item.userID == openedVideos[i].userID && item.videoID == openedVideos[i].videoID);
           if (videoItem) videoItem.videoName = openedVideos[i].videoName;
           newMemberAllVideos.push(
             videoItem || {
               userID: openedVideos[i].userID,
               videoID: openedVideos[i].videoID,
-              videoName: openedVideos[i].videoName
+              videoName: openedVideos[i].videoName,
             }
           );
         }
         // 将多余的组件销毁（比如从启用多摄像头变为不启用，多余的摄像头组件要销毁一下）
         for (var i = 0; i < member.allVideos.length; i++) {
-          const videoItem = newMemberAllVideos.find(item => item.userID == member.allVideos[i].userID && item.videoID == member.allVideos[i].videoID);
+          const videoItem = newMemberAllVideos.find((item) => item.userID == member.allVideos[i].userID && item.videoID == member.allVideos[i].videoID);
           if (!videoItem && member.allVideos[i].videoUI) member.allVideos[i].videoUI.destroy();
         }
         member.allVideos = newMemberAllVideos;
@@ -1369,26 +1376,27 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
           // userID: MeetingDemo.Login.userID,
           userID: member.userID,
           videoID: -1,
-          videoName: ''
+          videoName: '',
         });
       }
-      member.allVideos.forEach(videoItem => {
+      member.allVideos.forEach((videoItem) => {
         if (!videoItem.videoUI) {
           let posterImg = './image/pc/meeting_be_closed.jpg'; // 视频没有流时的预览图
           const videoStyle = {
             // video标签的自定义样式
-            objectFit: 'cover' //object-fit属性，cover表示裁剪显示
+            objectFit: 'cover', //object-fit属性，cover表示裁剪显示
           };
           // SDK接口：创建成员视频UI组件
           let videoUI = window.CRVideo_CreatVideoObj({
             // 可以传一个属性对象，都是video标签支持的属性
-            poster: posterImg
+            poster: posterImg,
             // style: videoStyle
           });
           videoUI.setVideo(member.userID, videoItem.videoID); // 订阅具体的摄像头id
           // videoUI.setVideo(member.userID, -1); //订阅默认摄像头
           videoUI.setNickNameStyle(this.nameStyle); // 设置昵称样式
           videoUI.dblClickFullScreen(1); // 设置video是否双击全屏
+          videoUI.showVideoSize(MeetingDemo.Video.showVideoSize); // 设置是否显示视频尺寸
           let videoIDStr = '';
           if (openedIDs.length > 1) {
             videoIDStr = `-${videoItem.videoID}`;
@@ -1416,7 +1424,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
     memberVideoStatusChange(UID, oldStatus, newStatus) {
       let nickname = '';
       // 更新状态
-      MeetingDemo.MemberMgr.members.forEach(memberItem => {
+      MeetingDemo.MemberMgr.members.forEach((memberItem) => {
         if (memberItem.userID == UID) {
           memberItem.videoStatus = newStatus;
           nickname = UID == MeetingDemo.Login.userID ? '我' : memberItem.nickname;
@@ -1460,7 +1468,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       const $this = $(dom);
       const UID = $this.parent().data('userid');
       const members = window.CRVideo_GetAllMembers(); // SDK接口：获取会议内所有成员信息
-      members.forEach(item => {
+      members.forEach((item) => {
         let parsedID = MeetingDemo.MemberMgr.parseUserID(item.userID);
         if (parsedID == UID) {
           if ($this.hasClass('deviceCamActive')) {
@@ -1483,9 +1491,9 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       const $this = $(dom);
       const parseUserID = $this.parent().data('userid');
       const uiid = $this.parent().data('uiid');
-      MeetingDemo.MemberMgr.members.forEach(member => {
+      MeetingDemo.MemberMgr.members.forEach((member) => {
         if (MeetingDemo.MemberMgr.parseUserID(member.userID) == parseUserID) {
-          member.allVideos.forEach(videoItem => {
+          member.allVideos.forEach((videoItem) => {
             if (videoItem.videoUI && videoItem.videoUI.id() == uiid) {
               // 直接保存照片 -- savePic
               const Date = MeetingDemo.getDate();
@@ -1524,6 +1532,44 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         }
       });
     }
+    // 创建大小流视频组件
+    createSubStreamVideoUI() {
+      const videoUI_large = window.CRVideo_CreatVideoObj(); // SDK接口：创建成员视频UI组件
+      videoUI_large.dblClickFullScreen(1); // 设置video是否双击全屏
+      videoUI_large.showVideoSize(true); // 设置video是否显示视频尺寸
+      document.querySelector('#subStreamVideo1').innerHTML = '';
+      document.querySelector('#subStreamVideo1').appendChild(videoUI_large.handler());
+      this.videoUI_large = videoUI_large;
+      const videoUI_small = window.CRVideo_CreatVideoObj(); // SDK接口：创建成员视频UI组件
+      videoUI_small.dblClickFullScreen(1); // 设置video是否双击全屏
+      videoUI_small.showVideoSize(true); // 设置video是否显示视频尺寸
+      document.querySelector('#subStreamVideo2').innerHTML = '';
+      document.querySelector('#subStreamVideo2').appendChild(videoUI_small.handler());
+      this.videoUI_small = videoUI_small;
+    }
+    // 点击视频组件里面的观看大小流
+    onClickWatchStream(dom) {
+      const $this = $(dom);
+      const parseUserID = $this.parent().data('userid');
+      const uiid = $this.parent().data('uiid');
+      MeetingDemo.MemberMgr.members.forEach((member) => {
+        if (MeetingDemo.MemberMgr.parseUserID(member.userID) == parseUserID) {
+          member.allVideos.forEach((videoItem) => {
+            if (videoItem.videoUI && videoItem.videoUI.id() == uiid) {
+              this.videoUI_large.setVideo(videoItem.userID, videoItem.videoID, 1);
+              this.videoUI_small.setVideo(videoItem.userID, videoItem.videoID, 2);
+              document.querySelector('.sub-stream-view').style.display = 'flex';
+            }
+          });
+        }
+      });
+    }
+    // 关闭大小流窗口
+    closeSubStreamWindow() {
+      document.querySelector('.sub-stream-view').style.display = 'none';
+      this.videoUI_large.setVideo('', 0);
+      this.videoUI_small.setVideo('', 0);
+    }
     // 切换分辨率或帧率或比例
     setVideoConfig(obj) {
       CRVideo_SetVideoCfg(obj); // SDK接口：设置视频参数
@@ -1560,7 +1606,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
     }
     // 点击添加虚拟摄像头按钮（图片）
     onClickAddCanvasCamBtn(dom) {
-      MeetingDemo.promptLayer(2, '请输入图片Url', '', value => {
+      MeetingDemo.promptLayer(2, '请输入图片Url', '', (value) => {
         this.addCanvasCam('img', '虚拟摄像头（图片）', value);
       });
     }
@@ -1574,7 +1620,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
     }
     // 点击添加网络摄像头按钮
     onClickAddIPCamBtn(dom) {
-      MeetingDemo.promptLayer(2, '请输入网络摄像头url（只支持wss://协议，且只支持特定摄像头，因为不同摄像头获取stream的方法不同）', '', value => {
+      MeetingDemo.promptLayer(2, '请输入网络摄像头url（只支持wss://协议，且只支持特定摄像头，因为不同摄像头获取stream的方法不同）', '', (value) => {
         // wss://192.168.5.163:8087/live/av0
         if (value.indexOf('wss://') != 0) return MeetingDemo.alertLayer('url格式不正确，请输入正确的url。（当前只支持 wss:// 协议的网络摄像头）', this.onClickAddCanvasCamBtn);
         this.addIPCam(value);
@@ -1616,11 +1662,11 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       }
       const screenCfg = {
         audio: false,
-        video: true
+        video: true,
       };
       // 获取桌面媒体流
       navigator.mediaDevices.getDisplayMedia(screenCfg).then(
-        stream => {
+        (stream) => {
           const videoID = window.CRVideo_AddStreamCam(stream, '桌面摄像头'); // SDK接口：添加webrtc媒体流摄像头
           this.screenCamID = videoID;
           this.screenStream = stream;
@@ -1628,7 +1674,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
           CRVideo_SetDefaultVideo(MeetingDemo.Login.userID, videoID); // SDK接口：设置默认摄像头
           $('#addScreenCamBtn').data('toggle', 1).text('移除桌面摄像头');
         },
-        err => {
+        (err) => {
           MeetingDemo.tipLayer(`获取桌面媒体流失败：${err}`);
         }
       );
@@ -1690,52 +1736,37 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       }
       videoID && window.CRVideo_RemoveCanvasVCam(videoID); // SDK接口：移除虚拟摄像头
     }
-    // 点击虚拟背景设置按钮
-    onClickVBGBtn() {
-      const baseUrl = MeetingDemo.Login.server.includes('localhost') || MeetingDemo.Login.server.includes('127.0.0.1') ? `sdk.${window.__CRName}.com` : MeetingDemo.Login.server;
-      $('#vbImg1').data('url', `https://${baseUrl}/web/resource/imgs/vb1.jpg`);
-      $('#vbImg2').data('url', `https://${baseUrl}/web/resource/imgs/vb2.jpg`);
-      $('#vbImg3').data('url', `https://${baseUrl}/web/resource/imgs/vb3.jpg`);
-      $('#vbImg1 .img-box img').attr('src', `https://${baseUrl}/web/resource/imgs/vb1.jpg`);
-      $('#vbImg2 .img-box img').attr('src', `https://${baseUrl}/web/resource/imgs/vb2.jpg`);
-      $('#vbImg3 .img-box img').attr('src', `https://${baseUrl}/web/resource/imgs/vb3.jpg`);
-      $('.bgimg-choose').show();
-    }
     // 点击选择虚拟背景图片
     chooseVBImg(dom) {
-      $(dom).addClass('active').siblings().removeClass('active');
-    }
-    // 虚拟背景选择界面确定按钮
-    onClickVBConfirmBtn() {
-      $('.bgimg-choose').hide();
-      var $selectNode = $('.choose-list li.active');
-      var type = $selectNode.data('type'),
-        color,
-        image;
-
       if (type != 0 && $('#mutiCam')[0].checked == true) {
         MeetingDemo.tipLayer('多摄像头模式下虚拟背景将不可用');
         return;
       }
+
+      const $dom = $(dom);
+
+      $dom.addClass('active').siblings().removeClass('active');
+      var type = $dom.data('type'),
+        color,
+        image;
       if (type == 1) {
-        color = $selectNode.data('color');
+        color = $dom.data('color');
       } else if (type == 2) {
-        image = $selectNode.find('img')[0];
+        image = $dom.find('img')[0];
       }
 
       const sdkErr = window.CRVideo_SetVirtualBackground({
         type,
         color,
         image,
-        debuggerStyle: false
-        // destroy: false,
+        blurIntensity: +$('#blurIntensitySlider').val(),
         // debuggerStyle: {
-        //     position: 'absolute',
-        //     right: '0px',
-        //     bottom: '0px',
-        //     width: '200px',
-        //     height: '112px',
-        //     zIndex: 9999,
+        //   position: 'absolute',
+        //   right: '0px',
+        //   bottom: '0px',
+        //   width: '200px',
+        //   height: '112px',
+        //   zIndex: 9999,
         // }
       });
       if (sdkErr == 0) {
@@ -1745,12 +1776,56 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       }
     }
     // 虚拟背景选择界面取消按钮
-    onClickVBCancelBtn() {
+    onClickVBCloseBtn() {
       $('.bgimg-choose').hide();
+
+      window.CRVideo_SetVirtualBackground({
+        type: 0,
+      });
+      $('#mutiCam').attr('disabled', false);
+      $('.choose-list li').removeClass('active');
+    }
+    onBlurIntensitySliderChange(dom) {
+      window.CRVideo_SetVirtualBackground({
+        blurIntensity: +dom.value,
+      });
     }
     // 打开摄像头失败
-    openVideoFailed(err) {
-      MeetingDemo.alertLayer(`打开摄像头失败：${err} </br>您的摄像头设备可能被占用或未授权访问，请检查后重新开关摄像头再试！`);
+    openVideoFailed(errCode, err, videoID) {
+      const camName = CRVideo_GetAllVideoInfo(MeetingDemo.Login.userID).find((item) => item.videoID == videoID).videoName;
+      const videoStr = videoID ? ` ${videoID} :“${camName}”` : '';
+      MeetingDemo.alertLayer(`打开摄像头${videoStr}失败，${err} </br>您的摄像头设备可能被占用或未授权访问，请检查后重新开关摄像头再试！`);
+    }
+    // 设置是否显示视频尺寸
+    clickIsShowVideoSize() {
+      let bool = !!$('#showVideSize').prop('checked');
+      this.showVideoSize = bool;
+      MeetingDemo.MemberMgr.members.forEach((member, index) => {
+        member.allVideos.forEach((videoItem) => {
+          videoItem.videoUI.showVideoSize(bool);
+        });
+      });
+    }
+    // 邀请监控设备
+    inviteNetCam() {
+      const url = $('#netcamUrl').val();
+      const userID = $('#netcamUserId').val();
+      const nickName = $('#netcamNickname').val();
+      console.log(url, userID, nickName);
+      if (url == '' || userID == '' || nickName == '') {
+        MeetingDemo.tipLayer('请填写完整信息');
+        return;
+      }
+      const usrExtDat = {
+        meeting: { ID: MeetingDemo.RoomMgr.meetID },
+        devInfo: {
+          userID,
+          nickName,
+        },
+      };
+
+      CRVideo_Invite(url, JSON.stringify(usrExtDat));
+      $('.invite-netcam-panel').hide();
     }
   }
   MeetingDemo.Video = new _videoM();
@@ -1775,8 +1850,16 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         this.memberMicEnergyUpdate(userID, oldLevel, newLevel);
       };
       // SDK接口：通知 打开麦克风失败
-      CRVideo_OpenMicFailed.callback = errDesc => {
+      CRVideo_OpenMicFailed.callback = (errCode, errDesc) => {
         this.openMicFailed(errDesc);
+      };
+      // SDK接口：通知 扬声器设备列表变化
+      CRVideo_SpkDeviceChanged.callback = () => {
+        this.updateAudioDevices();
+      };
+      // SDK接口：通知 麦克风设备列表变化
+      CRVideo_MicDeviceChanged.callback = () => {
+        this.updateAudioDevices();
       };
     }
     // 更新音频设备列表并展示
@@ -1817,7 +1900,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
     memberAudioStatusChanged(UID, oldStatus, newStatus) {
       let nickname = '';
       // 更新状态
-      MeetingDemo.MemberMgr.members.forEach(memberItem => {
+      MeetingDemo.MemberMgr.members.forEach((memberItem) => {
         if (memberItem.userID == UID) {
           memberItem.audioStatus = newStatus;
           nickname = UID == MeetingDemo.Login.userID ? '我' : memberItem.nickname;
@@ -1838,7 +1921,10 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       let parsedID = MeetingDemo.MemberMgr.parseUserID(UID);
       let $deviceMic = $('[data-userid=' + parsedID + '] .deviceMic');
       if (newLevel == 0) {
-        $deviceMic.removeClass('deviceMicEnergy');
+        clearTimeout(this.micEnergyRestTimer);
+        this.micEnergyRestTimer = setTimeout(() => {
+          $deviceMic.removeClass('deviceMicEnergy');
+        }, 500);
       } else {
         $deviceMic.addClass('deviceMicEnergy');
       }
@@ -1875,7 +1961,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       const $this = $(dom);
       const UID = $this.parent().data('userid');
       const members = window.CRVideo_GetAllMembers(); // SDK接口：获取会议内所有成员信息
-      members.forEach(item => {
+      members.forEach((item) => {
         let parsedID = MeetingDemo.MemberMgr.parseUserID(item.userID);
         if (parsedID == UID) {
           if ($this.hasClass('deviceMicActive')) {
@@ -1906,13 +1992,13 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       if (!!$('#autoGainControl').prop('checked')) {
         // SDK接口：设置音频参数
         CRVideo_SetAudioCfg({
-          autoGainControl: true
+          autoGainControl: true,
         });
         $('.mic-volume').hide();
       } else {
         // SDK接口：设置音频参数
         CRVideo_SetAudioCfg({
-          autoGainControl: false
+          autoGainControl: false,
         });
         const audioCfg = CRVideo_GetAudioCfg();
         $('#micVolInput').val(audioCfg.micVolume);
@@ -1925,12 +2011,12 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       if (!!$('#echoCancellation').prop('checked')) {
         // SDK接口：设置音频参数
         CRVideo_SetAudioCfg({
-          echoCancellation: true
+          echoCancellation: true,
         });
       } else {
         // SDK接口：设置音频参数
         CRVideo_SetAudioCfg({
-          echoCancellation: false
+          echoCancellation: false,
         });
       }
     }
@@ -1939,12 +2025,12 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       if (!!$('#noiseSuppression').prop('checked')) {
         // SDK接口：设置音频参数
         CRVideo_SetAudioCfg({
-          noiseSuppression: true
+          noiseSuppression: true,
         });
       } else {
         // SDK接口：设置音频参数
         CRVideo_SetAudioCfg({
-          noiseSuppression: false
+          noiseSuppression: false,
         });
       }
     }
@@ -1953,7 +2039,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       const vol = +ele.value;
       $('#micVolStr').html(vol);
       CRVideo_SetAudioCfg({
-        micVolume: vol
+        micVolume: vol,
       });
     }
     // 打开麦克风失败
@@ -1983,7 +2069,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
     }
     registerCallback() {
       // SDK接口：通知 房间中开启了屏幕共享
-      CRVideo_NotifyScreenShareStarted.callback = sharer => {
+      CRVideo_NotifyScreenShareStarted.callback = (sharer) => {
         $('#startMarkBtn').html('开启标注').addClass('disabled');
         setTimeout(() => {
           $('#startMarkBtn').removeClass('disabled');
@@ -2004,7 +2090,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         }
         if (this.screenShareUI && this.screenShareUI.destroy) this.screenShareUI.destroy();
         this.screenShareUI = window.CRVideo_CreatScreenShareObj({
-          poster: './image/pc/meeting_get_screen.jpg'
+          poster: './image/pc/meeting_get_screen.jpg',
         });
         this.screenShareUI.setVideo(sharer);
         this.screenShareUI.setNickNameStyle(MeetingDemo.Video.nameStyle); // 设置昵称样式
@@ -2017,7 +2103,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         MeetingDemo.exitFullscreen();
       };
       // SDK接口：通知 房间内屏幕共享结束
-      CRVideo_NotifyScreenShareStopped.callback = sharer => {
+      CRVideo_NotifyScreenShareStopped.callback = (sharer) => {
         $('#startMarkBtn').html('开启标注');
         $('#stopScreenShareBtn').removeClass('disabled');
         this.onScreenShareStoped();
@@ -2028,7 +2114,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         }
       };
       // SDK接口：通知 屏幕共享标注开始
-      CRVideo_NotifyScreenMarkStarted.callback = userID => {
+      CRVideo_NotifyScreenMarkStarted.callback = (userID) => {
         $('#startMarkBtn').html('结束标注');
         $('.page_meet_video').hide();
         $('.page_share_box').show();
@@ -2038,22 +2124,24 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
           allowMark: true,
           strokeStyle: '#ff0000', // 画笔颜色
           lineWidth: 3, // 画笔线宽
-          cursor: 'url("./image/pc/meeting_pen1_.ico"), auto' // 画笔样式
+          cursor: 'url("./image/pc/meeting_pen1_.ico"), auto', // 画笔样式
         });
       };
       // SDK接口：通知 屏幕共享标注结束
-      CRVideo_NotifyScreenMarkStopped.callback = userID => {
+      CRVideo_NotifyScreenMarkStopped.callback = (userID) => {
         $('#startMarkBtn').html('开启标注');
         // SDK接口：设置屏幕共享UI组件标注样式
         MeetingDemo.Screen.screenShareUI.setMark({
           allowMark: true,
-          cursor: 'default' // 画笔样式
+          cursor: 'default', // 画笔样式
         });
       };
       // SDK接口：回调 开启屏幕共享结果
-      CRVideo_StartScreenShareRslt.callback = sdkErr => {
+      CRVideo_StartScreenShareRslt.callback = (sdkErr) => {
         if (sdkErr == 0) {
           MeetingDemo.tipLayer(`当前正在共享自己的屏幕`);
+        } else if (sdkErr == 700) {
+          MeetingDemo.tipLayer(`共享失败，房间当前已在屏幕共享中！`);
         } else {
           this.isStarting = false;
           this.isSharing = false;
@@ -2086,15 +2174,15 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
             left: +$('#regShareLeft').val() || 0,
             top: +$('#regShareTop').val() || 0,
             width: +$('#regShareWidth').val() || 0,
-            height: +$('#regShareHeight').val() || 0
+            height: +$('#regShareHeight').val() || 0,
           },
-          maxFPS: this.screenFPS
+          maxFPS: this.screenFPS,
         });
       } else {
         // SDK接口：设置屏幕共享参数
         CRVideo_SetScreenShareCfg({
           catchRect: null,
-          maxFPS: this.screenFPS
+          maxFPS: this.screenFPS,
         });
       }
     }
@@ -2119,7 +2207,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         // 当前没有在屏幕共享或播放影音
 
         CRVideo_SetScreenShareCfg({
-          maxFPS: this.screenFPS
+          maxFPS: this.screenFPS,
         });
 
         CRVideo_StartScreenShare(); // SDK接口：开始屏幕共享
@@ -2179,7 +2267,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
     }
     registerCallback() {
       // SDK接口：通知 房间内开始播放影音
-      CRVideo_NotifyMediaStart.callback = UID => {
+      CRVideo_NotifyMediaStart.callback = (UID) => {
         this.isPlaying = true;
         this.isStarting = false;
         if (UID == MeetingDemo.Login.userID) {
@@ -2202,7 +2290,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         MeetingDemo.exitFullscreen();
       };
       // SDK接口：通知 房间内影音播放停止
-      CRVideo_NotifyMediaStop.callback = UID => {
+      CRVideo_NotifyMediaStop.callback = (UID) => {
         this.stopPlayingHandler();
         MeetingDemo.Mixer.updateInterflowRecord(); // 更新云端录制内容
       };
@@ -2233,7 +2321,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         var evt = new MouseEvent('click', {
           bubbles: false,
           cancelable: true,
-          view: window
+          view: window,
         });
         $('#mediaFileInput')[0].dispatchEvent(evt);
       }
@@ -2241,7 +2329,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
     // 载入影音文件
     onLoadMediaFiles(dom) {
       if (MeetingDemo.Screen.isSharing) {
-        MeetingDemo.tipLayer(`当前房间正在屏幕共享中，不可同时共享影音！`);
+        MeetingDemo.tipLayer(`房间当前正在屏幕共享中，不可同时共享影音！`);
         $('#openMediaBtn').removeClass('playing');
         $('#mediaFileInput')[0].value = null;
         this.mediaShareUIObj = null;
@@ -2250,16 +2338,21 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         this.isPlaying = false;
         this.isMyPlaying = false;
         return;
-      }
-      const file = dom.files[0];
-      $('.page_share_box').show();
-      $('.page_meet_video').hide();
-      MeetingDemo.Sync.switchToPage(7);
-      this.isStarting = true;
-      const isPlaying = window.CRVideo_StartPlayMedia(this.mediaShareUIObj, file, 0, 2); // SDK接口：开始播放影音
-      if (!isPlaying) {
-        MeetingDemo.tipLayer('不支持该影音格式！');
-        this.stopPlayingHandler();
+      } else if (this.isPlaying) {
+        MeetingDemo.tipLayer(`共享失败，房间当前已在影音共享中！`);
+        $('.page_share_box').show();
+        $('.page_meet_video').hide();
+      } else {
+        const file = dom.files[0];
+        $('.page_share_box').show();
+        $('.page_meet_video').hide();
+        MeetingDemo.Sync.switchToPage(7);
+        this.isStarting = true;
+        const isPlaying = window.CRVideo_StartPlayMedia(this.mediaShareUIObj, file, 0, 2); // SDK接口：开始播放影音
+        if (!isPlaying) {
+          MeetingDemo.tipLayer('不支持该影音格式！');
+          this.stopPlayingHandler();
+        }
       }
     }
     // 点击停止播放按钮
@@ -2363,7 +2456,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
           },
           btn2: function (index) {
             CRVideo_RejectInvite(inviteID, userExtDat, userExtDat);
-          }
+          },
         });
       };
       // SDK接口：通知 对方取消了邀请
@@ -2402,7 +2495,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
           formType: 2,
           value: '',
           title: '请输入被邀请者的ID(多个用户请用；号隔开)',
-          area: ['200px', '20px'] //自定义文本域宽高
+          area: ['200px', '20px'], //自定义文本域宽高
         },
         function (value, index, elem) {
           const users = value.toString().split(';');
@@ -2420,8 +2513,8 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         UID,
         JSON.stringify({
           meeting: {
-            ID: MeetingDemo.RoomMgr.meetID
-          }
+            ID: MeetingDemo.RoomMgr.meetID,
+          },
         })
       );
     }
@@ -2471,7 +2564,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       const msgText = $('input[name=chat_msg]').val();
       const stringMsg = JSON.stringify({
         CmdType: 'IM',
-        IMMsg: msgText
+        IMMsg: msgText,
       });
       CRVideo_SendMeetingCustomMsg(stringMsg); // SDK接口：发送会议内广播消息
     }
@@ -2623,7 +2716,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       var evt = new MouseEvent('click', {
         bubbles: false,
         cancelable: true,
-        view: window
+        view: window,
       });
       $('#fileInput')[0].dispatchEvent(evt);
     }
@@ -2666,7 +2759,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       }
       const jsonMsg = JSON.stringify({
         CmdType: 'IM',
-        IMMsg: msg
+        IMMsg: msg,
       });
       CRVideo_SendCmd(userID, jsonMsg); // SDK接口：发送点对点消息
     }
@@ -2679,48 +2772,24 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       this.initData();
       this.registerCallback();
     }
-    initData() {
-      // this.lastMainPage = 8; // 上一次的主功能区
-      this.curMainPage = 0; // 当前主功能区
-      this.curSubPage = '0.0'; // 当前子页面
-    }
-    registerCallback() {
-      // SDK接口：通知 当前功能区有变化
-      window.CRVideo_NotifySwitchToPage.callback = (mainPage, subPage) => {
-        console.crlog(`[MeetingDemo] 通知功能区切换，主功能区：${mainPage}，子功能区：${subPage}`);
-        if (this.curMainPage == mainPage) return;
-        this.curMainPage = mainPage;
-        this.curSubPage = subPage;
-        this.switchToPage(mainPage, subPage, true);
-      };
-    }
-    // 获取当前功能区
-    getCurPage() {
-      this.curMainPage = window.CRVideo_GetCurrentMainPage(); // SDK接口：获取当前主功能区
-      this.curSubPage = window.CRVideo_GetCurrentSubPage(); // SDK接口：获取当前子功能区
-      console.crlog(`[MeetingDemo] 获取到当前主功能区：${this.curMainPage}，子功能区：${this.curSubPage}`);
-      this.switchToPage(this.curMainPage, this.curSubPage, true);
-    }
+    initData() {}
+    registerCallback() {}
     // 切换功能区
-    switchToPage(mainPage, subPage, isNotify) {
+    switchToPage(mainPage) {
       if (!MeetingDemo.RoomMgr.isMeeting) return;
-      !isNotify && console.crlog(`[MeetingDemo] 切换功能区：${mainPage}, ${subPage}`);
-      // 如果只是通知切换，就不要调接口了
-      !isNotify && window.CRVideo_SwitchToPage(mainPage, subPage == undefined ? '0.0' : subPage); // SDK接口：切换功能区
-
       switch (mainPage) {
         case 6: // 屏幕共享
-          isNotify && MeetingDemo.tipLayer(`当前主功能区：屏幕共享`);
+          MeetingDemo.tipLayer(`当前主功能区：屏幕共享`);
           $('.page_share_box').show();
           $('.page_meet_video').hide();
           break;
         case 7: // 影音共享
-          isNotify && MeetingDemo.tipLayer(`当前主功能区：影音共享`);
+          MeetingDemo.tipLayer(`当前主功能区：影音共享`);
           $('.page_share_box').show();
           $('.page_meet_video').hide();
           break;
         case 8: // 视频墙
-          isNotify && MeetingDemo.tipLayer(`当前主功能区：视频墙`);
+          MeetingDemo.tipLayer(`当前主功能区：视频墙`);
           $('.page_meet_video').show();
           $('.page_share_box').hide();
           $('.page_meet_chat').show();
@@ -2746,7 +2815,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       //合流录制的配置
       this.interflowVideoCfg = {
         width: 1280,
-        height: 720
+        height: 720,
       };
 
       $('.file-info-list').html('');
@@ -2773,7 +2842,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         }, 0);
       };
       // SDK接口：通知 某个云端录制混图器信息变化
-      window.CRVideo_CloudMixerInfoChanged.callback = ID => {
+      window.CRVideo_CloudMixerInfoChanged.callback = (ID) => {
         console.log(`云端录制信息变化，ID:${ID}`);
         this.getAllCloudMixerInfo();
       };
@@ -2815,7 +2884,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
     loadEvent() {}
 
     //点击了开始录制
-    startRecord = task => {
+    startRecord = (task) => {
       if (task === 'unaflowRecord') {
         if (this.myUnaflow && this.myUnaflow.state !== 0) {
           CRVideo_DestroyCloudMixer(this.myUnaflow.ID);
@@ -2842,12 +2911,12 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         (function () {
           var subscribeVideos = [];
           const myOpenedIDs = window.CRVideo_GetOpenedVideoIDs(MeetingDemo.Login.userID);
-          myOpenedIDs.forEach(item => {
+          myOpenedIDs.forEach((item) => {
             subscribeVideos.push(`${MeetingDemo.Login.userID}.${item}`);
           });
           return subscribeVideos;
         })(),
-        [`${MeetingDemo.Login.userID}.-1`]
+        [`${MeetingDemo.Login.userID}.-1`],
       ][type];
     }
     // 根据Type生成音频订阅的参数
@@ -2861,8 +2930,8 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         if (str === 'mp4' && this.myUnaflow.cfg.videoFileCfg) {
           const json = {
             videoFileCfg: {
-              subscribeVideos: this.createSubscribeVideos(type)
-            }
+              subscribeVideos: this.createSubscribeVideos(type),
+            },
           };
           CRVideo_UpdateCloudMixerContent(this.myUnaflow.ID, json);
         }
@@ -2871,8 +2940,8 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         if (str === 'mp3' && this.myUnaflow.cfg.audioFileCfg) {
           const json = {
             audioFileCfg: {
-              subscribeAudios: this.createSubscribeAudios(type)
-            }
+              subscribeAudios: this.createSubscribeAudios(type),
+            },
           };
           CRVideo_UpdateCloudMixerContent(this.myUnaflow.ID, json);
         }
@@ -2883,8 +2952,8 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       if (this.myInterflow && this.myInterflow.state === 2) {
         const json = {
           videoFileCfg: {
-            layoutConfig: this.createLayoutConfig()
-          }
+            layoutConfig: this.createLayoutConfig(),
+          },
         };
         CRVideo_UpdateCloudMixerContent(this.myInterflow.ID, json);
       }
@@ -2897,7 +2966,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         region: $('#ossArea').val(),
         bucket: $('#ossBucket').val(),
         accessKey: $('#ossAccess').val(),
-        secretKey: $('#ossSecret').val()
+        secretKey: $('#ossSecret').val(),
       };
     }
     // 点击单流录制按钮
@@ -2911,7 +2980,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       }
 
       const jsonCfg = {
-        mode: 1
+        mode: 1,
       };
 
       const ossCfg = this.updateThirdPartyCloud();
@@ -2952,7 +3021,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
     // 点击创建合流录制
     createInterflowMixer() {
       const jsonCfg = {
-        mode: 0 //合流模式为0
+        mode: 0, //合流模式为0
       };
 
       const ossCfg = this.updateThirdPartyCloud();
@@ -2973,7 +3042,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
 
         const audioFileCfg = {
           svrPathName: path,
-          aChannelType: aChannelType
+          aChannelType: aChannelType,
         };
 
         //录制左右声道仅录制前两个用户
@@ -2985,7 +3054,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
             return;
           }
 
-          members.slice(0, 2).map(m => aChannelContent.push(m.userID));
+          members.slice(0, 2).map((m) => aChannelContent.push(m.userID));
           audioFileCfg.aChannelContent = aChannelContent;
         }
 
@@ -3014,7 +3083,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
           aChannelType: aChannelType,
           vWidth: width,
           vHeight: height,
-          layoutConfig: this.createLayoutConfig()
+          layoutConfig: this.createLayoutConfig(),
         };
 
         //录制左右声道仅录制前两个用户
@@ -3026,7 +3095,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
             return;
           }
 
-          members.slice(0, 2).map(m => aChannelContent.push(m.userID));
+          members.slice(0, 2).map((m) => aChannelContent.push(m.userID));
           videoFileCfg.aChannelContent = aChannelContent;
         }
 
@@ -3039,7 +3108,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
             return;
           }
 
-          members.slice(0, 2).map(m => aChannelContent.push(m.userID));
+          members.slice(0, 2).map((m) => aChannelContent.push(m.userID));
           videoFileCfg.aChannelContent = aChannelContent;
         }
 
@@ -3056,7 +3125,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       let myUnaflow = null,
         myInterflow = null;
 
-      allMixerInfo.forEach(item => {
+      allMixerInfo.forEach((item) => {
         if (item.cfg.mode === 1 && item.owner && item.owner == MeetingDemo.Login.userID) {
           myUnaflow = item;
         } else if (item.cfg.mode === 0 && item.owner && item.owner == MeetingDemo.Login.userID) {
@@ -3100,7 +3169,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
           top: 0,
           width: W,
           height: H,
-          keepAspectRatio: 1
+          keepAspectRatio: 1,
         });
       } else if (MeetingDemo.Media.isPlaying) {
         // 影音共享同理
@@ -3110,15 +3179,15 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
           top: 0,
           width: W,
           height: H,
-          keepAspectRatio: 1
+          keepAspectRatio: 1,
         });
       } else {
-        AllMembers.forEach(member => {
-          member.allVideos.forEach(item => {
+        AllMembers.forEach((member) => {
+          member.allVideos.forEach((item) => {
             videoItems.push({
               userID: item.userID,
               nickname: member.nickname,
-              videoID: item.videoID
+              videoID: item.videoID,
             });
           });
         });
@@ -3161,8 +3230,8 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
             param: {
               text: '暂无成员开启摄像头',
               color: '#e21918',
-              'font-size': 30
-            }
+              'font-size': 30,
+            },
           });
         }
 
@@ -3181,9 +3250,9 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
             width: w,
             height: h,
             param: {
-              camid: `${item.userID}.${item.videoID}`
+              camid: `${item.userID}.${item.videoID}`,
             },
-            keepAspectRatio: 1
+            keepAspectRatio: 1,
           });
 
           videoContents.push({
@@ -3193,8 +3262,8 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
             param: {
               text: `${item.nickname}-${item.videoID}号摄像头`,
               color: '#ffffff',
-              'font-size': 14
-            }
+              'font-size': 14,
+            },
           });
 
           // 如果没开摄像头，添加文字（摄像头已关闭）
@@ -3206,8 +3275,8 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
               param: {
                 text: '摄像头已关闭',
                 'font-size:': 30,
-                color: '#e21918'
-              }
+                color: '#e21918',
+              },
             });
           }
         });
@@ -3220,12 +3289,60 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         top: H - 60,
         param: {
           text: '%timestamp%',
-          'font-size:': 30
-        }
+          'font-size:': 30,
+        },
       });
 
       return videoContents;
     }
   }
   MeetingDemo.Mixer = new _CloudMixerClass();
+
+  // CRVideo_NotifyNetworkDelay.callback = (delay) => {
+  //   console.log(`网络延迟 -- ${delay}ms`);
+  // };
+  // CRVideo_NotifyPacketsDownloadLostRate.callback = (rate) => {
+  //   console.log(`下行丢包率 -- ${Math.floor(rate * 100)}%` );
+  // };
+  // CRVideo_NotifyPacketsUploadLostRate.callback = (rate) => {
+  //   console.log(`上行丢包率 -- ${Math.floor(rate * 100)}%` );
+  // };
+  // CRVideo_NetStateChanged.callback = (state) => {
+  //   console.log(`网络评分 -- ${state}`);
+  // }
+
+  // navigator.mediaDevices.addEventListener('devicechange', (e) => {
+  //   console.log(e);
+  //   navigator.mediaDevices.enumerateDevices().then(devices => {
+  //     console.log(devices);
+  //     const videoinputs = [],
+  //     audioinputs = [],
+  //     audiooutputs = [];
+  //     devices.forEach(item => {
+  //       if(item.kind === 'videoinput') {
+  //         videoinputs.push(item);
+  //       }
+  //       if(item.kind === 'audioinput') {
+  //         audioinputs.push(item);
+  //       }
+  //       if(item.kind === 'audiooutput') {
+  //         audiooutputs.push(item);
+  //       }
+  //     })
+  //     console.log('videoinputs: ', JSON.stringify(videoinputs));
+  //     console.log('audioinputs: ', JSON.stringify(audioinputs));
+  //     console.log('audiooutputs: ', JSON.stringify(audiooutputs));
+  //   });
+  // });
+
+  // CRVideo_NotifyAudioStream.callback = (side, stream ) => {
+  //   CRVideo_StartGetAudioPCM(side, 0, {eachTime:1})
+  // }
+
+  // CRVideo_NotifyAudioPCMDat.callback = function (aSide, PCMDat) {
+  //   const bytes = new Uint8Array(PCMDat.buffer);
+  //   const _base64Str = btoa(String.fromCharCode(...bytes));
+  //   console.log(_base64Str);
+  // };
+
 });

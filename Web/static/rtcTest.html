@@ -220,7 +220,7 @@
                 </div>
                 <div class="panel-body" v-cloak v-if="checkState.screenShareCheckState == '检测完成'">
                     <div v-if="isScreenShare" class="alert alert-success">当前浏览器支持屏幕共享！！！</div>
-                    <div v-else class="alert alert-danger">当前浏览器暂不支持屏幕共享！！！</div>
+                    <div v-else class="alert alert-danger">当前浏览器暂不支持屏幕共享或未获得用户授权！！！</div>
                 </div>
             </div>
             <div class="panel panel-primary panel-new">
@@ -258,6 +258,25 @@
 <script src="./js/vue@2_dist.js"></script>
 
 <script>
+    // 在Vue实例化前添加Worklet处理器代码
+    const audioWorkletCode = `
+        class AudioProcessor extends AudioWorkletProcessor {
+            process(inputs) {
+                const input = inputs[0];
+                if (input && input.length > 0) {
+                    let sum = 0.0;
+                    for (let i = 0; i < input[0].length; ++i) {
+                        sum += input[0][i] * input[0][i];
+                    }
+                    const instant = Math.sqrt(sum / input[0].length);
+                    this.port.postMessage(instant);
+                }
+                return true;
+            }
+        }
+        registerProcessor('audio-processor', AudioProcessor);
+    `;
+
     var vconsole = new VConsole();
     new Vue({
         el: '#app',
@@ -510,36 +529,71 @@
                 }
             },
             // 音频输入检测
-            checkAudioInput() {
+            async checkAudioInput() {
                 try {
-                    window.AudioContext = window.AudioContext || window.webkitAudioContext || mozAudioContext;
-                    if (!window.AudioContext || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
-                    let context = new AudioContext();
-                    let script = context.createScriptProcessor(2048, 1, 1);
+                    window.AudioContext = window.AudioContext || window.webkitAudioContext;
+                    if (!window.AudioContext || !navigator.mediaDevices?.getUserMedia) return;
+
+                    const context = new AudioContext();
+
+                    // 优先使用AudioWorkletNode
+                    if (typeof AudioWorkletNode === 'function') {
+                        try {
+                            const blob = new Blob([audioWorkletCode], {type: 'application/javascript'});
+                            const url = URL.createObjectURL(blob);
+                            await context.audioWorklet.addModule(url);
+                            const workletNode = new AudioWorkletNode(context, 'audio-processor');
+
+                            workletNode.port.onmessage = (event) => {
+                                this.sounder = event.data * 100;
+                            };
+
+                            navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+                                console.log(`获取到麦克风stream`, stream);
+                                this.isAudioInput = true;
+                                this.checkState.audioinputCheckState = '检测完成';
+
+                                const source = context.createMediaStreamSource(stream);
+                                source.connect(workletNode);
+                                workletNode.connect(context.destination);
+                            }).catch(err => {
+                                console.log(`获取麦克风stream失败：`, err.toString());
+                                this.checkState.audioinputCheckState = '检测完成';
+                            });
+                            return;
+                        } catch (workletError) {
+                            console.warn('AudioWorklet加载失败，回退到ScriptProcessorNode', workletError);
+                        }
+                    }
+
+                    // 回退到ScriptProcessorNode
+                    const bufferSize = 2048;
+                    const scriptNode = context.createScriptProcessor(bufferSize, 1, 1);
+
+                    scriptNode.onaudioprocess = (event) => {
+                        const input = event.inputBuffer.getChannelData(0);
+                        let sum = 0.0;
+                        for (let i = 0; i < input.length; ++i) {
+                            sum += input[i] * input[i];
+                        }
+                        this.sounder = Math.sqrt(sum / input.length) * 100;
+                    };
+
                     navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
                         console.log(`获取到麦克风stream`, stream);
                         this.isAudioInput = true;
                         this.checkState.audioinputCheckState = '检测完成';
-                        let audioinput = context.createMediaStreamSource(stream);
-                        audioinput.connect(script);
-                        script.connect(context.destination);
+
+                        const source = context.createMediaStreamSource(stream);
+                        source.connect(scriptNode);
+                        scriptNode.connect(context.destination);
                     }).catch(err => {
                         console.log(`获取麦克风stream失败：`, err.toString());
                         this.checkState.audioinputCheckState = '检测完成';
                     });
 
-                    script.onaudioprocess = (event) => {
-                        let input = event.inputBuffer.getChannelData(0);
-                        let instant = 0.0;
-                        let sum = 0.0;
-                        for (let i = 0; i < input.length; ++i) {
-                            sum += input[i] * input[i];
-                        }
-                        instant = Math.sqrt(sum / input.length);
-                        this.sounder = instant * 100;
-                    };
                 } catch (err) {
-                    console.error(err);
+                    console.error('音频检测异常:', err);
                     this.checkState.audioinputCheckState = '检测完成';
                 }
             },

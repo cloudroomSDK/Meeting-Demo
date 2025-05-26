@@ -95,11 +95,11 @@
             </div>
             <div class="form_input">
                 <label for="appID">AppID：</label>
-                <input type="text" id="appID" value=" 默认appID" />
+                <input type="text" id="appID" value=" 默认" />
             </div>
             <div class="form_input">
                 <label for="appSecret">Secret：</label>
-                <input type="password" id="appSecret" value="默认appSecret" />
+                <input type="password" id="appSecret" value="默认" />
             </div>
             <div class="form_input">
                 <label>协&ensp;&ensp;议：</label>
@@ -216,7 +216,7 @@
     <script type="text/javascript" src="../static/lib/mobileSelector/js/mPicker.min.js"></script>
     <script type="text/javascript" src="../static/lib/layui/layui.js"></script>
 
-<script src="../SDK/RTCSDKV2.min.js?v=91c3"></script></body>
+<script src="../SDK/RTCSDKV2.min.js?v=3df4"></script></body>
 
 <script>
 
@@ -584,8 +584,8 @@
 
         // 载入存储的设置
         let serverAddr = localStorage.getItem('M_MeetingDemo_serverAddr') || window.location.host;
-        let appID = localStorage.getItem('M_MeetingDemo_appID') || '默认appID';
-        let appSecret = localStorage.getItem('M_MeetingDemo_appSec') || '默认appSecret';
+        let appID = localStorage.getItem('M_MeetingDemo_appID') || '默认';
+        let appSecret = localStorage.getItem('M_MeetingDemo_appSec') || '默认';
         let meetID = sessionStorage.getItem("CRMeetingDemo_meetingID") || '';
 
         $("#g_meet_id").val(meetID);
@@ -655,8 +655,8 @@
     // 点击重置按钮
     $('.recover_btn').on('click', function () {
         $("#serverAddr").val(window.location.host || '');
-        $("#appID").val('默认appID');
-        $("#appSecret").val('默认appSecret');
+        $("#appID").val('默认');
+        $("#appSecret").val('默认');
     })
 
     // 给所有的video标签加上双击全屏事件
@@ -785,15 +785,17 @@
 
 
         const videoSendBW = navigator.userAgent.includes('iPhone') ? 3200 : 800; // ios不设置上限
-        CRVideo_Init({
-            // isSDKConsole: false,
-            MSProtocol: g_protocal, // 媒体流传输协议，1 udp, 2 tcp 缺省为 1 tcp
-            isCallSer: false, // 是否启用队列呼叫服务
-        }).then(res => {
+        CRVideo_Init().then(res => {
             g_is_init = true
-            //登录
+            CRVideo_SetSDKParams({
+                // isSDKConsole: false,
+                MSProtocol: g_protocal, // 媒体流传输协议，1 udp, 2 tcp 缺省为 1 tcp
+                isCallSer: false, // 是否启用队列呼叫服务
+                // securityEnhancement: true, //是否开启安全增强（会有跨域问题，需配置跨域响应头）
+            });
             CRVideo_SetServerAddr($('#serverAddr').val());
-            CRVideo_Login(g_appID, g_appSecret == '默认appSecret' || g_appSecret.length == 32 ? g_appSecret : md5(g_appSecret), g_nick_name, g_user_id, "");
+            //登录
+            CRVideo_Login(g_appID, g_appSecret == '默认' || g_appSecret.length == 32 ? g_appSecret : md5(g_appSecret), g_nick_name, g_user_id, "");
             return;
         }, err => {
             tipLayer(`SDK初始化失败：${err}`);
@@ -833,7 +835,7 @@
         console.log(`登录服务器失败，错误码：${sdkErr}, cookie:${cookie}`);
         if (!!cookie && cookie.includes('reLogin') && cookie.split('_')[1] <= 10) {
             setTimeout(() => {
-                CRVideo_Login(g_appID, g_appSecret == '默认appSecret' || g_appSecret.length == 32 ? g_appSecret : md5(g_appSecret), g_nick_name, g_user_id, `reLogin_${++g_reLoginTimes}`);
+                CRVideo_Login(g_appID, g_appSecret == '默认' || g_appSecret.length == 32 ? g_appSecret : md5(g_appSecret), g_nick_name, g_user_id, `reLogin_${++g_reLoginTimes}`);
             }, 2000);
             return;
         } else if (!!cookie && cookie.includes('reLogin') && cookie.split('_')[1] > 10) {
@@ -847,7 +849,7 @@
             sdkErr == 18 ? sdkErr = "Token已过期！" : sdkErr;
             sdkErr == 20 ? sdkErr = "鉴权app不存在！" : sdkErr;
             sdkErr == 22 ? sdkErr = "此app非Token鉴权！" : sdkErr;
-            sdkErr == 202 ? sdkErr = "登录服务器异常！" : sdkErr;
+            sdkErr == 202 ? sdkErr = "网络异常！" : sdkErr;
             sdkErr == 204 ? sdkErr = "socket连接失败！" : sdkErr;
             alertLayer('登录服务器失败，请稍后再试: ' + sdkErr);
         }
@@ -1031,7 +1033,7 @@
             clearTimeout(g_reLoginTimer);
             g_reLoginTimer = setTimeout(() => {
                 console.log(`重新登录...`);
-                CRVideo_Login(g_appID, g_appSecret == '默认appSecret' || g_appSecret.length == 32 ? g_appSecret : md5(g_appSecret), g_nick_name, g_user_id, `reLogin_${++g_reLoginTimes}`);
+                CRVideo_Login(g_appID, g_appSecret == '默认' || g_appSecret.length == 32 ? g_appSecret : md5(g_appSecret), g_nick_name, g_user_id, `reLogin_${++g_reLoginTimes}`);
             }, 5000);
         }
     }
@@ -1361,14 +1363,14 @@
 
     // 通知切换功能区（已废弃）
     // CRVideo_NotifySwitchToPage.callback = function (mainPage, subPage) {
-        // if (mainPage == 8) {
-        //     clearTimeout(shareUItimer);
-        //     $(".page_screen_share").hide();
-        //     $(".page_meet_video").show();
-        // } else if (mainPage == 6) {
-        //     $(".page_screen_share").show();
-        //     $(".page_meet_video").hide();
-        // }
+    // if (mainPage == 8) {
+    //     clearTimeout(shareUItimer);
+    //     $(".page_screen_share").hide();
+    //     $(".page_meet_video").show();
+    // } else if (mainPage == 6) {
+    //     $(".page_screen_share").show();
+    //     $(".page_meet_video").hide();
+    // }
     // }
 
     document.querySelectorAll('.disableSelect').forEach(item => {
@@ -1390,11 +1392,11 @@
     }
 
     // 通知打开摄像头失败
-    CRVideo_OpenVideoFailed.callback = (errDesc) => {
+    CRVideo_OpenVideoFailed.callback = (errCode, errDesc) => {
         alertLayer(`打开摄像头失败：${errDesc}`);
     }
     // 通知打开麦克风失败
-    CRVideo_OpenMicFailed.callback = (errDesc) => {
+    CRVideo_OpenMicFailed.callback = (errCode, errDesc) => {
         alertLayer(`打开麦克风失败：${errDesc}`);
     }
 </script>
