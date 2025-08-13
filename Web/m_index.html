@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<script type="text/javascript">
+    window.__CRKEY = 'CRDEMO';
+    var protocol = window.location.protocol;
+    var host = window.location.host;
+    var isLocal = false;
+
+    if (host.includes('127.0.0.1') || host.includes('localhost:') || protocol.includes('file')) isLocal = true;
+
+    console.log(`isLocal: ${isLocal}`);
+    console.log(`href: ${window.location.href}`);
+    console.log(`referrer: ${document.referrer}`);
+    console.log(`protocol: ${protocol}`);
+    console.log(`isMobile: ${navigator.userAgent.includes('Mobile')}`);
+
+    // http强制跳转https
+    if (protocol != 'https:' && !isLocal) {
+        location.href = 'https:' + location.href.substring(protocol.length);
+    }
+
+    // 移动端/pc端自动跳转
+    const htmlName = /\w+.html/.exec(window.location.href)[0];
+    console.log(htmlName);
+    if (navigator.userAgent.includes('Mobile') && !htmlName.includes('m_')) { // 移动端打开pc页面
+        window.location.href = window.location.href.replace(htmlName, `m_${htmlName}`);
+    } else if (!navigator.userAgent.includes('Mobile') && htmlName.includes('m_')) { // pc端打开移动端页面
+        window.location.href = window.location.href.replace(htmlName, `${htmlName.replace('m_', '')}`);
+    }
+
+    // ios上webview打开，如果referrer为空则会获取不到相关媒体api，这里强制刷新一下，让referrer不为空(Firefox不行)
+    if (document.referrer == '' && !isLocal && !navigator.userAgent.includes('Firefox')) {
+        window.location.reload();
+    }
+</script>
+
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>MeetingDemo</title>
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="keywords" content="webRTC" />
+    <meta name="description" content="webRTC" />
+    <link rel="shortcut icon" href="./image/favicon.ico">
+    <link rel="stylesheet" href="./lib/layui/css/layui.css">
+    <link rel="stylesheet" href="./lib/mobileSelector/css/mpicker.css">
+    <link rel="stylesheet" href="./css/m_meeting.css?v=2.5.4.12">
+    <script type="text/javascript" src="./js/vconsole.min.js"></script>
+<script src="SDK/RTCSDKV2.min.js"></script></head>
+
+<body>
+    <!-- 登录界面 开始 -->
+    <div id="page_login" class="disableSelect" style="display:block">
+        <div class="login_cont">
+            <div class="setting">
+                <i class="icon icon-setting" onclick="$('.loginSet').show()"></i>
+            </div>
+            <div class="login_form">
+                <div class="form_label">请输入房间号</div>
+                <div class="form_dec">
+                    <span id="formDesc">创建一个新房间或输入房间号加入已有房间</span>
+                    <!-- <span>如果该房间不存在，请点击下面的【创建房间】按钮，</span>
+                    <span>创建并自动加入到一个新的房间；</span> -->
+                </div>
+                <div class="form_input">
+                    <input type="text" id="g_meet_id" placeholder="请输入房间号" autocomplete="off" />
+                    <input type="password" id="g_meet_pwd" placeholder="请输入房间密码" autocomplete="off" />
+                    <input type="text" id="g_nick_name" placeholder="请输入昵称" autocomplete="off" />
+                </div>
+                <div class="enmeet_btn">进入房间</div>
+                <div class="login_order">
+                    <span class="line"></span>
+                    <span class="text">或者</span>
+                    <span class="line"></span>
+                </div>
+                <div class="crmeet_btn">创建房间</div>
+                <div class="verson">SDK版本: <span id="verson"></span></div>
+            </div>
+        </div>
+    </div>
+    <!-- 登录界面 结束 -->
+
+    <!-- 设置界面 开始 -->
+    <div class="loginSet">
+        <!-- <div id="login_sel">登录设置</div> -->
+        <div class="title">设置<button id="saveCfg">保存</button></div>
+        <div class="logset_hide">
+            <div class="form_input">
+                <label for="serverAddr">服务器：</label>
+                <input type="text" id="serverAddr" value="" />
+            </div>
+            <div class="form_input">
+                <label for="appID">AppID：</label>
+                <input type="text" id="appID" value=" 默认" />
+            </div>
+            <div class="form_input">
+                <label for="appSecret">Secret：</label>
+                <input type="password" id="appSecret" value="默认" />
+            </div>
+            <div class="form_input">
+                <label>协&ensp;&ensp;议：</label>
+                <div class="protocaltype">
+                    <label for="udpProtocal">UDP</label>
+                    <input type="radio" class="protocal-radio" name="protocalRadio" id="udpProtocal" value="1" checked />
+                    <label for="tcpProtocal">TCP</label>
+                    <input type="radio" class="protocal-radio" name="protocalRadio" id="tcpProtocal" value="2" />
+                </div>
+            </div>
+            <div class="recover_btn">恢复默认</div>
+        </div>
+    </div>
+    <!-- 设置界面 结束 -->
+
+
+    <!-- 房间界面 开始 -->
+    <div id="page_meeting" style="display:none">
+        <div class="page_meet_head por" style="display: block;">
+            <div class="net-state-icon fine"></div>
+            <div class="page_meet_header">
+                <span id="meetNickName"></span>&ensp;
+                <span id="page_meet_id">房间号：88888888</span>
+            </div>
+        </div>
+        <div class="page_meet_cont por">
+            <div class="page_meet_view">
+                <div class="page_meet_video">
+                    <div class="page_screen">
+                        <div class="screenbox"></div>
+                        <div class="screenbox"></div>
+                        <div class="screenbox"></div>
+                        <div class="screenbox"></div>
+                        <div class="screenbox"></div>
+                        <div class="screenbox"></div>
+                        <div class="screenbox"></div>
+                        <div class="screenbox"></div>
+                        <div class="screenbox"></div>
+                    </div>
+                    <div class="page_chat_box">
+                        <ul>
+                            <!-- <span>乖乖兔：这是干啥呢</span> -->
+                        </ul>
+                    </div>
+                </div>
+                <div class="page_screen_share"></div>
+                <div class="page_meet_chat">
+                    <div class="chat_msg_input">
+                        <i class="icon-arrow"></i>
+                        <div>
+                            <input type="text" autocomplete="off" name="chat_msg" placeholder="请输入聊天内容" />
+                            <span id="sendMsg">发送</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="page_meet_tools">
+                    <ul class="page_meet_tool">
+                        <li id="open_mic" data-status="true">
+                            <img src="./image/m_meet_voice_close.png" />
+                            <p>打开麦克风</p>
+                        </li>
+                        <li id="open_cam" data-status="true">
+                            <img src="./image/m_meet_camera_close.png" />
+                            <p>打开摄像头</p>
+                        </li>
+                        <li id="transform_camera">
+                            <img src="./image/m_meet_transform.png" />
+                            <p>切换摄像头</p>
+                        </li>
+                        <li id="resolution_camera">
+                            <!-- 如果选择其他清晰度，打开华为手机后置摄像头会选择长焦镜头导致画面模糊，切换清晰度不影响 -->
+                            <input type="text" class="resolution_camera_input" value="848*480" style="display: none;">
+                            <img src="./image/m_meet_resolution.png" />
+                            <p>分辨率</p>
+                        </li>
+                        <li id="open_chat" style="float: right;">
+                            <img src="./image/m_meet_chat.png" />
+                            <p>聊天</p>
+                        </li>
+                    </ul>
+                    <div class="page_meet_close"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 房间界面 结束 -->
+
+    <!-- 提示框 开始 -->
+    <div class="page_hint" id="page_hint" style="display: none;">
+        <div class="shadow"></div>
+        <div class="hint-box">
+            <div class="hint-title">提示
+                <a href="javascript:;" class="icon-close" onclick="m_removeAlert()">
+                    <i></i>
+                </a>
+            </div>
+            <div id="hint-content" class="hint-content">房间号不能为空！</div>
+            <div class="hint-footer">
+                <button class="close-btn">确定</button>
+            </div>
+        </div>
+    </div>
+    <!-- 提示框 结束 -->
+    <script>
+        var vConsole = new VConsole();
+    </script>
+
+    <script type="text/javascript" src="./js/md5.js"></script>
+    <script type="text/javascript" src="./lib/zepto/dist/zepto.min.js"></script>
+    <script type="text/javascript" src="./lib/mobileSelector/js/mPicker.min.js"></script>
+    <script type="text/javascript" src="./lib/layui/layui.js"></script>
+
+</body>
+
+<script>
+
+    CRVideo.sdkver ? $('#verson').html(CRVideo.sdkver) : $('#verson').html('未知');
+
+    var g_serverAddr; //服务器地址
+    var g_appID; //用户名 appID
+    var g_appSecret; //登录密码 appSecret
+    var g_protocal = 1; // 流媒体协议
+
+    var enmeet_type; //入会方式 1 房间号入会  2创建房间
+    var g_nick_name = null; //登录者昵称
+    var g_user_id = null; // 登录者id
+    var g_is_login = false; //是否登录了
+    var g_is_init = false; //sdk是否已初始化
+    var g_meet_id = ""; //房间号
+    var g_meet_pwd = ""; //房间密码
+    var g_is_meeting = false; //房间是否在进行中
+    var g_IMChatId = null; //IM聊天消息id
+    var g_curCam = null; //当前摄像头
+    var g_curSpeaker = null; //当前扬声器
+    var g_curMic = null; //当前麦克风
+    var g_curSize = null; //当前视频尺寸
+    var g_curFrame = null; //当前帧率
+    var g_isStartedScreenShare = false; //是否已经有人在共享屏幕了
+    var g_isScreenSharing = false; //是否正在共享自己的屏幕
+
+    // var g_meet_video = {}; // 房间内所有的video对象
+    var g_meet_screen = {}; // 房间内所有的screen对象
+    var g_members = []; // 房间内成员
+    var g_loading_index = -1;
+    var g_loading_deleted = false;
+
+    var g_reEnterTimes = 0; // 重进房间尝试次数
+    var g_reLoginTimes = 0; // 重登服务器尝试次数
+
+    //移动端
+    var gm_videoCfg = {
+        width: 848,
+        height: 480,
+        fps: 15, //	帧率：视频帧率（5~30）
+    }
+
+    //视频状态码
+    var g_camStatus = {
+        open: 3,
+        close: 2
+    }
+
+    //麦克风状态码
+    var g_micStatus = {
+        open: 3,
+        close: 2
+    }
+
+    // 昵称样式
+    var nicknameStyle = {
+        left: "3px",
+        top: "3px",
+        backgroundColor: "rgba(0, 0, 0, .7)",
+        padding: "0 10px",
+        borderRadius: "15px",
+        display: "block",
+        fontSize: "0.8rem",
+        fontWeight: "800",
+        lineHeight: "20px",
+        height: "20px"
+    }
+
+    $(function () {
+
+        // 下拉框选择
+        $("#login_sel").click(function () {
+            if ($(".logset_hide").css("display") == "none") {
+                $(".login_cont").css("top", "-230px")
+                $("#login_sel").css("background-image", 'url("./image/55.png")');
+                $(".logset_hide").show();
+            } else {
+                $(".login_cont").css("top", "0")
+                $("#login_sel").css("background-image", 'url("./image/icon2_06.png")');
+                $(".logset_hide").hide();
+            }
+        });
+
+        //房间号进入
+        $(".enmeet_btn").on('click', function () {
+            var meeting_id = $("#g_meet_id").val();
+            if (meeting_id == "") {
+                alertLayer("房间号不能为空！");
+                return;
+            } else if (meeting_id.length !== 8) {
+                alertLayer("请输入正确的8位房间号！");
+                return;
+            } else {
+                g_meet_id = meeting_id;
+                loginFunc(1);
+            }
+
+        });
+
+        //创建房间
+        $(".crmeet_btn").on('click', function () {
+            loginFunc(2);
+        });
+
+        //退出房间
+        $(".page_meet_close").on('click', function () {
+            $("#page_meeting").hide();
+            $("#page_login").show();
+            CRVideo_ExitMeeting();
+            CRVideo_Logout();
+            CRVideo_Uninit();
+
+            $(".page_screen").removeClass().addClass("page_screen")
+            for (var i = 0; i < 9; i++) {
+                $(".page_screen").children().eq(i).html('待进入...');
+            }
+            g_members = [];
+            // g_meet_video = {};
+            g_is_login = false;
+            g_is_meeting = false;
+            g_curCam = null;
+            g_is_init = false;
+
+
+            if (g_isScreenSharing) {
+                CRVideo_StopScreenShare();
+            }
+        })
+
+    })
+
+    /* ********************************** 分辨率及帧率选择插件 ********************************** */
+    var record_size_arr = [
+        [0, 0, 0],
+        [144, 80, 56],
+        [224, 128, 72],
+        [288, 160, 100],
+        [336, 192, 150],
+        [448, 256, 200],
+        [512, 288, 250],
+        [576, 320, 300],
+        [640, 360, 350],
+        [720, 400, 420],
+        [848, 480, 500],
+        [1024, 576, 650],
+        [1280, 720, 1000], // 12
+        [1920, 1080, 2000] // 13
+    ];
+
+    function updateVideoCfg() {
+        var cfg = {}
+        if (gm_videoCfg.size) {
+            cfg.size = gm_videoCfg.size;
+        } else {
+            cfg.width = gm_videoCfg.width;
+            cfg.height = gm_videoCfg.height;
+        }
+        CRVideo_SetVideoCfg(cfg)
+    }
+    //用于选择分辨率
+    var resolutionData = [{
+        "level": "1",
+        "value": "640*360",
+        "name": "640*360",
+        "shortName": "640*360",
+    }, {
+        "level": "1",
+        "value": "848*480",
+        "name": "848*480",
+        "shortName": "848*480",
+    }, {
+        "level": "1",
+        "value": "1280*720",
+        "name": "1280*720",
+        "shortName": "1280*720",
+    }, {
+        "level": "1",
+        "value": "1920*1080",
+        "name": "1920*1080",
+        "shortName": "1920*1080",
+    }];
+    $('#resolution_camera').click(function (e) {
+        $('.resolution_camera_input').click();
+    })
+    $('.resolution_camera_input').mPicker({
+        level: 1,
+        dataJson: resolutionData,
+        Linkage: false,
+        rows: 3,
+        idDefault: true,
+        header: '<div class="mPicker-header">分辨率</div>',
+        confirm: function (json) {
+            //弹出分辨率选择点击确认时
+            gm_videoCfg.width = +json.values.split('*')[0];
+            gm_videoCfg.height = +json.values.split('*')[1];
+            updateVideoCfg();
+        },
+        cancel: function (json) {
+            console.info('当前选中json：', json);
+        }
+    })
+
+    //用于选择帧率
+    var fpsData = [{
+        "value": 5,
+        "name": "5",
+        "shortName": "1",
+        "level": "1"
+    }, {
+        "value": 10,
+        "name": "10",
+        "shortName": "1",
+        "level": "1"
+    }, {
+        "value": 15,
+        "name": "15",
+        "shortName": "1",
+        "level": "1"
+    }, {
+        "value": 20,
+        "name": "20",
+        "shortName": "1",
+        "level": "1"
+    }, {
+        "value": 25,
+        "name": "25",
+        "shortName": "1",
+        "level": "1"
+    }, {
+        "value": 30,
+        "name": "30",
+        "shortName": "1",
+        "level": "1"
+    }];
+
+
+    /* ********************************** 公共方法 ********************************** */
+    // IE浏览器提示不受支持
+    if (navigator.userAgent.indexOf("MSIE") > -1 || navigator.userAgent.indexOf("Trident") > -1) {
+        $(".alert-wrapper").show();
+        $("#downloadChromeBtn").click(function () {
+            window.location.href = "https://www.baidu.com/s?wd=chrome";
+        })
+        $("#laterDownloadBtn").click(function () {
+            $(".alert-wrapper").hide();
+        })
+        $("#wrapperCloseBtn").click(function () {
+            $(".alert-wrapper").hide();
+        })
+    }
+
+    function m_removeAlert() {
+        $('#hint-content').html('');
+        $('#page_hint').hide();
+    }
+    // 弹出提示层
+    function tipLayer(msg, timer) {
+        if (!timer) {
+            var timer = 2000;
+        }
+        layui.use('layer', function () {
+            layer.open({
+                title: 0,
+                btn: 0,
+                content: msg,
+                closeBtn: 0,
+                shade: 0,
+                time: timer,
+            });
+        })
+    }
+    // 弹出警告层
+    function alertLayer(contents, yesFun) {
+        removeLodingLayer();
+        layui.use('layer', function () {
+            var layer = layui.layer;
+            layer.open({
+                type: 0,
+                time: 10000,
+                area: '20rem',
+                title: ['提示', 'font-size:14px;'],
+                content: contents, //注意，如果str是object，那么需要字符拼接。
+                btn: ['确定'],
+                yes: function (index, layero) {
+                    yesFun != undefined ? yesFun() : "";
+                    layer.close(index);
+                }
+            });
+        });
+    }
+    //删除加载层
+    var removeLodingLayer = function () {
+        setTimeout(() => {
+            if (g_loading_index != -1) {
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.close(g_loading_index);
+                    g_loading_index = -1;
+                    g_loading_deleted = false;
+                })
+            } else {
+                g_loading_deleted = true;
+            }
+        }, 500);
+    }
+    // 弹出加载层
+    function popupLodingLayer() {
+        layui.use('layer', function () {
+            var layer = layui.layer;
+            g_loading_deleted = false;
+            g_loading_index = layer.load({
+                end: function () { }
+            });
+            if (g_loading_deleted) {
+                removeLodingLayer();
+            }
+        });
+    }
+    // 即将离开当前页面(刷新或关闭)
+    window.onbeforeunload = window.onpagehide = function () {
+        if (g_is_meeting) {
+            // $(".page_meet_close").click();
+            CRVideo_ExitMeeting();
+        }
+
+        if (g_is_login) {
+            CRVideo_Logout();
+            CRVideo_Uninit();
+        }
+    }
+    // 按键F5 刷新
+    document.onkeydown = function (e) {
+        var ev = window.event || e;
+        var code = ev.keyCode || ev.which;
+        if (code == 116) { // F5
+            if (ev.preventDefault) {
+                ev.preventDefault();
+                location.replace(location.href)
+            } else {
+                ev.keyCode = 0;
+                ev.returnValue = false;
+                location.replace(location.href)
+            }
+        }
+    }
+    window.addEventListener('load', function () {
+
+        // 载入存储的设置
+        let serverAddr = localStorage.getItem('M_MeetingDemo_serverAddr') || window.location.host;
+        let appID = localStorage.getItem('M_MeetingDemo_appID') || '默认';
+        let appSecret = localStorage.getItem('M_MeetingDemo_appSec') || '默认';
+        let meetID = sessionStorage.getItem("CRMeetingDemo_meetingID") || '';
+
+        $("#g_meet_id").val(meetID);
+        $('#serverAddr').val(serverAddr);
+        $('#appID').val(appID);
+        $('#appSecret').val(appSecret);
+
+        g_serverAddr = serverAddr;
+        g_appID = appID;
+        g_appSecret = appSecret;
+
+        // 载入昵称
+        let userinfo = sessionStorage.getItem('CR_M_MeetingDemo_UserInfo');
+        if (!!userinfo) {
+            userinfo = JSON.parse(userinfo);
+            $('#g_nick_name').val(userinfo.nickName);
+        } else {
+            $('#g_nick_name').val("H5_M_" + randomNumstr(4));
+        }
+
+        // 处理url带参数
+        const paramsStr = decodeURI(window.location.href.split('?')[1]),
+            paramsArr = paramsStr ? paramsStr.split('&') : [],
+            paramsObj = new Object();
+        paramsArr.length > 0 && paramsArr.forEach((item, index) => {
+            const _key = item.split('=')[0],
+                _value = item.split('=')[1];
+            paramsObj[_key] = _value;
+        })
+
+        console.crlog(`[MeetingDemo] url参数：${JSON.stringify(paramsObj)}`);
+        if (paramsObj.meetid !== undefined) { // 链接入会
+            paramsObj.nickname && $('#g_nick_name').val(paramsObj.nickname);
+        }
+    })
+
+
+    // 存储昵称
+    $("#g_nick_name").change(function () {
+        const userinfo = {
+            nickName: $('#g_nick_name').val(),
+        }
+        sessionStorage.setItem("CR_M_MeetingDemo_UserInfo", JSON.stringify(userinfo));
+    })
+
+    // 点击保存按钮
+    $('#saveCfg').on('click', () => {
+        saveLoginCfg();
+        $('.loginSet').hide();
+    })
+
+    // 保存登录设置
+    function saveLoginCfg() {
+        const serverAddr = $('#serverAddr').val();
+        const appID = $('#appID').val();
+        const secret = $('#appSecret').val();
+        const protocal = +$('input[name=protocalRadio]:checked').val();
+        localStorage.setItem("M_MeetingDemo_serverAddr", serverAddr);
+        localStorage.setItem("M_MeetingDemo_appID", appID);
+        localStorage.setItem("M_MeetingDemo_appSec", secret);
+        g_serverAddr = serverAddr;
+        g_appID = appID;
+        g_appSecret = secret;
+        g_protocal = protocal;
+    }
+
+    // 点击重置按钮
+    $('.recover_btn').on('click', function () {
+        $("#serverAddr").val(window.location.host || '');
+        $("#appID").val('默认');
+        $("#appSecret").val('默认');
+    })
+
+    // 给所有的video标签加上双击全屏事件
+    var videoEleTimer = setInterval(function () {
+        requestVideoFullScreen();
+    }, 5000)
+    // 双击video全屏
+    function requestVideoFullScreen() {
+        document.querySelectorAll('video').forEach(function (item) {
+            $(item).unbind();
+        })
+        document.querySelectorAll('video').forEach(function (item) {
+            $(item).on('dblclick', function () {
+                console.log(`双击全屏：`, this);
+                if (this.webkitRequestFullScreen) {
+                    this.webkitRequestFullScreen();
+                } else if (this.mozRequestFullScreen) {
+                    this.mozRequestFullScreen();
+                } else if (this.msRequestFullScreen) {
+                    this.msRequestFullScreen();
+                }
+            })
+        })
+    }
+    // 判断是否在全屏状态
+    function isFullScreen() {
+        return document.isFullScreen || document.mozIsFullScreen || document.webkitIsFullScreen
+    }
+    // 获取当前全屏的元素
+    function getFullscreenElement() {
+        var fullscreenEle = document.fullscreenElement ||
+            document.mozFullScreenElement ||
+            document.webkitFullscreenElement;
+        //注意：要在用户授权全屏后才能获取全屏的元素，否则 fullscreenEle为null
+        console.log("全屏元素：", fullscreenEle);
+        return fullscreenEle;
+    }
+    // 退出全屏
+    function exitFullscreen() {
+        if (!isFullScreen()) return;
+        console.log(`退出全屏`);
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+            document.msExiFullscreen();
+        } else if (document.webkitCancelFullScreen) {
+            document.webkitCancelFullScreen();
+        }
+    }
+
+    //根据在线人数刷新样式
+    function adjustmentStyle(number) {
+
+        for (var i = 0; i < 9 && i < g_members.length; i++) {
+            if ($(".page_screen").children().eq(i).html().indexOf('待进入...') > -1) {
+                $(".page_screen").children().eq(i).html(g_members[i].videoObj.handler());
+                $(".page_screen").children().eq(i + 1).html('待进入...');
+            }
+        }
+
+        if (number == 1) { // 1分屏
+
+            $(".page_screen").removeClass().addClass("page_screen screenOne");
+            $(".page_screen").children().eq(0).show().nextAll().hide();
+
+        } else if (number == 2) { // 2分屏
+
+            $(".page_screen").removeClass().addClass("page_screen screenTwo");
+            $(".page_screen").children().eq(1).show().prevAll().show();
+            $(".page_screen").children().eq(1).show().nextAll().hide();
+
+        } else if (number > 2 && number < 5) { // 4分屏
+
+            $(".page_screen").removeClass().addClass("page_screen screenFour");
+            $(".page_screen").children().eq(3).show().prevAll().show();
+            $(".page_screen").children().eq(3).show().nextAll().hide();
+
+        } else if (number > 4 && number < 10) { // 9分屏
+
+            $(".page_screen").removeClass().addClass("page_screen screenNine");
+            $(".page_screen").children().show();
+
+        }
+    }
+
+    /* ********************************** 登录系统 ********************************** */
+    // 登录操作函数
+
+    // 生成随机数字符串
+    function randomNumstr(length) {
+        if (typeof (length) != "number") {
+            length = 4;
+        }
+        var numStr = "";
+        for (var i = 0; i < length; i++) {
+            numStr += Math.floor(Math.random() * 10)
+        }
+        return numStr;
+    }
+
+    function uuid() {
+        return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+            (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+        )
+    }
+
+    // 登录操作函数
+    function loginFunc(type) {
+        g_nick_name = $('#g_nick_name').val(); // nickname
+        g_user_id = `${g_nick_name}_${Math.floor(Math.random() * 8999) + 1000}`; // userID
+        $("#meetNickName").text("昵称：" + g_nick_name);
+        if (g_nick_name.length == 0) return tipLayer('昵称不能为空');
+        if (g_nick_name.length > 10) return tipLayer('昵称过长');
+
+        enmeet_type = type;
+
+        popupLodingLayer();
+
+        if (!g_serverAddr || !g_appID || !g_appSecret) {
+            tipLayer(`登录失败，缺少必要参数！`);
+            removeLodingLayer();
+            return
+        };
+
+
+        const videoSendBW = navigator.userAgent.includes('iPhone') ? 3200 : 800; // ios不设置上限
+        CRVideo_Init().then(res => {
+            g_is_init = true
+            CRVideo_SetSDKParams({
+                // isSDKConsole: false,
+                MSProtocol: g_protocal, // 媒体流传输协议，1 udp, 2 tcp 缺省为 1 tcp
+                isCallSer: false, // 是否启用队列呼叫服务
+                // securityEnhancement: true, //是否开启安全增强（会有跨域问题，需配置跨域响应头）
+            });
+            CRVideo_SetServerAddr($('#serverAddr').val());
+            //登录
+            CRVideo_Login(g_appID, g_appSecret == '默认' || g_appSecret.length == 32 ? g_appSecret : md5(g_appSecret), g_nick_name, g_user_id, "");
+            return;
+        }, err => {
+            tipLayer(`SDK初始化失败：${err}`);
+            removeLodingLayer();
+        })
+    }
+    // 登录成功
+    CRVideo_LoginSuccess.callback = function (usrID, cookie) {
+
+        saveLoginCfg(); // 保存登录设置
+
+        g_is_login = true;
+        g_reLoginTimes = 0; // 重置重登次数
+
+        sessionStorage.setItem('CR_M_MeetingDemo_UserInfo', JSON.stringify({
+            nickName: g_nick_name
+        }));
+
+        if (!g_is_meeting) {
+            if (enmeet_type == 1) {
+                //房间号进入
+                CRVideo_EnterMeeting3(g_meet_id);
+            } else {
+                //创建房间并进入
+                CRVideo_CreateMeeting2();
+            }
+        } else {
+            console.log(`登录成功（掉线重登），不做处理...`);
+        }
+    }
+    // 登录失败
+    CRVideo_LoginFail.callback = function (sdkErr, cookie) {
+        setTimeout(() => { //防止弹出层还没弹出来就关闭
+            removeLodingLayer();
+        }, 50);
+
+        console.log(`登录服务器失败，错误码：${sdkErr}, cookie:${cookie}`);
+        if (!!cookie && cookie.includes('reLogin') && cookie.split('_')[1] <= 10) {
+            setTimeout(() => {
+                CRVideo_Login(g_appID, g_appSecret == '默认' || g_appSecret.length == 32 ? g_appSecret : md5(g_appSecret), g_nick_name, g_user_id, `reLogin_${++g_reLoginTimes}`);
+            }, 2000);
+            return;
+        } else if (!!cookie && cookie.includes('reLogin') && cookie.split('_')[1] > 10) {
+            alertLayer(`网络错误，多次尝试重新登录失败！您已掉线！`);
+            return;
+        } else {
+            g_is_init = false;
+            g_is_login = false;
+            sdkErr == 7 ? sdkErr = "用户名或密码错误！" : sdkErr;
+            sdkErr == 21 ? sdkErr = "Token鉴权失败！" : sdkErr;
+            sdkErr == 18 ? sdkErr = "Token已过期！" : sdkErr;
+            sdkErr == 20 ? sdkErr = "鉴权app不存在！" : sdkErr;
+            sdkErr == 22 ? sdkErr = "此app非Token鉴权！" : sdkErr;
+            sdkErr == 202 ? sdkErr = "网络异常！" : sdkErr;
+            sdkErr == 204 ? sdkErr = "socket连接失败！" : sdkErr;
+            alertLayer('登录服务器失败，请稍后再试: ' + sdkErr);
+        }
+    }
+
+    /* ********************************** 房间 ********************************** */
+    // 创建房间成功
+    CRVideo_CreateMeetingSuccess.callback = function (meetObj, cookie) {
+        console.log("(demo)CRVideo_CreateMeetingSuccess!");
+        console.log(meetObj);
+        // 拿到房间号之后进入房间
+        g_meet_id = meetObj.ID;
+        g_meet_pwd = meetObj.pswd;
+        CRVideo_EnterMeeting(g_meet_id, g_meet_pwd, g_user_id, g_nick_name);
+    }
+
+    // 创建房间失败
+    CRVideo_CreateMeetingFail.callback = function (sdkErr, cookie) {
+        console.log("(demo)CRVideo_CreateMeetingFail!");
+        removeLodingLayer();
+        alertLayer("创建房间失败,是否重试？")
+    }
+
+    // 进入房间后的操作函数
+    function enterMeetFun(userId, index) {
+        console.log(`成员 ${userId} 创建视频UI组件`);
+        let posterImg = './image/m_meet_be_closed.jpg';
+        let videoStyle = {
+            objectFit: 'cover' //object-fit属性
+        }
+        // if (userId == g_user_id) { // 本地画面镜像显示
+        //     posterImg = './image/m_meet_be_closed_180deg.jpg';
+        //     videoStyle.transform = 'rotateY(180deg)';
+        // }
+        const videoObj = CRVideo_CreatVideoObj({
+            poster: posterImg,
+            // style: videoStyle
+        });
+
+        var nickname = CRVideo_GetMemberNickName(userId) || userId;
+        g_members.push({
+            userID: userId,
+            nickName: nickname,
+            videoObj: videoObj
+        });
+
+        //刷新人数样式
+        adjustmentStyle(g_members.length);
+
+        // 放置video标签
+        videoObj.setVideo(userId);
+
+        // 设置昵称样式
+        videoObj.setNickNameStyle(nicknameStyle);
+        if (userId == g_user_id) {
+            videoObj.setNickNameContent("我");
+        }
+
+        // videoObj.showVideoSize(true);
+    }
+
+    // 进入房间的结果
+    CRVideo_EnterMeetingRslt.callback = function (sdkErr, cookie) {
+
+        removeLodingLayer();
+
+        if (sdkErr == 0) {
+            console.log(`进入会议成功，cookie:${cookie}`);
+            g_reEnterTimes = 0; // 重登次数归零
+
+            updateVideoCfg();
+
+            sessionStorage.setItem("CRMeetingDemo_meetingID", g_meet_id)
+            $("#g_meet_id").val(g_meet_id);
+
+            $(".page_screen").removeClass().addClass("page_screen")
+            for (var i = 0; i < 9; i++) {
+                $(".page_screen").children().eq(i).html('待进入...');
+            }
+
+            console.log("(demo) Enter Meeting Success !");
+
+            $("#page_meet_id").text("房间号：" + g_meet_id)
+            $("#page_login").hide();
+            $("#page_meeting").show();
+
+            g_is_meeting = true;
+
+            var members = CRVideo_GetAllMembers(); // 获取房间内所有成员
+
+            g_members = [];
+            if (members.length > 0) {
+                members.forEach(function (ele, index) {
+                    enterMeetFun(ele.userID, index);
+                })
+            }
+            // $('#CRSDKAudioBox').show();
+            // 注意：华为鸿蒙系统，HWWebView 先开摄像头，再开麦克风，不显示摄像头画面，只能先开麦，再开摄像头
+            CRVideo_OpenMic(g_user_id);
+            CRVideo_OpenVideo(g_user_id);
+
+        } else {
+            console.log(`进入会议失败，错误码：${sdkErr}，cookie:${cookie}`);
+            // 通过cookie来判断是否是重登，如果是重登，网络恢复需要时间，可以多尝试几次
+            if (!!cookie && cookie.includes('reEnter') && cookie.split('_')[1] <= 10) {
+                setTimeout(() => {
+                    tipLayer(`进入房间失败，正在第${g_reEnterTimes + 1}次尝试重新进入...`);
+                    CRVideo_EnterMeeting(g_meet_id, md5($('#g_meet_pwd').val()), g_user_id, g_nick_name,
+                        `reEnter_${++g_reEnterTimes}`);
+                }, 2000);
+                return;
+            } else if (!!cookie && cookie.includes('reEnter') && cookie.split('_')[1] > 10) {
+                alertLayer(`从房间中掉线，多次尝试重新进入失败，请检查您的网络！${sdkErr}`);
+            } else {
+                let errDesc = '';
+                if (sdkErr == 205) {
+                    errDesc = "没有可用服务器";
+                } else if (sdkErr == 800) {
+                    errDesc = "房间不存在或已结束";
+                } else if (sdkErr == 802) {
+                    errDesc = "服务器授权到期或超出并发数！"
+                } else {
+                    errDesc = "请稍后再试！"
+                }
+                alertLayer(`进入房间失败！${errDesc}`);
+            }
+        }
+
+    }
+
+    // 有人进入会议
+    CRVideo_UserEnterMeeting.callback = function (id) {
+        console.log("(demo) user " + id + " enter meeting");
+        enterMeetFun(id);
+        if (id != g_user_id) {
+            tipLayer(CRVideo_GetMemberNickName(id) + ' 进入房间 ...', 2000);
+        }
+    }
+
+    // 有人离开房间
+    CRVideo_UserLeftMeeting.callback = function (id, reson) {
+        var removeIndex = null;
+        g_members.forEach(function (item, index) {
+            if (id == item.userID) {
+                removeIndex = index;
+                // delete g_meet_video["video" + id];
+                // $(`.user_${id}`).html('待进入...');
+                $(".page_screen").children().eq(index).html('待进入...');
+            }
+        })
+        if (id != g_user_id) {
+            g_members.forEach(function (member) {
+                if (member.userID == id) {
+                    tipLayer(member.nickName + ' 离开房间 ...', 2000);
+                }
+            })
+        } else {
+            if (reson == 'kick') {
+                alertLayer(`您已被请出房间！`, function () {
+                    window.location.reload(); // 刷新当前页面
+                })
+            }
+        }
+        g_members.splice(removeIndex, 1);
+        //刷新人数样式
+        adjustmentStyle(g_members.length);
+    }
+
+    // 会议结束
+    CRVideo_MeetingStopped.callback = function (id) {
+        alertLayer("<p>当前房间已被关闭！</p><p>请重新创建房间或进入其它正在进行中的房间。</p>", function () {
+            window.location.reload(); // 刷新当前页面
+        })
+    }
+
+    // 通知从系统中掉线
+    var g_reLoginTimer;
+    CRVideo_LineOff.callback = (sdkErr) => {
+        console.log(`从系统掉线了！错误码：${sdkErr}`);
+        if (sdkErr == 18) {
+            alertLayer(`Token过期，已从系统中断开！`)
+        } else {
+            clearTimeout(g_reLoginTimer);
+            g_reLoginTimer = setTimeout(() => {
+                console.log(`重新登录...`);
+                CRVideo_Login(g_appID, g_appSecret == '默认' || g_appSecret.length == 32 ? g_appSecret : md5(g_appSecret), g_nick_name, g_user_id, `reLogin_${++g_reLoginTimes}`);
+            }, 5000);
+        }
+    }
+
+    // 通知从房间中掉线
+    CRVideo_MeetingDropped.callback = (sdkErr) => {
+        console.log('从房间中掉线了！错误码：' + sdkErr);
+        if (sdkErr == 18) {
+            setTimeout(() => {
+                alertLayer('Token过期，强制退出房间！');
+            }, 3000);
+            $("#page_meeting").hide();
+            $("#page_login").show();
+            $(".page_screen").removeClass().addClass("page_screen")
+            // // $("#open_mic img").addClass("disabled");
+            // $("#open_cam img").addClass("disabled");
+            $('.page_chat_box ul').html('');
+            for (var i = 0; i < 9; i++) {
+                $(".page_screen").children().eq(i).html("待入会" + (i + 1) + "...");
+            }
+            g_members = [];
+            // g_meet_video = {};
+            g_curCam = null;
+            g_is_init = false;
+            g_isScreenSharing = false;
+        } else {
+            if (g_is_meeting) {
+                tipLayer(`已从房间中掉线，准备重新进入...`);
+                setTimeout(() => {
+                    // 掉线后自动重登，通过cookie来判断是否是重登
+                    tipLayer(`正在第1次尝试重新进入房间...`);
+                    CRVideo_EnterMeeting(g_meet_id, md5($('#g_meet_pwd').val()), g_user_id, g_nick_name,
+                        `reEnter_${++g_reEnterTimes}`);
+                }, 3000);
+            }
+        }
+    }
+
+
+
+    /* ********************************** 聊天 ********************************** */
+    function sendMsg() {
+        const msgText = $("input[name=chat_msg]").val();
+        if (!msgText) return;
+        const stringMsg = JSON.stringify({
+            "CmdType": "IM",
+            "IMMsg": msgText
+        });
+        CRVideo_SendMeetingCustomMsg(stringMsg); // SDK接口：发送房间内广播消息
+    }
+
+    function hideTextMsgInput(e) {
+        e.stopPropagation();
+        $('.page_meet_chat').hide();
+        $('.page_meet_chat input[name="chat_msg"]').blur();
+    }
+
+    // 聊天窗口
+    $("#open_chat").on('click', function () {
+        if ($(".page_meet_chat").css("display") == "none") {
+            $(".page_meet_chat").show();
+            $(".page_chat_box").show();
+            setTimeout(function () {
+                $(".page_meet_chat input").focus();
+            }, 10);
+        } else {
+            $(".page_meet_chat").hide();
+            // $(".page_chat_box").hide();
+        }
+    });
+    $('.page_meet_chat').on('click', hideTextMsgInput);
+    $('.page_meet_chat .chat_msg_input').on('click', function (e) {
+        e.stopPropagation();
+    })
+
+    $('.page_meet_chat .icon-arrow ').on('click', hideTextMsgInput)
+
+    $('#page_hint .close-btn').on('click', function () {
+        $('#page_hint').hide();
+    })
+    // 点击发送
+    $("#sendMsg").on('click', sendMsg)
+
+
+
+    // 监听回车键发送消息
+    window.addEventListener("keyup", function (e) {
+        if (g_is_meeting == true && $(".page_meet_chat").css("display") !== "none") {
+            if (e.keyCode == 13) {
+                if ($("input[name=chat_msg]").val() !== "") {
+                    $("#sendMsg").click(); // 发送消息
+                    $(".page_meet_chat").hide();
+                } else {
+                    $("input[name=chat_msg]")[0].focus(); // 获得焦点
+                }
+            }
+        }
+    })
+
+    // 发送消息结果的通知
+    CRVideo_SendMeetingCustomMsgRslt.callback = (errCode, cookie) => {
+        if (errCode == 0) {
+            //发送成功
+            $("input[name=chat_msg]").val("");
+        } else {
+            alert(`消息发送失败！${errCode}`);
+        }
+    }
+    // 收到房间内广播消息
+    CRVideo_NotifyMeetingCustomMsg.callback = (fromUserID, stringMsg) => {
+        let jsonMsg = {};
+        try {
+            jsonMsg = JSON.parse(stringMsg);
+        } catch (e) { }
+
+        if (jsonMsg.CmdType && jsonMsg.CmdType == 'IM') {
+            const msg = jsonMsg.IMMsg;
+            const nickname = CRVideo_GetMemberNickName(fromUserID);
+            const htmlEle = "</br><span>" + nickname + ' <span style="color:#fff;">' + msg + "</span></span>"
+            $(".page_chat_box > ul").append(htmlEle);
+            $(".page_chat_box > ul")[0].scrollTop = $(".page_chat_box > ul")[0].scrollHeight; // 让滚动条自动滚动到底部
+
+            if ($(".page_chat_box").css("display") == "none") {
+                tipLayer("收到了新的聊天消息...", 1000);
+            }
+        }
+    }
+
+
+    // 收到透明通道命令消息
+    CRVideo_NotifyCmdData.callback = function (userID, data) {
+        tipLayer("收到 " + userID + " 发送的命令消息：" + JSON.stringify(data), 3000);
+    }
+
+
+    // // 点击麦克风开关按钮
+    $("#open_mic").on('click', function () {
+        var $micLi = $(this);
+        var aStatus = CRVideo_GetAudioStatus(g_user_id);
+        if (aStatus == 1) {
+            alert('没有可打开的音频设备');
+        } else if (aStatus == 2 || aStatus == 0) { // 已关闭 或 未知
+            CRVideo_OpenMic(g_user_id);
+            $micLi.find("img").attr("src", "./image/m_meet_voice.png").siblings('p').html(
+                '关闭麦克风');
+        } else if (aStatus == 3) { // aStatus == 3  已打开
+            CRVideo_CloseMic(g_user_id);
+            $micLi.find("img").attr("src", "./image/m_meet_voice_close.png").siblings('p')
+                .html(
+                    '打开麦克风');
+        }
+    })
+
+    // 点击摄像头开关按钮
+    $("#open_cam").on('click', function () {
+        var $camLi = $(this);
+
+        var vStatus = CRVideo_GetVideoStatus(g_user_id);
+        if (vStatus == 1) {
+            alert("没有可打开的视频设备")
+        } else if (vStatus == 2 || vStatus == 0) {
+            CRVideo_OpenVideo(g_user_id);
+            $(this).find("img").attr("src", "./image/m_meet_camera.png").siblings('p').html(
+                '关闭摄像头');
+        } else if (vStatus == 3) {
+            CRVideo_CloseVideo(g_user_id);
+            $(this).find("img").attr("src", "./image/m_meet_camera_close.png").siblings('p')
+                .html(
+                    '打开摄像头');
+        }
+    });
+
+    //切换摄像头按钮
+    $('#transform_camera').on('click', function () {
+        var $transformLi = $(this);
+
+        if (CRVideo_GetVideoStatus(g_user_id) !== 3) { //摄像头被禁用时
+            tipLayer('摄像头未开启');
+            return;
+        }
+
+        $('#open_cam').addClass('disabled');
+        if ($transformLi.hasClass('disabled')) {
+            tipLayer('操作太快啦，歇一会吧!');
+            return;
+        }
+
+        $transformLi.addClass('disabled');
+        if (!$transformLi.timerId) {
+            $transformLi.timerId = setTimeout(function () {
+                $transformLi.removeClass('disabled');
+                $('#open_cam').removeClass('disabled');
+            }, 2000);
+        }
+        var defVideo = CRVideo_GetDefaultVideo(g_user_id);
+
+        CRVideo_SetDefaultVideo(g_user_id, defVideo == 1 ? 2 : 1);
+    })
+
+
+
+    /* ********************************** 屏幕共享 ********************************** */
+
+    var g_screenShareObj = null;
+    // SDK通知有人开启了屏幕共享
+    CRVideo_NotifyScreenShareStarted.callback = function (sharer) {
+
+        if (sharer != g_user_id) {
+            g_isStartedScreenShare = true;
+
+            console.log('(demo)开启了屏幕共享');
+
+            g_screenShareObj = CRVideo_CreatScreenShareObj({
+                poster: './image/m_meet_get_screen.jpg'
+            });
+            $(".page_screen_share").html(g_screenShareObj.handler());
+
+            g_screenShareObj.setVideo(sharer);
+            g_screenShareObj.setNickNameStyle(nicknameStyle); // 设置昵称样式
+            g_screenShareObj.setNickNameContent(CRVideo_GetMemberNickName(sharer) + "的屏幕");
+            g_screenShareObj.dblClickFullScreen(1); // 设置双击全屏
+
+            shareUItimer = setTimeout(function () {
+                $(".page_meet_video").hide();
+                $(".page_screen_share").showFlex();
+            }, 2000)
+
+            // updateRecord();
+            exitFullscreen();
+            requestVideoFullScreen();
+
+        } else {
+            g_isScreenSharing = true;
+        }
+    }
+    // SDK通知屏幕共享关闭
+    CRVideo_NotifyScreenShareStopped.callback = function (user) {
+
+        console.log('(demo)停止了屏幕共享');
+        g_isStartedScreenShare = false;
+        g_isScreenSharing = false;
+
+        exitFullscreen();
+        requestVideoFullScreen();
+
+        clearTimeout(shareUItimer);
+        $(".page_screen_share").hide();
+        $(".page_meet_video").show();
+        $(".page_screen_share").html('');
+
+    }
+
+    var g_mediaShareObj;
+    var shareUItimer = -1;
+    // SDK通知，影音共享开始
+    CRVideo_NotifyMediaStart.callback = function (UID) {
+        g_mediaShareObj = CRVideo_CreatMediaObj();
+        $(".page_screen_share").html(g_mediaShareObj.handler());
+
+        g_mediaShareObj.setVideo(UID);
+        g_mediaShareObj.setNickNameStyle(nicknameStyle); // 设置昵称样式
+        g_mediaShareObj.setNickNameContent(CRVideo_GetMemberNickName(UID) + "共享的影音");
+        g_mediaShareObj.dblClickFullScreen(1); // 设置双击全屏
+
+        shareUItimer = setTimeout(function () {
+            $(".page_meet_video").hide();
+            $(".page_screen_share").showFlex();
+        }, 1000)
+    }
+
+    // SDK通知，影音共享结束
+    CRVideo_NotifyMediaStop.callback = function () {
+        exitFullscreen();
+        requestVideoFullScreen();
+        $(".page_screen_share").hide();
+        $(".page_meet_video").show();
+        $(".page_screen_share").html('');
+    }
+
+    /* ********************************** 音视频 ********************************** */
+    // 通知成员摄像头状态改变
+    CRVideo_VideoStatusChanged.callback = function (userID, oldStatus, newStatus) {
+        console.log("(demo) VideoStatusChanged: " + JSON.stringify({
+            userID,
+            oldStatus,
+            newStatus
+        }));
+
+        if (userID == g_user_id) {
+            if (newStatus == g_camStatus.open) {
+                //打开
+                $('#open_cam img').attr('src', "./image/m_meet_camera.png").siblings('p').text(
+                    '关闭摄像头');
+                tipLayer("摄像头已打开", 1500);
+            } else if (newStatus == g_camStatus.close) {
+                //关闭
+                $('#open_cam img').attr('src', "./image/m_meet_camera_close.png").siblings('p')
+                    .text('打开摄像头');
+                if (oldStatus != 0) {
+                    tipLayer("摄像头已关闭", 1500);
+                }
+            }
+        }
+    }
+    // 通知成员麦克风状态改变
+    CRVideo_AudioStatusChanged.callback = function (userID, oldStatus, newStatus) {
+        console.log("(demo) AudioStatusChanged: " + JSON.stringify({
+            userID,
+            oldStatus,
+            newStatus
+        }));
+
+        if (userID == g_user_id) {
+            if (newStatus == g_micStatus.open) {
+                //打开
+                $('#open_mic img').attr('src', "./image/m_meet_voice.png").siblings('p').text(
+                    '关闭麦克风');
+                tipLayer("麦克风已打开，您可以发言...", 1500);
+            } else if (newStatus == g_micStatus.close) {
+                //关闭
+                $('#open_mic img').attr('src', "./image/m_meet_voice_close.png").siblings('p')
+                    .text('打开麦克风');
+                tipLayer("麦克风已关闭", 1500);
+            }
+        }
+    }
+
+    // 通知切换功能区（已废弃）
+    // CRVideo_NotifySwitchToPage.callback = function (mainPage, subPage) {
+    // if (mainPage == 8) {
+    //     clearTimeout(shareUItimer);
+    //     $(".page_screen_share").hide();
+    //     $(".page_meet_video").show();
+    // } else if (mainPage == 6) {
+    //     $(".page_screen_share").show();
+    //     $(".page_meet_video").hide();
+    // }
+    // }
+
+    document.querySelectorAll('.disableSelect').forEach(item => {
+        item.onselectstart = function (e) {
+            return false
+        }
+    })
+
+    // 通知网络状态变化
+    CRVideo_NetStateChanged.callback = function (score) {
+        console.crlog(`[MeetingDemo] 网络质量变化：${score}`);
+        if (score > 8) {
+            $('.net-state-icon').removeClass('bad midium none').addClass('fine');
+        } else if (score > 5) {
+            $('.net-state-icon').removeClass('bad fine none').addClass('midium');
+        } else {
+            $('.net-state-icon').removeClass('fine midium none').addClass('bad');
+        }
+    }
+
+    // 通知打开摄像头失败
+    CRVideo_OpenVideoFailed.callback = (errCode, errDesc) => {
+        alertLayer(`打开摄像头失败：${errDesc}`);
+    }
+    // 通知打开麦克风失败
+    CRVideo_OpenMicFailed.callback = (errCode, errDesc) => {
+        alertLayer(`打开麦克风失败：${errDesc}`);
+    }
+</script>
+
+</html>
