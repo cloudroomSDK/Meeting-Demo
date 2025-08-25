@@ -1,36 +1,37 @@
 <!DOCTYPE html>
 <script type="text/javascript">
+    // window.__CRRTCSDK_NO_CONSOLE = true;
     window.__CRKEY = 'CRDEMO';
     var protocol = window.location.protocol;
     var host = window.location.host;
-    var isLocal = false;
-
-    if (host.includes('127.0.0.1') || host.includes('localhost:') || protocol.includes('file')) isLocal = true;
+    var isLocal = host.includes('127.0.0.1') || host.includes('localhost:') || protocol.includes('file');
+    var isMobile = navigator.userAgent.includes('Mobile') || navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad') || navigator.userAgent.includes('Android');
 
     console.log(`isLocal: ${isLocal}`);
     console.log(`href: ${window.location.href}`);
     console.log(`referrer: ${document.referrer}`);
-    console.log(`protocol: ${protocol}`);
-    console.log(`isMobile: ${navigator.userAgent.includes('Mobile')}`);
+    console.log(`page protocol: ${protocol}`);
+    console.log(`isMobile: ${isMobile}`);
 
     // http强制跳转https
     if (protocol != 'https:' && !isLocal) {
         location.href = 'https:' + location.href.substring(protocol.length);
     }
 
-    // 移动端/pc端自动跳转
-    const htmlName = /\w+.html/.exec(window.location.href)[0];
-    console.log(htmlName);
-    if (navigator.userAgent.includes('Mobile') && !htmlName.includes('m_')) { // 移动端打开pc页面
-        window.location.href = window.location.href.replace(htmlName, `m_${htmlName}`);
-    } else if (!navigator.userAgent.includes('Mobile') && htmlName.includes('m_')) { // pc端打开移动端页面
-        window.location.href = window.location.href.replace(htmlName, `${htmlName.replace('m_', '')}`);
-    }
+    // // 移动端/pc端自动跳转
+    // const htmlName = /\w+.html/.exec(window.location.href)[0];
+    // console.log(htmlName);
+    // if (isMobile && !htmlName.includes('m_')) { // 移动端打开pc页面
+    //     window.location.href = window.location.href.replace(htmlName, `m_${htmlName}`);
+    // } else if (!isMobile && htmlName.includes('m_')) { // pc端打开移动端页面
+    //     window.location.href = window.location.href.replace(htmlName, `${htmlName.replace('m_', '')}`);
+    // }
 
     // ios上webview打开，如果referrer为空则会获取不到相关媒体api，这里强制刷新一下，让referrer不为空(Firefox不行)
-    if (document.referrer == '' && !isLocal && !navigator.userAgent.includes('Firefox')) {
-        window.location.reload();
-    }
+    // 2025-08-15 暂时注释，中债环境始终获取不到referrer
+    // if (document.referrer == '' && !isLocal && !navigator.userAgent.includes('Firefox')) {
+    //     window.location.reload();
+    // }
 </script>
 
 <html>
@@ -595,7 +596,7 @@
             paramsObj[_key] = _value;
         })
 
-        console.crlog(`[MeetingDemo] url参数：${JSON.stringify(paramsObj)}`);
+        __Rtc.crlog(`[MeetingDemo] url参数：${JSON.stringify(paramsObj)}`);
         if (paramsObj.meetid !== undefined) { // 链接入会
             paramsObj.nickname && $('#g_nick_name').val(paramsObj.nickname);
         }
@@ -1362,7 +1363,7 @@
 
     // 通知网络状态变化
     CRVideo_NetStateChanged.callback = function (score) {
-        console.crlog(`[MeetingDemo] 网络质量变化：${score}`);
+        __Rtc.crlog(`[MeetingDemo] 网络质量变化：${score}`);
         if (score > 8) {
             $('.net-state-icon').removeClass('bad midium none').addClass('fine');
         } else if (score > 5) {

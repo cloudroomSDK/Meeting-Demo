@@ -4,14 +4,14 @@
     window.__CRKEY = 'CRDEMO';
     var protocol = window.location.protocol;
     var host = window.location.host;
-    var isLocal = false;
-    if (host.includes('127.0.0.1') || host.includes('localhost:') || protocol.includes('file')) isLocal = true;
+    var isLocal = host.includes('127.0.0.1') || host.includes('localhost:') || protocol.includes('file');
+    var isMobile = navigator.userAgent.includes('Mobile') || navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad') || navigator.userAgent.includes('Android');
 
     console.log(`isLocal: ${isLocal}`);
     console.log(`href: ${window.location.href}`);
     console.log(`referrer: ${document.referrer}`);
     console.log(`page protocol: ${protocol}`);
-    console.log(`isMobile: ${navigator.userAgent.includes('Mobile')}`);
+    console.log(`isMobile: ${isMobile}`);
 
     // http强制跳转https
     if (protocol != 'https:' && !isLocal) {
@@ -21,15 +21,10 @@
     // 移动端/pc端自动跳转
     const htmlName = /\w+.html/.exec(window.location.href)[0];
     console.log(htmlName);
-    if (navigator.userAgent.includes('Mobile') && !htmlName.includes('m_')) { // 移动端打开pc页面
+    if (isMobile && !htmlName.includes('m_')) { // 移动端打开pc页面
         window.location.href = window.location.href.replace(htmlName, `m_${htmlName}`);
-    } else if (!navigator.userAgent.includes('Mobile') && htmlName.includes('m_')) { // pc端打开移动端页面
+    } else if (!isMobile && htmlName.includes('m_')) { // pc端打开移动端页面
         window.location.href = window.location.href.replace(htmlName, `${htmlName.replace('m_', '')}`);
-    }
-
-    // ios上webview打开，如果referrer为空则会获取不到相关媒体api，这里强制刷新一下，让referrer不为空(Firefox不行)
-    if (document.referrer == '' && !isLocal && !navigator.userAgent.includes('Firefox')) {
-        window.location.reload();
     }
 </script>
 
