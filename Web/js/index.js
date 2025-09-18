@@ -959,7 +959,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       document.execCommand('copy');
       MeetingDemo.modalLayer('邀请参会', `会议链接已复制，去粘贴发送给别人吧！`, {
         btns: ['确定'],
-        btn1Callback() { },
+        btn1Callback() {},
       });
     }
   }
@@ -1578,11 +1578,13 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
     // 切换分辨率或帧率或比例
     setVideoConfig(obj) {
       // SDK接口：设置视频参数
-      CRVideo_SetVideoCfg(obj).then((res) => {
-        // MeetingDemo.tipLayer('设置成功');
-      }).catch(err => {
-        MeetingDemo.tipLayer(`设置失败：${err.errDesc}`);
-      })
+      CRVideo_SetVideoCfg(obj)
+        .then((res) => {
+          // MeetingDemo.tipLayer('设置成功');
+        })
+        .catch((err) => {
+          MeetingDemo.tipLayer(`设置失败：${err.errDesc}`);
+        });
     }
     // 设置默认摄像头（切换摄像头）
     setDefaultVideo(camID) {
@@ -1853,6 +1855,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
     initData() {
       // this.curMic = null; // 当前正在使用的麦克风ID
       // this.curSpeaker = null; // 当前正在使用的扬声器ID
+      this.subUserAudios = [];
     }
     registerCallback() {
       // SDK接口：通知 成员麦克风状态改变
@@ -2541,7 +2544,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       this.initData();
       this.registerCallback();
     }
-    initData() { }
+    initData() {}
     registerCallback() {
       // SDK接口：回调 发送消息的结果
       CRVideo_SendMeetingCustomMsgRslt.callback = (errCode, cookie) => {
@@ -2646,7 +2649,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
           if (jsonData.CmdType && jsonData.CmdType == 'IM') {
             data = jsonData.IMMsg;
           }
-        } catch (e) { }
+        } catch (e) {}
         $('#fromUserID').html(userID);
         $('#msgType').html('文本命令');
         $('#cmdValueBox').html(data);
@@ -2786,8 +2789,8 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       this.initData();
       this.registerCallback();
     }
-    initData() { }
-    registerCallback() { }
+    initData() {}
+    registerCallback() {}
     // 切换功能区
     switchToPage(mainPage) {
       if (!MeetingDemo.RoomMgr.isMeeting) return;
@@ -2895,7 +2898,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         $('.file-info-list')[0].scrollTop = $('.file-info-list')[0].scrollHeight;
       };
     }
-    loadEvent() { }
+    loadEvent() {}
 
     //点击了开始录制
     startRecord(task) {
@@ -2916,7 +2919,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
           this.createInterflowMixer();
         }
       }
-    };
+    }
     // 根据Type生成视频订阅的参数
     createSubscribeVideos(type) {
       return [
@@ -2938,7 +2941,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       return [[MeetingDemo.Login.userID], ['_cr_all_']][type];
     }
     //单流配置修改后，更新录制
-    updateUnaflowRecord(str, type){
+    updateUnaflowRecord(str, type) {
       if (this.myUnaflow && this.myUnaflow.state === 2) {
         //如果原来有生成MP4文件，才更新
         if (str === 'mp4' && this.myUnaflow.cfg.videoFileCfg) {
@@ -2960,7 +2963,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
           CRVideo_UpdateCloudMixerContent(this.myUnaflow.ID, json);
         }
       }
-    };
+    }
     //更新合流录制
     updateInterflowRecord() {
       if (this.myInterflow && this.myInterflow.state === 2) {
@@ -2971,7 +2974,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         };
         CRVideo_UpdateCloudMixerContent(this.myInterflow.ID, json);
       }
-    };
+    }
     //获取第三方云盘信息
     updateThirdPartyCloud() {
       if (!$('#isUploadOss')[0].checked) return false;
