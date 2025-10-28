@@ -129,7 +129,7 @@ namespace SDKDemo
             App.CRVideo.VideoSDK.setNetworkProxy(jsonData);
 
             //配置服务器
-            App.CRVideo.VideoSDK.serverAddr = iniFile.ReadValue("Cfg", "LastServer", "sdk.cloudroom.com");
+            App.CRVideo.VideoSDK.serverAddr = iniFile.ReadValue("Cfg", "LastServer", AccountInfo.TEST_Server);
 
             mUserID = edtNickname.Text.Trim();      //账号ID，此处采用登陆昵称，实际开发中按照自己的业务需求取值，需保证其在此会话参与者中的唯一性
 

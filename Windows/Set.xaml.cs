@@ -22,7 +22,7 @@ namespace SDKDemo
             ShowInTaskbar = false;   
 
             IniFile iniFile = new IniFile(Directory.GetCurrentDirectory() + "/meeting.ini");  //获取当前根目录
-            edtServer.Text = iniFile.ReadValue("Cfg", "LastServer", "sdk.cloudroom.com");
+            edtServer.Text = iniFile.ReadValue("Cfg", "LastServer", AccountInfo.TEST_Server);
             cbHttpType.SelectedIndex = Convert.ToInt32(iniFile.ReadValue("Cfg", "HttpType", "2"));
             edtAccount.Text = iniFile.ReadValue("Cfg", "LastAccount", "");
             edtPassword.Password = iniFile.ReadValue("Cfg", "LastPwd", "");
@@ -83,7 +83,7 @@ namespace SDKDemo
             else
             {
                 edtAccount.Text = "默认APPID";
-                edtPassword.Password = "*";
+                edtPassword.Password = "\x1\x1\x1\x1\x1\x1";
             }
         }
 
@@ -91,7 +91,7 @@ namespace SDKDemo
         private void btnDefault_Clicked(object sender, RoutedEventArgs e)
         {
             proxyType.SelectedIndex = 0;
-            edtServer.Text = "sdk.cloudroom.com";
+            edtServer.Text = AccountInfo.TEST_Server;
             cbType.SelectedIndex = 0;
             sdkParamEdt.Text = "";
             setDefAcnt();
@@ -151,16 +151,18 @@ namespace SDKDemo
             string strParams = Convert.ToBase64String(System.Text.Encoding.Default.GetBytes(sdkParamEdt.Text.Trim()));
             iniFile.WriteValue("Cfg", "SDKParams", strParams);
            
+            string acnt = null;
+            string pswd = null;
             if (edtAccount.Text != "默认APPID")
             {
-                iniFile.WriteValue("Cfg", "LastAccount", edtAccount.Text);
-                iniFile.WriteValue("Cfg", "LastPwd", mIsPasswrodChanged ? App.getMD5Value(edtPassword.Password) : edtPassword.Password);                
+                acnt = edtAccount.Text;
             }
-            else
+            if (edtPassword.Password != "\x1\x1\x1\x1\x1\x1")
             {
-                iniFile.WriteValue("Cfg", "LastAccount", null);
-                iniFile.WriteValue("Cfg", "LastPwd", null);
+                pswd = mIsPasswrodChanged ? App.getMD5Value(edtPassword.Password) : edtPassword.Password;
             }
+            iniFile.WriteValue("Cfg", "LastAccount", acnt);
+            iniFile.WriteValue("Cfg", "LastPwd", pswd);
         }
 
         private void proxyTypeChanged(object sender, SelectionChangedEventArgs e)

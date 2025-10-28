@@ -146,7 +146,7 @@ namespace SDKDemo
             App.CRVideo.VideoSDK.speakerVolume = (int)micBar.Value;
 
             rbVideoSpeed.IsChecked = true; //视频默认使用流畅优先
-            cmbVideoSize.SelectedIndex = (int)(VIDEO_SHOW_SIZE.VSIZE_SZ_360-1);
+            cmbVideoSize.Text = "640*360";
             VDenoise.IsChecked = true;
 
             //是否开启多摄像头判断
@@ -247,7 +247,7 @@ namespace SDKDemo
             }
 
             VideoCfg cfg = new VideoCfg();
-            cfg.size = cmbVideoSize.Text;
+            cfg.size = (string)cmbVideoSize.SelectedItem;
             if (FpsCmBox.SelectedIndex >= 0)
             {
                 cfg.fps = Convert.ToInt32((string)FpsCmBox.SelectedItem);

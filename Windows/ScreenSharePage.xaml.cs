@@ -205,7 +205,7 @@ namespace SDKDemo
         private void btn_photo(object sender, RoutedEventArgs e)
         {
             string photoPath = System.Windows.Forms.Application.StartupPath + "\\Tmp\\" + System.Guid.NewGuid().ToString() + ".jpg";
-            int rslt = mShareUI.ShareUI.savePic(photoPath);
+            int rslt = mShareUI.ShareUI.savePicToFile(photoPath);
             if(rslt > 0)
             {
                 showImage img = new showImage();

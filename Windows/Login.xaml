@@ -17,7 +17,8 @@
 
         <Image Grid.Row="0" Grid.Column="1" Source="/Res/logo.png" Stretch="Fill" HorizontalAlignment="Center" Width="120" Margin="14,29,106,29"/>
 
-        <Label Grid.Column="0" Grid.Row="1" Margin="0,13,5,13" HorizontalAlignment="Right" VerticalAlignment="Center" Height="25" Width="34">昵称</Label>
+        <Label Grid.Column="0" Grid.Row="1" Margin="0,13.4,4.6,12.8" HorizontalAlignment="Right" VerticalAlignment="Center" Height="25" Width="48
+               ">UserID</Label>
         <TextBox Name="edtNickname" Grid.Column="1" Grid.Row="1" Margin="5,10,0,9" Height="32" HorizontalAlignment="Left" VerticalAlignment="Center" Width="160"></TextBox>
 
         <Button Name="btnLogin"  Grid.Column="1" Grid.Row="2" Margin="5,9,0,10"  HorizontalAlignment="Left" VerticalAlignment="Center" Width="160" Height="32" Click="btnLogin_Click" Style="{StaticResource HighlightBtn}">登陆</Button>
