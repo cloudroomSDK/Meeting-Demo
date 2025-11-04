@@ -355,7 +355,6 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       // this.userID = sessionStorage.getItem('CRMEETINGDEMO_UID') || `${this.nickname}_${Math.floor(Math.random() * 899) + 100}`; // 登录SDK系统的用户唯一ID
       this.userID = sessionStorage.getItem('CRMEETINGDEMO_UID') || this.nickname; // 登录SDK系统的用户唯一ID
       this.isLogin = false; // 是否已经登录
-      this.reLoginTimer = null; // 掉线重登计时器
       this.reLoginTimes = null; // 掉线重登重试次数
 
       $('#userInputName').val(this.nickname);
@@ -437,35 +436,14 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         $('.login_form').css('border', 'none');
         __Rtc.crlog(`[MeetingDemo] 从系统掉线了！错误码：${sdkErr}`);
         if (sdkErr == 10) {
-          MeetingDemo.alertLayer(`您的ID已在其它设备登录，您已自动退出房间...`, () => {
-            MeetingDemo.RoomMgr.onClickCloseBtn(1);
-          });
+          MeetingDemo.alertLayer(`您的ID已在其它设备登录，您已自动退出房间...`);
         } else if (sdkErr == 18) {
           MeetingDemo.alertLayer(`Token失效，已从系统中断开！`);
-          MeetingDemo.RoomMgr.onClickCloseBtn(1);
-
-          $('#page_meeting').animate(
-            {
-              width: '0px',
-            },
-            300
-          );
-          $('#page_login').animate(
-            {
-              width: '100%',
-            },
-            300
-          );
         } else {
-          clearTimeout(this.reLoginTimer);
-
-          // 这里不再自动重登呼叫系统了，只自动重试进入房间，进入房间之后再去判断一下，如果登录掉线了就重新登录一下
-
-          // this.reLoginTimer = setTimeout(() => {
-          //     __Rtc.crlog(`[MeetingDemo] 掉线，重新登录...`);
-          //     this.loginSystem(`reLogin_${++this.reLoginTimes}`);
-          // }, 5000);
+          MeetingDemo.alertLayer(`您已从系统中掉线，请重新登录...`);
         }
+
+        MeetingDemo.RoomMgr.onClickCloseBtn(1);
       };
     }
     // 注册事件
@@ -565,7 +543,8 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       }
       $('#server_add').val(this.server);
       $('#loginPassRadio').click(); // 密码登录
-      $('#msTypeUDP').click(); // UDP
+      $('#msTypeUDPTCP').click(); // UDP/TCP
+      // $('#msTypeUDP').click(); // UDP
       $('#cr_account').val('默认');
       $('#comp_psdw').val('默认');
       $('#userAuthCode').val('');
@@ -650,7 +629,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         virtualBackgroundAssets: '../SDK/VirtualBackgroundSource', //虚拟背景资源路径
         // virtualBackgroundAssets: "https://cdn.jsdelivr.net/npm/@VirtualBackgroundSource/selfie_segmentation", //虚拟背景资源路径
         // virtualBackgroundAssets: "https://www.unpkg.com/@VirtualBackgroundSource/selfie_segmentation", //虚拟背景资源路径
-        // svrTimeout: 120, // 与服务器通信超时时间 缺省为60s
+        svrTimeout: 30, // 与服务器通信超时时间 缺省为60s
         // isHttp: true, // 是否强制sdk内部使用http协议（和页面协议无关） 缺省为false
         // securityEnhancement: true, //是否开启安全增强（会有跨域问题，需配置跨域响应头） 缺省为false
         // isSDKConsole: false, // 是否在控制台输出SDK日志  缺省为true
@@ -731,27 +710,27 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
           window.location.reload(); // 刷新当前页面
         });
       };
-      // SDK接口：通知 从房间中掉线了
-      CRVideo_MeetingDropped.callback = () => {
-        this.isMeeting = false;
+      // // SDK接口：通知 从房间中掉线了
+      // CRVideo_MeetingDropped.callback = () => {
+      //   this.isMeeting = false;
 
-        // // 自动重新入会
-        // setTimeout(() => {
-        //   MeetingDemo.tipLayer(`从房间中掉线了，正在第${++this.reEnterTimes}次尝试重新进入...`);
-        //   this.enterMeetingFun(`reEnter_${this.reEnterTimes}`); // 进入房间
-        // }, 0);
+      //   // // 自动重新入会
+      //   // setTimeout(() => {
+      //   //   MeetingDemo.tipLayer(`从房间中掉线了，正在第${++this.reEnterTimes}次尝试重新进入...`);
+      //   //   this.enterMeetingFun(`reEnter_${this.reEnterTimes}`); // 进入房间
+      //   // }, 0);
 
-        // 弹框提示掉线
-        MeetingDemo.modalLayer(`掉线`, `您已从房间中掉线，是否重新进入？`, {
-          btns: ['重进', '取消'],
-          btn1Callback() {
-            MeetingDemo.RoomMgr.enterMeetingFun(`reEnter_${++MeetingDemo.RoomMgr.reEnterTimes}`); // 进入房间
-          },
-          btn2Callback() {
-            MeetingDemo.RoomMgr.onClickCloseBtn();
-          },
-        });
-      };
+      //   // 弹框提示掉线
+      //   MeetingDemo.modalLayer(`掉线`, `您已从房间中掉线，是否重新进入？`, {
+      //     btns: ['重进', '取消'],
+      //     btn1Callback() {
+      //       MeetingDemo.RoomMgr.enterMeetingFun(`reEnter_${++MeetingDemo.RoomMgr.reEnterTimes}`); // 进入房间
+      //     },
+      //     btn2Callback() {
+      //       MeetingDemo.RoomMgr.onClickCloseBtn();
+      //     },
+      //   });
+      // };
     }
     // 点击创建房间按钮
     onClickCreateBtn() {
@@ -1561,8 +1540,8 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         if (MeetingDemo.MemberMgr.parseUserID(member.userID) == parseUserID) {
           member.allVideos.forEach((videoItem) => {
             if (videoItem.videoUI && videoItem.videoUI.id() == uiid) {
-              this.videoUI_large.setVideo(videoItem.userID, videoItem.videoID, 1);
-              this.videoUI_small.setVideo(videoItem.userID, videoItem.videoID, 2);
+              if(this.videoUI_large) this.videoUI_large.setVideo(videoItem.userID, videoItem.videoID, 1);
+              if(this.videoUI_small) this.videoUI_small.setVideo(videoItem.userID, videoItem.videoID, 2);
               document.querySelector('.sub-stream-view').style.display = 'flex';
             }
           });
@@ -1572,8 +1551,8 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
     // 关闭大小流窗口
     closeSubStreamWindow() {
       document.querySelector('.sub-stream-view').style.display = 'none';
-      this.videoUI_large.setVideo('', 0);
-      this.videoUI_small.setVideo('', 0);
+      if(this.videoUI_large) this.videoUI_large.setVideo('', 0);
+      if(this.videoUI_small) this.videoUI_small.setVideo('', 0);
     }
     // 切换分辨率或帧率或比例
     setVideoConfig(obj) {
