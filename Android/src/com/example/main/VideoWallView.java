@@ -13,13 +13,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.cloudroom.cloudroomvideosdk.CRMeetingCallback;
-import com.cloudroom.cloudroomvideosdk.CloudroomVideoMeeting;
-import com.cloudroom.cloudroomvideosdk.model.CRVIDEOSDK_ERR_DEF;
-import com.cloudroom.cloudroomvideosdk.model.UsrVideoId;
-import com.cloudroom.cloudroomvideosdk.model.VIDEO_WALL_MODE;
-import com.cloudroom.cloudroomvideosdk.model.VSTATUS;
+import com.rtc.sdk.RTCMeetingCallback;
+import com.rtc.sdk.RTCMeeting;
+import com.rtc.sdk.model.CRVIDEOSDK_ERR_DEF;
+import com.rtc.sdk.model.UsrVideoId;
+import com.rtc.sdk.model.VSTATUS;
 import com.example.meetingdemo.R;
+import com.examples.common.VIDEO_WALL_MODE;
 import com.examples.tool.CRLog;
 
 public class VideoWallView extends RelativeLayout {
@@ -28,18 +28,16 @@ public class VideoWallView extends RelativeLayout {
 
 	private VIDEO_WALL_MODE mVideoWallMode = VIDEO_WALL_MODE.VLO_WALL2;
 	ArrayList<VideoView> mVideoViews = new ArrayList<VideoView>();
-	private CRMeetingCallback mCRMeetingCallback = new CRMeetingCallback() {
+	private RTCMeetingCallback mRTCMeetingCallback = new RTCMeetingCallback() {
 
 		@Override
 		public void defVideoChanged(String userID, short videoID) {
-			
 			// 更新观看视频
 			updateWatchVideos();
 		}
 
 		@Override
 		public void enterMeetingRslt(CRVIDEOSDK_ERR_DEF code) {
-			
 			if (code != CRVIDEOSDK_ERR_DEF.CRVIDEOSDK_NOERR) {
 				return;
 			}
@@ -49,27 +47,19 @@ public class VideoWallView extends RelativeLayout {
 		}
 
 		@Override
-		public void notifyVideoWallMode(VIDEO_WALL_MODE wallMode) {
-			
-		}
-
-		@Override
 		public void userEnterMeeting(String userID) {
-			
 			// 更新观看视频
 			updateWatchVideos();
 		}
 
 		@Override
 		public void userLeftMeeting(String userID) {
-			
 			// 更新观看视频
 			updateWatchVideos();
 		}
 
 		@Override
 		public void videoDevChanged(String userID) {
-			
 			// 更新观看视频
 			updateWatchVideos();
 		}
@@ -77,7 +67,6 @@ public class VideoWallView extends RelativeLayout {
 		@Override
 		public void videoStatusChanged(String userID, VSTATUS oldStatus,
 				VSTATUS newStatus) {
-			
 			// 更新观看视频
 			updateWatchVideos();
 		}
@@ -87,37 +76,31 @@ public class VideoWallView extends RelativeLayout {
 
 	public VideoWallView(Context context) {
 		super(context);
-		// TODO Auto-generated constructor stub
 		init();
 	}
 
 	public VideoWallView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		// TODO Auto-generated constructor stub
 		init();
 	}
 
 	private void init() {
 		resetVideoWallLayout();
-		CloudroomVideoMeeting.getInstance()
-				.registerCallback(mCRMeetingCallback);
+		RTCMeeting.getInstance()
+				.registerCallback(mRTCMeetingCallback);
 	}
 	
 	private static final int MSG_RESET_LAYOUT = 0;
-	private Handler mMainHandler = new Handler(new Callback() {
-		
-		@Override
-		public boolean handleMessage(Message msg) {
-			
-			switch (msg.what) {
-			case MSG_RESET_LAYOUT:
-				resetVideoWallLayout();
-				break;
-			default:
-				break;
-			}
-			return false;
+	private Handler mMainHandler = new Handler(msg -> {
+
+		switch (msg.what) {
+		case MSG_RESET_LAYOUT:
+			resetVideoWallLayout();
+			break;
+		default:
+			break;
 		}
+		return false;
 	});
 
 	private View mViewContainer = null;
@@ -168,6 +151,8 @@ public class VideoWallView extends RelativeLayout {
 	}
 
 	private void addVideoViewToList(View view) {
+
+
 		if (view instanceof VideoView) {
 			mVideoViews.add((VideoView) view);
 			return;
@@ -214,7 +199,7 @@ public class VideoWallView extends RelativeLayout {
 
 	private void updateWatchVideos() {
 		// 更新观看视频
-		ArrayList<UsrVideoId> watchableVideos = CloudroomVideoMeeting
+		ArrayList<UsrVideoId> watchableVideos = RTCMeeting
 				.getInstance().getWatchableVideos();
 
 		int watchableSize = watchableVideos.size();

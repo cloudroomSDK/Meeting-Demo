@@ -30,10 +30,12 @@ public class PermissionManager {
 	public static String[] PHONE_INFO = { Manifest.permission.READ_PHONE_STATE };
 
 	// 音视频相关权限
-	public static String[] VIDEO_PERMISSION = { Manifest.permission.CAMERA,
+	public static String[] VIDEO_PERMISSION = {
+			Manifest.permission.CAMERA,
 			Manifest.permission.RECORD_AUDIO,
 			Manifest.permission.WRITE_EXTERNAL_STORAGE,
-			Manifest.permission.READ_PHONE_STATE, };
+//			Manifest.permission.READ_PHONE_STATE,
+	};
 
 	public static String[] NEED_PERMISSION = VIDEO_PERMISSION;
 

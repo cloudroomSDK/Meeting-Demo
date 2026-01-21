@@ -40,6 +40,6 @@ public class BaseActivity extends Activity {
 		DemoApp.getInstance().onActivityDestroy(this);
 	}
     protected void onRequestPermissionsFinished() {
-        DemoApp.getInstance().initCloudroomVideoSDK();
+        DemoApp.getInstance().initRTCSDK();
     }
 }

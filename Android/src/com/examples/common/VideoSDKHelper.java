@@ -1,7 +1,6 @@
 package com.examples.common;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -9,17 +8,17 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.cloudroom.cloudroomvideosdk.CRMeetingCallback;
-import com.cloudroom.cloudroomvideosdk.CRMgrCallback;
-import com.cloudroom.cloudroomvideosdk.CloudroomVideoMeeting;
-import com.cloudroom.cloudroomvideosdk.CloudroomVideoMgr;
-import com.cloudroom.cloudroomvideosdk.model.CRVIDEOSDK_ERR_DEF;
-import com.cloudroom.cloudroomvideosdk.model.CRVIDEOSDK_MEETING_DROPPED_REASON;
+import com.rtc.sdk.RTCMeetingCallback;
+import com.rtc.sdk.RTCMgrCallback;
+import com.rtc.sdk.RTCMeeting;
+import com.rtc.sdk.RTCMgr;
+import com.rtc.sdk.model.CRVIDEOSDK_ERR_DEF;
+import com.rtc.sdk.model.CRVIDEOSDK_MEETING_DROPPED_REASON;
 import com.example.meetingdemo.R;
 import com.examples.tool.CRLog;
 import com.examples.tool.Tools;
-import com.examples.tool.UITool;
-import com.google.gson.Gson;
+
+import org.json.JSONObject;
 
 @SuppressLint("HandlerLeak")
 /**
@@ -34,8 +33,8 @@ public class VideoSDKHelper {
 	private Handler mMainHandler = new Handler();
 
 	private VideoSDKHelper() {
-		CloudroomVideoMgr.getInstance().registerCallback(mMgrCallback);
-		CloudroomVideoMeeting.getInstance().registerCallback(mMeetingCallback);
+		RTCMgr.getInstance().registerCallback(mMgrCallback);
+		RTCMeeting.getInstance().registerCallback(mMeetingCallback);
 	}
 
 	private static VideoSDKHelper mInstance = null;
@@ -49,7 +48,7 @@ public class VideoSDKHelper {
 		return mInstance;
 	}
 
-	private CRMgrCallback mMgrCallback = new CRMgrCallback() {
+	private RTCMgrCallback mMgrCallback = new RTCMgrCallback() {
 
 		// 登陆失败
 		@Override
@@ -84,7 +83,7 @@ public class VideoSDKHelper {
 		}
 	};
 
-	private CRMeetingCallback mMeetingCallback = new CRMeetingCallback() {
+	private RTCMeetingCallback mMeetingCallback = new RTCMeetingCallback() {
 
 		@Override
 		public void enterMeetingRslt(CRVIDEOSDK_ERR_DEF code) {
@@ -110,23 +109,26 @@ public class VideoSDKHelper {
 
 		@Override
 		public void notifyMeetingCustomMsg(String fromUserID, String text) {
-			Gson gson = new Gson();
-			Map<String, String> map = gson.fromJson(text, Map.class);
-			if (map != null && map.containsKey("CmdType")) {
-				if (!"IM".equals(map.get("CmdType"))) {
+			try {
+				JSONObject json = new JSONObject(text);
+				if (json != null && json.has("CmdType")) {
+					if (!"IM".equals(json.getString("CmdType"))) {
+						return;
+					}
+				} else {
 					return;
 				}
-			} else {
-				return;
+				String imMsgText = json.getString("IMMsg");
+				CRLog.debug(TAG, "notifyIMmsg fromUserID:" + fromUserID + " text:"
+						+ text);
+				IMmsg imMsg = new IMmsg();
+				imMsg.fromUserID = fromUserID;
+				imMsg.text = imMsgText;
+				imMsg.sendTime = (long) System.currentTimeMillis();
+				mIMmsgList.add(imMsg);
+			} catch (Exception e) {
+				com.rtc.sdk.CRLog.w("notifyMeetingCustomMsg ex:" + e.getMessage());
 			}
-			String imMsgText = map.get("IMMsg");
-			CRLog.debug(TAG, "notifyIMmsg fromUserID:" + fromUserID + " text:"
-					+ text);
-			IMmsg imMsg = new IMmsg();
-			imMsg.fromUserID = fromUserID;
-			imMsg.text = imMsgText;
-			imMsg.sendTime = (long) System.currentTimeMillis();
-			mIMmsgList.add(imMsg);
 		}
 
 		@Override
@@ -139,13 +141,11 @@ public class VideoSDKHelper {
 
 	public void logout() {
 		mLoginUserID = null;
-		mNickName = null;
-		CloudroomVideoMgr.getInstance().logout();
+		RTCMgr.getInstance().logout();
 	}
 
 	private boolean mBInMeeting = false;
 	private String mLoginUserID = null;
-	private String mNickName = null;
 
 	public String getLoginUserID() {
 		return mLoginUserID;
@@ -153,14 +153,6 @@ public class VideoSDKHelper {
 
 	public boolean isLogin() {
 		return mLoginUserID != null;
-	}
-
-	public String getNickName() {
-		return mNickName;
-	}
-
-	public void setNickName(String nickName) {
-		this.mNickName = nickName;
 	}
 
 	public boolean isInMeeting() {
@@ -180,7 +172,7 @@ public class VideoSDKHelper {
 	}
 
 	public void enterMeeting(int meetId) {
-		CloudroomVideoMeeting.getInstance().enterMeeting(meetId);
+		RTCMeeting.getInstance().enterMeeting(meetId, mLoginUserID);
 	}
 
 	public String getErrStr(CRVIDEOSDK_ERR_DEF errCode) {

@@ -43,7 +43,7 @@ public class SettingActivity extends BaseActivity {
 
 	public static final String KEY_SERVER = "server";
 	public static final String KEY_APPID = "account";
-	public static final String KEY_APPSECRET = "password";
+	public static final String KEY_APPSECRET = "appsecret";
 	public static final String KEY_DATENC_TYPE = "datEncType";
 
 	@Override
@@ -66,8 +66,7 @@ public class SettingActivity extends BaseActivity {
 				.getDefaultSharedPreferences(this);
 
 		String server = sharedPreferences.getString(KEY_SERVER, SDKConfig.DEFAULT_SERVER);
-		String appID = sharedPreferences.getString(KEY_APPID,
-				SDKConfig.DEFAULT_APPID);
+		String appID = sharedPreferences.getString(KEY_APPID, SDKConfig.DEFAULT_APPID);
 		String appSecret = sharedPreferences.getString(KEY_APPSECRET, SDKConfig.DEFAULT_APPSECRET);
 
 		mServerEditText.setText(server);
@@ -80,8 +79,7 @@ public class SettingActivity extends BaseActivity {
 
 		try {
 			ArrayList<String> datEncTypeStrs = UITool.getStringArray(this, R.array.datenc_types);
-			String datEncType = sharedPreferences.getString(KEY_DATENC_TYPE,
-					SDKConfig.DEFAULT_DATENC_TYPE);
+			String datEncType = sharedPreferences.getString(KEY_DATENC_TYPE, SDKConfig.DEFAULT_DATENC_TYPE);
 			mDatEncTV.setText(datEncTypeStrs.get(Integer.parseInt(datEncType)));
 		} catch (Exception e) {
 		}
@@ -191,9 +189,6 @@ public class SettingActivity extends BaseActivity {
 
 		if(!oldAppSecret.equals(appSecret)) {
 			// 判断是否恢复默认
-			if (!SDKConfig.DEFAULT_APPSECRET.equals(appSecret)) {
-				appSecret = MD5Util.MD5(appSecret);
-			}
 			if (TextUtils.isEmpty(appSecret)) {
 				editor.remove(KEY_APPSECRET);
 			} else {

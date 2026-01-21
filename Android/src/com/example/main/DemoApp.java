@@ -7,13 +7,14 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.media.MediaRecorder;
 import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.cloudroom.cloudroomvideosdk.CloudroomVideoSDK;
-import com.cloudroom.cloudroomvideosdk.model.SdkInitDat;
+import com.rtc.sdk.RTCSDK;
+import com.rtc.sdk.model.SdkInitDat;
 import com.examples.common.PermissionManager;
 import com.examples.common.VideoSDKHelper;
 import com.tencent.bugly.crashreport.CrashReport;
@@ -45,16 +46,16 @@ public class DemoApp extends Application {
 	/**
 	 * 初始化SDK
 	 */
-	public void initCloudroomVideoSDK() {
-        if (CloudroomVideoSDK.getInstance().isInitSuccess()) {
-            Log.i(TAG, "initCloudroomVideoSDK has init");
+	public void initRTCSDK() {
+        if (RTCSDK.getInstance().isInitSuccess()) {
+            Log.i(TAG, "initRTCSDK has init");
             return;
         }
-        Log.i(TAG, "initCloudroomVideoSDK init");
+        Log.i(TAG, "initRTCSDK init");
 		// 输出SDK版本号
-		String sdkVer = CloudroomVideoSDK.getInstance()
-				.GetCloudroomVideoSDKVer();
-		Log.d(TAG, "CloudroomVideoSDKVer:" + sdkVer);
+		String sdkVer = RTCSDK.getInstance()
+				.GetRTCSDKVer();
+		Log.d(TAG, "RTCSDKVer:" + sdkVer);
 
         SharedPreferences sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(this);
@@ -73,16 +74,15 @@ public class DemoApp extends Application {
         } else {
             initDat.params.put("VerifyHttpsCert", "0");
         }
-//        initDat.params.put("SupportUSBCamera", "1");
 		// 初始化SDK
-		CloudroomVideoSDK.getInstance().init(getApplicationContext(), initDat);
+		RTCSDK.getInstance().init(getApplicationContext(), initDat);
 	}
 
-    public void uninitCloudroomVideoSDK() {
-        if(!CloudroomVideoSDK.getInstance().isInitSuccess()) {
+    public void uninitRTCSDK() {
+        if(!RTCSDK.getInstance().isInitSuccess()) {
             return;
         }
-        CloudroomVideoSDK.getInstance().uninit();
+        RTCSDK.getInstance().uninit();
     }
 
 	private static DemoApp mInstance = null;
@@ -137,7 +137,7 @@ public class DemoApp extends Application {
 	 */
 	public void terminalApp() {
 		// 反初始化SDK
-		CloudroomVideoSDK.getInstance().uninit();
+		RTCSDK.getInstance().uninit();
 		for (Activity activity : mActivitys) {
 			try {
 				activity.finish();

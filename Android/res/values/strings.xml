@@ -21,7 +21,7 @@
     <string name="null_appsecret">App Secret不能为空</string>
     <string name="datenc_type">通讯协议</string>
     <string name="sdk_ver">SDK版本号：</string>
-    <string name="null_nickname">昵称不能为空</string>
+    <string name="null_privacnt">第三方账号不能为空</string>
     <string name="create_meeting">创建房间</string>
     <string name="input_meeting_id">请输入房间号</string>
     <string name="meeting_id_prompt">请输入8位房间号</string>

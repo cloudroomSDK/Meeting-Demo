@@ -12,7 +12,7 @@
         android:layout_height="50dp"
         android:src="@drawable/video_back" />
 
-    <com.cloudroom.cloudroomvideosdk.VideoUIView
+    <com.rtc.sdk.VideoUIView
         android:id="@+id/view_yuv_video"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

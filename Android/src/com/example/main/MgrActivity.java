@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -17,13 +16,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.cloudroom.cloudroomvideosdk.CRMgrCallback;
-import com.cloudroom.cloudroomvideosdk.CloudroomVideoMgr;
-import com.cloudroom.cloudroomvideosdk.CloudroomVideoSDK;
-import com.cloudroom.cloudroomvideosdk.model.CRVIDEOSDK_ERR_DEF;
-import com.cloudroom.cloudroomvideosdk.model.LoginDat;
+import com.rtc.sdk.RTCMgrCallback;
+import com.rtc.sdk.RTCMgr;
+import com.rtc.sdk.RTCSDK;
+import com.rtc.sdk.model.CRVIDEOSDK_ERR_DEF;
+import com.rtc.sdk.model.LoginDat;
 import com.example.meetingdemo.R;
 import com.examples.common.VideoSDKHelper;
+import com.examples.tool.MD5Util;
 import com.examples.tool.UITool;
 import com.examples.tool.UITool.ConfirmDialogCallback;
 
@@ -41,7 +41,7 @@ public class MgrActivity extends BaseActivity {
 	private Button mCreateMeetBtn = null;
 	private Button mEnterMeetBtn = null;
 
-	private CRMgrCallback mMgrCallback = new CRMgrCallback() {
+	private RTCMgrCallback mMgrCallback = new RTCMgrCallback() {
 
 		// 登陆失败
 		@Override
@@ -66,14 +66,12 @@ public class MgrActivity extends BaseActivity {
 		// 登陆成功
 		@Override
 		public void loginSuccess(String usrID, String cookie) {
-			
 			Log.d(TAG, "onLoginSuccess");
 			enableOption(true);
 			mHandler.removeMessages(MSG_LOGIN);
 
 			// 提示登录成功
 			VideoSDKHelper.getInstance().showToast(R.string.login_success);
-			VideoSDKHelper.getInstance().setNickName(mLoginData.nickName);
 			mLoging = false;
 		}
 
@@ -120,7 +118,7 @@ public class MgrActivity extends BaseActivity {
         }
 
 		// 设置呼叫处理对象
-		CloudroomVideoMgr.getInstance().registerCallback(mMgrCallback);
+		RTCMgr.getInstance().registerCallback(mMgrCallback);
 
 		initViews();
 
@@ -135,7 +133,7 @@ public class MgrActivity extends BaseActivity {
 
 		TextView version = (TextView) findViewById(R.id.tv_version);
 		version.setText(getString(R.string.sdk_ver)
-				+ CloudroomVideoSDK.getInstance().GetCloudroomVideoSDKVer());
+				+ RTCSDK.getInstance().GetRTCSDKVer());
 
 		enableOption(VideoSDKHelper.getInstance().isLogin());
 	}
@@ -157,8 +155,8 @@ public class MgrActivity extends BaseActivity {
 			mHandler.sendEmptyMessage(MSG_LOGIN);
             VideoSDKHelper.getInstance().logout();
             if(SettingActivity.bInitDataChanged) {
-                DemoApp.getInstance().uninitCloudroomVideoSDK();
-                DemoApp.getInstance().initCloudroomVideoSDK();
+                DemoApp.getInstance().uninitRTCSDK();
+                DemoApp.getInstance().initRTCSDK();
             }
         }
         SettingActivity.bSettingChanged = false;
@@ -169,7 +167,7 @@ public class MgrActivity extends BaseActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 		mHandler.removeMessages(MSG_LOGIN);
-		CloudroomVideoMgr.getInstance().unregisterCallback(mMgrCallback);
+		RTCMgr.getInstance().unregisterCallback(mMgrCallback);
 	}
 
 	public void onViewClick(View v) {
@@ -245,9 +243,7 @@ public class MgrActivity extends BaseActivity {
 				SDKConfig.DEFAULT_APPSECRET);
 
 		// 登录私有账号昵称，正式商用建议使用有意义的不重复账号
-//		String privAcnt = "Android_" + USERID_RANDOM;
-		String privAcnt = "Android_" + Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-		String nickName = privAcnt;
+		String privAcnt = "Android_" + USERID_RANDOM;
 
 		// 检查服务器地址是否为空
 		if (TextUtils.isEmpty(server)) {
@@ -265,34 +261,31 @@ public class MgrActivity extends BaseActivity {
 			return;
 		}
 		// 检查昵称是否为空
-		if (TextUtils.isEmpty(nickName)) {
-			VideoSDKHelper.getInstance().showToast(R.string.null_nickname);
+		if (TextUtils.isEmpty(privAcnt)) {
+			VideoSDKHelper.getInstance().showToast(R.string.null_privacnt);
 			return;
 		}
-		doLogin(server, appID, appSecret, nickName, privAcnt);
+		doLogin(server, appID, appSecret, privAcnt);
 	}
 
 	private LoginDat mLoginData = null;
 	private boolean mLoging = false;
 
 	// 登陆操作
-	private void doLogin(String server, String appID, String appSecret,
-			String nickName, String privAcnt) {
+	private void doLogin(String server, String appID, String appSecret, String privAcnt) {
 		// 设置服务器地址
-		CloudroomVideoSDK.getInstance().setServerAddr(server);
+		RTCSDK.getInstance().setServerAddr(server);
 
 		// 登录数据对象
 		LoginDat loginDat = new LoginDat();
-		// 昵称
-		loginDat.nickName = nickName;
 		// 第三方账号
 		loginDat.privAcnt = privAcnt;
 		// APPID，使用开通SDK的APPID
 		loginDat.authAcnt = appID;
 		// APPSECRET必须做MD5处理
-		loginDat.authPswd = appSecret;
+		loginDat.authPswd = MD5Util.MD5(appSecret);
 		// 执行登录操作
-		CloudroomVideoMgr.getInstance().login(loginDat);
+		RTCMgr.getInstance().login(loginDat);
 
 		// 登录过程中登录按钮不可用
 		enableOption(false);

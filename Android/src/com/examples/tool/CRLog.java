@@ -1,12 +1,12 @@
 package com.examples.tool;
 
-import com.cloudroom.cloudroomvideosdk.CloudroomVideoSDK;
-import com.cloudroom.cloudroomvideosdk.model.SDK_LOG_LEVEL_DEF;
+import com.rtc.sdk.RTCSDK;
+import com.rtc.sdk.model.SDK_LOG_LEVEL_DEF;
 
 public class CRLog {
 
 	private static void log(SDK_LOG_LEVEL_DEF level, String tag, String log) {
-		CloudroomVideoSDK.getInstance().writeLog(level, tag + ":" + log);
+		RTCSDK.getInstance().writeLog(level, tag + ":" + log);
 	}
 
 	public static void debug(String tag, String log) {

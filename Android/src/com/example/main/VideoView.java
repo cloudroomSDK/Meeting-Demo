@@ -7,9 +7,9 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.cloudroom.cloudroomvideosdk.CloudroomVideoMeeting;
-import com.cloudroom.cloudroomvideosdk.VideoUIView;
-import com.cloudroom.cloudroomvideosdk.model.UsrVideoId;
+import com.rtc.sdk.RTCMeeting;
+import com.rtc.sdk.VideoUIView;
+import com.rtc.sdk.model.UsrVideoId;
 import com.example.meetingdemo.R;
 
 public class VideoView extends RelativeLayout {
@@ -56,7 +56,7 @@ public class VideoView extends RelativeLayout {
 		} else {
 			mVideoUIView.setVisibility(View.VISIBLE);
 			mNickNameTV.setVisibility(View.VISIBLE);
-			String nickName = CloudroomVideoMeeting.getInstance().getNickName(
+			String nickName = RTCMeeting.getInstance().getNickName(
 					usrVideoId.userId);
 			mNickNameTV.setText(nickName);
 		}

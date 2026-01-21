@@ -4,8 +4,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.Thread.UncaughtExceptionHandler;
 
-import com.cloudroom.cloudroomvideosdk.CloudroomVideoSDK;
-import com.cloudroom.cloudroomvideosdk.model.SDK_LOG_LEVEL_DEF;
+import com.rtc.sdk.RTCSDK;
+import com.rtc.sdk.model.SDK_LOG_LEVEL_DEF;
 
 public class CrashHandler implements UncaughtExceptionHandler {
 
@@ -32,7 +32,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
 
 	@Override
 	public void uncaughtException(Thread thread, Throwable ex) {
-		CloudroomVideoSDK.getInstance().writeLog(
+		RTCSDK.getInstance().writeLog(
 				SDK_LOG_LEVEL_DEF.SDKLEVEL_CRIT, throwable2String(ex));
 		if (mShowCrashDialog) {
 			mDefaultHandler.uncaughtException(thread, ex);

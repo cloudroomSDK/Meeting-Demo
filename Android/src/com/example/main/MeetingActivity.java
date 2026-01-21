@@ -1,9 +1,7 @@
 package com.example.main;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
@@ -34,28 +32,30 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.cloudroom.cloudroomvideosdk.CRMeetingCallback;
-import com.cloudroom.cloudroomvideosdk.CRMgrCallback;
-import com.cloudroom.cloudroomvideosdk.CloudroomVideoMeeting;
-import com.cloudroom.cloudroomvideosdk.CloudroomVideoMgr;
-import com.cloudroom.cloudroomvideosdk.MediaUIView;
-import com.cloudroom.cloudroomvideosdk.ScreenShareUIView;
-import com.cloudroom.cloudroomvideosdk.model.ASTATUS;
-import com.cloudroom.cloudroomvideosdk.model.CRVIDEOSDK_ERR_DEF;
-import com.cloudroom.cloudroomvideosdk.model.CRVIDEOSDK_MEETING_DROPPED_REASON;
-import com.cloudroom.cloudroomvideosdk.model.MEDIA_STOP_REASON;
-import com.cloudroom.cloudroomvideosdk.model.MeetInfo;
-import com.cloudroom.cloudroomvideosdk.model.Size;
-import com.cloudroom.cloudroomvideosdk.model.UsrVideoInfo;
-import com.cloudroom.cloudroomvideosdk.model.VSTATUS;
-import com.cloudroom.cloudroomvideosdk.model.VideoCfg;
+import com.rtc.sdk.RTCMeetingCallback;
+import com.rtc.sdk.RTCMgrCallback;
+import com.rtc.sdk.RTCMeeting;
+import com.rtc.sdk.RTCMgr;
+import com.rtc.sdk.MediaUIView;
+import com.rtc.sdk.ScreenShareUIView;
+import com.rtc.sdk.model.ASTATUS;
+import com.rtc.sdk.model.CRVIDEOSDK_ERR_DEF;
+import com.rtc.sdk.model.CRVIDEOSDK_MEETING_DROPPED_REASON;
+import com.rtc.sdk.model.MEDIA_STOP_REASON;
+import com.rtc.sdk.model.MeetInfo;
+import com.rtc.sdk.model.Size;
+import com.rtc.sdk.model.UsrVideoInfo;
+import com.rtc.sdk.model.VSTATUS;
+import com.rtc.sdk.model.VideoCfg;
 import com.example.meetingdemo.R;
 import com.examples.common.IMmsg;
 import com.examples.common.VideoSDKHelper;
 import com.examples.common.WheelView;
 import com.examples.tool.UITool;
 import com.examples.tool.UITool.ConfirmDialogCallback;
-import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 @SuppressLint({ "NewApi", "HandlerLeak", "ClickableViewAccessibility",
 		"DefaultLocale" })
@@ -96,7 +96,7 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 
 	private static final int MSG_HIDE_OPTION = 1002;
 
-	private CRMgrCallback mMgrCallback = new CRMgrCallback() {
+	private RTCMgrCallback mMgrCallback = new RTCMgrCallback() {
 
 		@Override
 		public void lineOff(CRVIDEOSDK_ERR_DEF sdkErr) {
@@ -121,12 +121,7 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 
 	};
 
-	private CRMeetingCallback mMeetingCallback = new CRMeetingCallback() {
-
-		@Override
-		public void notifyMainVideoChanged() {
-			Log.d(TAG, "notifyMainVideoChanged");
-		}
+	private RTCMeetingCallback mMeetingCallback = new RTCMeetingCallback() {
 
 		/**
 		 * 进入会议结果
@@ -155,7 +150,7 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 
 			// 如果默认使用的时听筒， 开启外放
 			if (mSpeakType <= 1) {
-				CloudroomVideoMeeting.getInstance().setSpeakerOut(true);
+				RTCMeeting.getInstance().setSpeakerOut(true);
 			}
 		}
 
@@ -193,7 +188,7 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 
 		@Override
 		public void micEnergyUpdate(String userID, int oldLevel, int newLevel) {
-			String myUserID = CloudroomVideoMeeting.getInstance().getMyUserID();
+			String myUserID = RTCMeeting.getInstance().getMyUserID();
 			if (myUserID.equals(userID)) {
 				// mMicPB.setProgress(newLevel % mMicPB.getMax());
 			}
@@ -201,12 +196,17 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 
 		@Override
 		public void videoDevChanged(String userID) {
+			if(userID.equals(RTCMeeting.getInstance().getMyUserID())) {
+				initVideo();
+			}
 		}
 
 		@Override
 		public void videoStatusChanged(String userID, VSTATUS oldStatus,
 				VSTATUS newStatus) {
-			updateCameraBtn();
+			if(userID.equals(RTCMeeting.getInstance().getMyUserID())) {
+				updateCameraBtn();
+			}
 		}
 
 		@Override
@@ -226,22 +226,24 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 		@SuppressWarnings({ "unchecked", "unchecked" })
 		@Override
 		public void notifyMeetingCustomMsg(String fromUserID, String text) {
-			Gson gson = new Gson();
-			Map<String, String> map = gson.fromJson(text, Map.class);
-			if (map.containsKey("CmdType")) {
-				if (!"IM".equals(map.get("CmdType"))) {
+			try {
+				JSONObject json = new JSONObject(text);
+				if (json.has("CmdType")) {
+					if (!"IM".equals(json.getString("CmdType"))) {
+						return;
+					}
+				} else {
 					return;
 				}
-			} else {
-				return;
+
+
+			} catch (Exception e) {
+				com.rtc.sdk.CRLog.w("notifyMeetingCustomMsg ex:" + e.getMessage());
 			}
-			// 收到聊天消息刷新界面
-			mIMAdapter.notifyDataSetChanged();
-			mIMListView.setSelection(mIMAdapter.getCount() - 1);
 		}
 
 		@Override
-		public void notifyScreenShareStarted() {
+		public void notifyScreenShareStarted(String sharerID) {
 			mBScreenShareStarted = true;
 			VideoSDKHelper.getInstance()
 					.showToast(R.string.screenshare_started);
@@ -249,7 +251,7 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 		}
 
 		@Override
-		public void notifyScreenShareStopped() {
+		public void notifyScreenShareStopped(String oprUserID) {
 			mBScreenShareStarted = false;
 			VideoSDKHelper.getInstance()
 					.showToast(R.string.screenshare_stopped);
@@ -318,7 +320,7 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 
 	private void exitMeeting() {
 		// 离开会议
-		CloudroomVideoMeeting.getInstance().exitMeeting();
+		RTCMeeting.getInstance().exitMeeting();
 		finish();
 	}
 
@@ -352,8 +354,8 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 
 		initViews();
 
-		CloudroomVideoMeeting.getInstance().registerCallback(mMeetingCallback);
-		CloudroomVideoMgr.getInstance().registerCallback(mMgrCallback);
+		RTCMeeting.getInstance().registerCallback(mMeetingCallback);
+		RTCMgr.getInstance().registerCallback(mMgrCallback);
 
 		updateCameraBtn();
 		updateMicBtn();
@@ -419,8 +421,7 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 	// 创建会议
 	private void createMeeting() {
 		// 创建会议
-		CloudroomVideoMgr.getInstance().createMeeting("Android Meeting", false,
-				TAG);
+		RTCMgr.getInstance().createMeeting(TAG);
 	}
 
 	// 进入会议
@@ -436,10 +437,10 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 	protected void onDestroy() {
 		super.onDestroy();
 		unwatchHeadset();
-		CloudroomVideoMeeting.getInstance().exitMeeting();
-		CloudroomVideoMeeting.getInstance()
+		RTCMeeting.getInstance().exitMeeting();
+		RTCMeeting.getInstance()
 				.unregisterCallback(mMeetingCallback);
-		CloudroomVideoMgr.getInstance().unregisterCallback(mMgrCallback);
+		RTCMgr.getInstance().unregisterCallback(mMgrCallback);
 	}
 
 	@Override
@@ -461,29 +462,47 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 
 	// 成功进入会议
 	private void enterMeetingSuccess() {
+		initVideo();
+		String myUserID = RTCMeeting.getInstance().getMyUserID();
+		// 打开麦克风
+		RTCMeeting.getInstance().openMic(myUserID);
+	}
+
+	private boolean hasInitVideo = false;
+	private void initVideo() {
+		if(hasInitVideo) return;
+		String myUserID = RTCMeeting.getInstance().getMyUserID();
+		VSTATUS vstatus = RTCMeeting.getInstance().getVideoStatus(myUserID);
+		if(vstatus == VSTATUS.VOPEN || vstatus == VSTATUS.VOPENING) {
+			return;
+		}
 		// 设置默认值
 		VideoCfg videoCfg = new VideoCfg();
-		videoCfg.fps = 15;
-		videoCfg.maxbps = -1;
-		videoCfg.minQuality = 22;
-		videoCfg.maxQuality = 25;
 		videoCfg.size = new Size(360, 360);
-		CloudroomVideoMeeting.getInstance().setVideoCfg(videoCfg);
+		videoCfg.fps = 15;
+		videoCfg.maxbps = 500*1000;
+		videoCfg.minQuality = 21;
+		videoCfg.maxQuality = 25;
+		RTCMeeting.getInstance().setVideoCfg(videoCfg);
 
-		String myUserID = CloudroomVideoMeeting.getInstance().getMyUserID();
 		// 默认使用前置摄像头
-		ArrayList<UsrVideoInfo> myVideos = CloudroomVideoMeeting.getInstance()
+		ArrayList<UsrVideoInfo> myVideos = RTCMeeting.getInstance()
 				.getAllVideoInfo(myUserID);
+		Log.i("", "initVideo myVideos:" + myVideos.size());
+		if(myVideos.size() <= 0) {
+			return;
+		}
+		hasInitVideo = true;
 		for (UsrVideoInfo vInfo : myVideos) {
 			if (vInfo.videoName.contains("FRONT")) {
-				CloudroomVideoMeeting.getInstance().setDefaultVideo(myUserID,
+				RTCMeeting.getInstance().setDefaultVideo(myUserID,
 						vInfo.videoID);
 				break;
 			}
 		}
 
 		// // 多档视频实现, 出多档质量的视频流，将带来很大的cpu开销
-		// short defaultVideoID = CloudroomVideoMeeting.getInstance()
+		// short defaultVideoID = RTCMeeting.getInstance()
 		// .getDefaultVideo(myUserID);
 		// VideoAttributes attr = new VideoAttributes();
 		// // 配置第二档视频
@@ -494,28 +513,25 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 		// cfg.maxQuality = 25;
 		// cfg.size = new Size(80, 80);
 		// attr.quality2Cfg = cfg;
-		// CloudroomVideoMeeting.getInstance().setLocVideoAttributes(
+		// RTCMeeting.getInstance().setLocVideoAttributes(
 		// defaultVideoID, attr);
 
 		// 打开摄像头
-		CloudroomVideoMeeting.getInstance().openVideo(myUserID);
+		RTCMeeting.getInstance().openVideo(myUserID);
 		// //设置摄像头焦距，需要摄像头打开之后才能设置，重新打开摄像头以前的设置失效
-		// short videoID = CloudroomVideoMeeting.getInstance().getDefaultVideo(
+		// short videoID = RTCMeeting.getInstance().getDefaultVideo(
 		// myUserID);
-		// String params = CloudroomVideoMeeting.getInstance()
+		// String params = RTCMeeting.getInstance()
 		// .getLocalVideoParams(videoID);
 		// Log.d(TAG, "getLocalVideoParams:" + params);
-		// CloudroomVideoMeeting.getInstance().setLocalVideoParam(videoID,
+		// RTCMeeting.getInstance().setLocalVideoParam(videoID,
 		// "zoom",
 		// "" + 270);
-
-		// 打开麦克风
-		CloudroomVideoMeeting.getInstance().openMic(myUserID);
 	}
 
 	private void updateCameraBtn() {
-		String userId = CloudroomVideoMeeting.getInstance().getMyUserID();
-		VSTATUS status = CloudroomVideoMeeting.getInstance().getVideoStatus(
+		String userId = RTCMeeting.getInstance().getMyUserID();
+		VSTATUS status = RTCMeeting.getInstance().getVideoStatus(
 				userId);
 		if (status == VSTATUS.VOPEN || status == VSTATUS.VOPENING) {
 			mCameraIV.setImageResource(R.drawable.camera_opened);
@@ -527,8 +543,8 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 	}
 
 	private void updateMicBtn() {
-		String userId = CloudroomVideoMeeting.getInstance().getMyUserID();
-		ASTATUS status = CloudroomVideoMeeting.getInstance().getAudioStatus(
+		String userId = RTCMeeting.getInstance().getMyUserID();
+		ASTATUS status = RTCMeeting.getInstance().getAudioStatus(
 				userId);
 		if (status == ASTATUS.AOPEN || status == ASTATUS.AOPENING) {
 			mMicIV.setImageResource(R.drawable.mic_opened);
@@ -552,28 +568,28 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 	}
 
 	public void onViewClick(View v) {
-		String userId = CloudroomVideoMeeting.getInstance().getMyUserID();
+		String userId = RTCMeeting.getInstance().getMyUserID();
 		switch (v.getId()) {
 		case R.id.btn_exit_meeting:
 			showExitDialog();
 			break;
 		case R.id.btn_mic: {
-			ASTATUS status = CloudroomVideoMeeting.getInstance()
+			ASTATUS status = RTCMeeting.getInstance()
 					.getAudioStatus(userId);
 			if (status == ASTATUS.AOPEN || status == ASTATUS.AOPENING) {
-				CloudroomVideoMeeting.getInstance().closeMic(userId);
+				RTCMeeting.getInstance().closeMic(userId);
 			} else {
-				CloudroomVideoMeeting.getInstance().openMic(userId);
+				RTCMeeting.getInstance().openMic(userId);
 			}
 			break;
 		}
 		case R.id.btn_camera: {
-			VSTATUS status = CloudroomVideoMeeting.getInstance()
+			VSTATUS status = RTCMeeting.getInstance()
 					.getVideoStatus(userId);
 			if (status == VSTATUS.VOPEN || status == VSTATUS.VOPENING) {
-				CloudroomVideoMeeting.getInstance().closeVideo(userId);
+				RTCMeeting.getInstance().closeVideo(userId);
 			} else {
-				CloudroomVideoMeeting.getInstance().openVideo(userId);
+				RTCMeeting.getInstance().openVideo(userId);
 			}
 			break;
 		}
@@ -601,10 +617,10 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 	}
 
 	private void switchCamera() {
-		String userId = CloudroomVideoMeeting.getInstance().getMyUserID();
-		short curDev = CloudroomVideoMeeting.getInstance().getDefaultVideo(
+		String userId = RTCMeeting.getInstance().getMyUserID();
+		short curDev = RTCMeeting.getInstance().getDefaultVideo(
 				userId);
-		ArrayList<UsrVideoInfo> devs = CloudroomVideoMeeting.getInstance()
+		ArrayList<UsrVideoInfo> devs = RTCMeeting.getInstance()
 				.getAllVideoInfo(userId);
 
 		if (devs.size() > 1) {
@@ -618,7 +634,7 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 					find = true;
 				}
 			}
-			CloudroomVideoMeeting.getInstance().setDefaultVideo(info.userId,
+			RTCMeeting.getInstance().setDefaultVideo(info.userId,
 					info.videoID);
 		}
 	}
@@ -652,9 +668,9 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 			if (intent.hasExtra("state")) {
 				int state = intent.getIntExtra("state", 0);
 				Log.d(TAG, "HeadsetReceiver state:" + state);
-				CloudroomVideoMeeting.getInstance()
+				RTCMeeting.getInstance()
 						.setSpeakerOut(!(state == 1));
-				boolean speakerOut = CloudroomVideoMeeting.getInstance()
+				boolean speakerOut = RTCMeeting.getInstance()
 						.getSpeakerOut();
 				Log.d(TAG, "setSpeakerOut:" + speakerOut);
 			}
@@ -743,7 +759,7 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 
 	private void showVideoResolutionDialog() {
 		ArrayList<String> videosizes = getStringArray(R.array.videosizes);
-		Size size = CloudroomVideoMeeting.getInstance().getVideoCfg().size;
+		Size size = RTCMeeting.getInstance().getVideoCfg().size;
 		String sizeStr = String.format("%d*%d", size.width, size.height);
 
 		showSingleChoiceDialog(getString(R.string.video_resolution),
@@ -752,29 +768,29 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 					@Override
 					public void onSelect(int index, String item) {
 						String[] sizeStrs = item.split("\\*");
-						VideoCfg cfg = CloudroomVideoMeeting.getInstance()
+						VideoCfg cfg = RTCMeeting.getInstance()
 								.getVideoCfg();
 						cfg.size = new Size(Integer.parseInt(sizeStrs[0]),
 								Integer.parseInt(sizeStrs[1]));
 						cfg.maxbps = -1;
-						CloudroomVideoMeeting.getInstance().setVideoCfg(cfg);
+						RTCMeeting.getInstance().setVideoCfg(cfg);
 					}
 				});
 	}
 
 	private void showVideoFpsDialog() {
-		int curFps = CloudroomVideoMeeting.getInstance().getVideoCfg().fps;
+		int curFps = RTCMeeting.getInstance().getVideoCfg().fps;
 		showSingleChoiceDialog(getString(R.string.video_fps),
 				getStringArray(R.array.fps), "" + curFps, new SelectListener() {
 
 					@Override
 					public void onSelect(int index, String item) {
 						int fps = Integer.parseInt(item);
-						VideoCfg cfg = CloudroomVideoMeeting.getInstance()
+						VideoCfg cfg = RTCMeeting.getInstance()
 								.getVideoCfg();
 						cfg.fps = fps;
 						cfg.maxbps = -1;
-						CloudroomVideoMeeting.getInstance().setVideoCfg(cfg);
+						RTCMeeting.getInstance().setVideoCfg(cfg);
 					}
 				});
 	}
@@ -808,14 +824,16 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 			VideoSDKHelper.getInstance().showToast(R.string.send_null);
 			return;
 		}
-		HashMap<String, String> map = new HashMap<String, String>();
-		map.put("CmdType", "IM");
-		map.put("IMMsg", text);
-		Gson gson = new Gson();
-		String jsonStr = gson.toJson(map);
-
-		// 发送聊天消息
-		CloudroomVideoMeeting.getInstance().sendMeetingCustomMsg(jsonStr, jsonStr);
+		try {
+			JSONObject json = new JSONObject();
+			json.put("CmdType", "IM");
+			json.put("IMMsg", text);
+			String jsonStr = json.toString();
+			// 发送聊天消息
+			RTCMeeting.getInstance().sendMeetingCustomMsg(jsonStr, text);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		// 清空输入框
 		mIMInputET.setText("");
 	}
@@ -857,7 +875,7 @@ public class MeetingActivity extends BaseActivity implements OnTouchListener,
 					.findViewById(R.id.tv_msg_text);
 
 			msgTV.setText(info.text);
-			String nickName = CloudroomVideoMeeting.getInstance().getNickName(
+			String nickName = RTCMeeting.getInstance().getNickName(
 					info.fromUserID);
 			nameTV.setText(nickName);
 			nameTV.setVisibility(TextUtils.isEmpty(nickName) ? View.GONE

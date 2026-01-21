@@ -53,7 +53,7 @@
 }
 
 
-############CloudroomVideoSDK��������  begin############
+############RTCSDK混淆配置  begin############
 -dontshrink
 -dontoptimize
 -ignorewarnings
@@ -63,19 +63,13 @@
     native <methods>;
 }
 
--keep class com.cloudroom.cloudroomvideosdk.** { *; }
--keep class com.cloudroom.cloudroomvideosdk.model.** { *; }
+-keep class com.rtc.sdk.** { *; }
+-keep class com.rtc.sdk.model.** { *; }
 -keep class com.rtc.tool.** { *; }
--keep class com.cloudroom.servicescreencap.** { *; }
--keep class com.cloudroom.usbcamera.** { *; }
--keep class org.webrtc.** { *; }
--keep class org.webrtc.voiceengine.** { *; }
--keep class org.webrtc.webrtcdemo.** { *; }
+-keep class com.rtc.servicescreencap.** { *; }
+-keep class com.rtc.usbcamera.** { *; }
 -keep class org.crmedia.** { *; }
 -keep class org.crmedia.clearvoice.** { *; }
 -keep class org.crmedia.crvedemo.** { *; }
--keep class org.qtproject.qt5.android.** { *; }
--keep class org.qtproject.qt5.android.bearer.** { *; }
--keep class org.qtproject.qt5.android.accessibility.** { *; }
 
-############CloudroomVideoSDK��������  end############
+############RTCSDK混淆配置  end############

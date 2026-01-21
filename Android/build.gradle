@@ -6,7 +6,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.2'
+        classpath 'com.android.tools.build:gradle:7.4.1'
     }
 }
 
@@ -24,14 +24,13 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     //noinspection GradleCompatible
     implementation "com.android.support:appcompat-v7:26.0.1"
-    implementation "com.tencent.bugly:crashreport:2.1.9"
-    implementation "com.tencent.bugly:nativecrashreport:3.0"
-    implementation 'com.google.code.gson:gson:2.7'
+    implementation "com.tencent.bugly:crashreport:latest.release"
+    implementation "com.tencent.bugly:nativecrashreport:latest.release"
     implementation "com.squareup.okhttp3:logging-interceptor:3.8.1"
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 34
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -43,8 +42,8 @@ android {
     }
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 28
-        versionName "4.4.8"
+        targetSdkVersion 34
+        versionName "4.8.3.2"
         versionCode 160
         ndk {
             abiFilters "armeabi-v7a"
