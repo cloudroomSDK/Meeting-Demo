@@ -629,7 +629,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         virtualBackgroundAssets: '../SDK/VirtualBackgroundSource', //虚拟背景资源路径
         // virtualBackgroundAssets: "https://cdn.jsdelivr.net/npm/@VirtualBackgroundSource/selfie_segmentation", //虚拟背景资源路径
         // virtualBackgroundAssets: "https://www.unpkg.com/@VirtualBackgroundSource/selfie_segmentation", //虚拟背景资源路径
-        svrTimeout: 30, // 与服务器通信超时时间 缺省为60s
+        // svrTimeout: 30, // 与服务器通信超时时间 缺省为60s
         // isHttp: true, // 是否强制sdk内部使用http协议（和页面协议无关） 缺省为false
         // securityEnhancement: true, //是否开启安全增强（会有跨域问题，需配置跨域响应头） 缺省为false
         // isSDKConsole: false, // 是否在控制台输出SDK日志  缺省为true
@@ -1540,8 +1540,8 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         if (MeetingDemo.MemberMgr.parseUserID(member.userID) == parseUserID) {
           member.allVideos.forEach((videoItem) => {
             if (videoItem.videoUI && videoItem.videoUI.id() == uiid) {
-              if(this.videoUI_large) this.videoUI_large.setVideo(videoItem.userID, videoItem.videoID, 1);
-              if(this.videoUI_small) this.videoUI_small.setVideo(videoItem.userID, videoItem.videoID, 2);
+              if (this.videoUI_large) this.videoUI_large.setVideo(videoItem.userID, videoItem.videoID, 1);
+              if (this.videoUI_small) this.videoUI_small.setVideo(videoItem.userID, videoItem.videoID, 2);
               document.querySelector('.sub-stream-view').style.display = 'flex';
             }
           });
@@ -1551,8 +1551,8 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
     // 关闭大小流窗口
     closeSubStreamWindow() {
       document.querySelector('.sub-stream-view').style.display = 'none';
-      if(this.videoUI_large) this.videoUI_large.setVideo('', 0);
-      if(this.videoUI_small) this.videoUI_small.setVideo('', 0);
+      if (this.videoUI_large) this.videoUI_large.setVideo('', 0);
+      if (this.videoUI_small) this.videoUI_small.setVideo('', 0);
     }
     // 切换分辨率或帧率或比例
     setVideoConfig(obj) {
@@ -1628,10 +1628,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       let g_Wfs = new Wfs();
       g_Wfs.attachMedia(videoEle, url);
       let waitingTimer = setTimeout(() => {
-        MeetingDemo.alertLayer(
-          '摄像头连接失败，如果摄像头url确认无误，可能是受浏览器安全策略限制无法直接访问ip地址。您点击『确定』按钮后，将打开浏览器安全访问确认页面，请在页面中点击“高级——继续前往”以授权网页访问摄像头ip地址。',
-          openIpAddr
-        );
+        MeetingDemo.alertLayer('摄像头连接失败，如果摄像头url确认无误，可能是受浏览器安全策略限制无法直接访问ip地址。您点击『确定』按钮后，将打开浏览器安全访问确认页面，请在页面中点击“高级——继续前往”以授权网页访问摄像头ip地址。', openIpAddr);
       }, 1000);
       function openIpAddr() {
         window.open(`https://${url.split('//')[1].split('/')[0].split(':')[0]}`);
