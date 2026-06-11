@@ -123,23 +123,44 @@
                     <div id="login_sel" class="disableSelect" onclick="MeetingDemo.Login.clickLoginSel()">登录设置
                     </div>
                     <div class="logset_hide">
-                        <div class="token_radio">
-                            <form action="">
+                        <div class="login_set_options">
+                            <div class="token_radio">
                                 <span>鉴权方式：</span>
-                                <input id="loginPassRadio" type="radio" name="login_set" value=1 checked>
-                                <label for="loginPassRadio">密码</label>&nbsp;
-                                <input id="loginTokeRadio" type="radio" name="login_set" value=2>
-                                <label for="loginTokeRadio">Token&nbsp;</label>
-                            </form>
-                        </div>
-                        <div class="login_set_mstype">
-                            <span>流媒体协议：</span>
-                            <input id="msTypeUDPTCP" type="radio" name="msTypeSet" value=0 checked>
-                            <label for="msTypeUDPTCP">自适应</label>&ensp;
-                            <input id="msTypeUDP" type="radio" name="msTypeSet" value=1>
-                            <label for="msTypeUDP">UDP</label>&ensp;
-                            <input id="msTypeTCP" type="radio" name="msTypeSet" value=2>
-                            <label for="msTypeTCP">TCP</label>
+                                <span class="login_set_option">
+                                    <input id="loginPassRadio" type="radio" name="login_set" value=1 checked>
+                                    <label for="loginPassRadio">密码</label>
+                                </span>
+                                <span class="login_set_option">
+                                    <input id="loginTokeRadio" type="radio" name="login_set" value=2>
+                                    <label for="loginTokeRadio">Token</label>
+                                </span>
+                            </div>
+                            <div class="login_set_mstype">
+                                <span>流媒体协议：</span>
+                                <span class="login_set_option">
+                                    <input id="msTypeUDPTCP" type="radio" name="msTypeSet" value=0 checked>
+                                    <label for="msTypeUDPTCP">自适应</label>
+                                </span>
+                                <span class="login_set_option">
+                                    <input id="msTypeUDP" type="radio" name="msTypeSet" value=1>
+                                    <label for="msTypeUDP">UDP</label>
+                                </span>
+                                <span class="login_set_option">
+                                    <input id="msTypeTCP" type="radio" name="msTypeSet" value=2>
+                                    <label for="msTypeTCP">TCP</label>
+                                </span>
+                            </div>
+                            <div class="login_set_security">
+                                <span>安全增强模式：</span>
+                                <span class="login_set_option">
+                                    <input id="securityEnhancementOff" type="radio" name="securityEnhancementSet" value=0 checked>
+                                    <label for="securityEnhancementOff">不启用</label>
+                                </span>
+                                <span class="login_set_option">
+                                    <input id="securityEnhancementOn" type="radio" name="securityEnhancementSet" value=1>
+                                    <label for="securityEnhancementOn">启用</label>
+                                </span>
+                            </div>
                         </div>
                         <div class="input_box">
                             <form action="">

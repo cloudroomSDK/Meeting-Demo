@@ -350,6 +350,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       this.appSecret = this.storage.appSecret || $('#comp_psdw').val(); // 登录的密码
       this.token = this.storage.token || $('#loginToken').val(); // token鉴权方式登录的token
       this.protocol = this.storage.protocol || $('input[name=msTypeSet]:checked').val(); // 流媒体转发协议
+      this.securityEnhancement = this.storage.securityEnhancement === true || this.storage.securityEnhancement === '1' || $('input[name=securityEnhancementSet]:checked').val() === '1'; // 是否开启安全增强
       this.userAuthCode = this.storage.userAuthCode || $('#userAuthCode').val(); // 启用第三方鉴时的鉴权参数
       this.nickname = sessionStorage.getItem('CRMEETINGDEMO_NICKNAME') || `H5用户${Math.floor(Math.random() * 899) + 100}`; // 登录昵称
       // this.userID = sessionStorage.getItem('CRMEETINGDEMO_UID') || `${this.nickname}_${Math.floor(Math.random() * 899) + 100}`; // 登录SDK系统的用户唯一ID
@@ -485,6 +486,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         appSecret: this.appSecret,
         token: this.token,
         protocol: this.protocol,
+        securityEnhancement: this.securityEnhancement,
         userAuthCode: this.userAuthCode,
       };
       localStorage.setItem('CRMEETINGDEMO_LOGIN', JSON.stringify(storage));
@@ -509,6 +511,11 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
           $('#msTypeUDP').click(); // UDP
         } else {
           $('#msTypeTCP').click(); // TCP
+        }
+        if (this.securityEnhancement) {
+          $('#securityEnhancementOn').click();
+        } else {
+          $('#securityEnhancementOff').click();
         }
         $('#loginToken').val(this.token);
 
@@ -544,6 +551,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       $('#server_add').val(this.server);
       $('#loginPassRadio').click(); // 密码登录
       $('#msTypeUDPTCP').click(); // UDP/TCP
+      $('#securityEnhancementOff').click(); // 安全增强：不启用
       // $('#msTypeUDP').click(); // UDP
       $('#cr_account').val('默认');
       $('#comp_psdw').val('默认');
@@ -562,12 +570,14 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       this.appSecret = $('#comp_psdw').val(); // 登录的密码
       this.token = $('#loginToken').val(); // token鉴权方式登录的token
       this.protocol = $('input[name=msTypeSet]:checked').val(); // 流媒体转发协议
+      this.securityEnhancement = $('input[name=securityEnhancementSet]:checked').val() === '1'; // 是否开启安全增强
       this.userAuthCode = $('#userAuthCode').val(); // 启用第三方鉴时的鉴权参数
       let changed = false;
-      const storage = JSON.parse(localStorage.getItem('CRMEETINGDEMO_LOGIN'));
+      const storage = JSON.parse(localStorage.getItem('CRMEETINGDEMO_LOGIN')) || {};
       for (var key in storage) {
         if (this[key] == undefined || this[key] != storage[key]) changed = true;
       }
+      if (this.securityEnhancement !== !!storage.securityEnhancement) changed = true;
       if (changed || this.isLogin == false) {
         this.setLoginStorage();
         this.setSDKParams();
@@ -626,12 +636,12 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       // SDK接口：设置SDK参数
       CRVideo_SetSDKParams({
         MSProtocol: this.protocol, // 媒体流传输协议 TCP UDP 详见文档
+        securityEnhancement: !!this.securityEnhancement, //是否开启安全增强（会有跨域问题，需配置跨域响应头） 缺省为false
         virtualBackgroundAssets: '../SDK/VirtualBackgroundSource', //虚拟背景资源路径
         // virtualBackgroundAssets: "https://cdn.jsdelivr.net/npm/@VirtualBackgroundSource/selfie_segmentation", //虚拟背景资源路径
         // virtualBackgroundAssets: "https://www.unpkg.com/@VirtualBackgroundSource/selfie_segmentation", //虚拟背景资源路径
         // svrTimeout: 30, // 与服务器通信超时时间 缺省为60s
         // isHttp: true, // 是否强制sdk内部使用http协议（和页面协议无关） 缺省为false
-        // securityEnhancement: true, //是否开启安全增强（会有跨域问题，需配置跨域响应头） 缺省为false
         // isSDKConsole: false, // 是否在控制台输出SDK日志  缺省为true
         // isUploadLog: false, // 是否上传日志  缺省为true
         // isRtcLog: false, // 是否输出RTC日志  缺省为true
@@ -1650,7 +1660,16 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       }
       const screenCfg = {
         audio: false,
-        video: true,
+        video: {
+          // 分辨率
+          height: {
+            max: 1440, // 限制最大尺寸为1440p，防止尺寸过大，影响性能和带宽
+          },
+          // 帧率
+          frameRate: {
+            ideal: 10, // 桌面共享一般不需要太大帧率，8~10帧即可，帧率过大会严重消耗带宽
+          },
+        },
       };
       // 获取桌面媒体流
       navigator.mediaDevices.getDisplayMedia(screenCfg).then(

@@ -278,40 +278,53 @@ a:active {
 #page_login .login_cont .login_form .loginSet .logset_hide {
   position: relative;
   display: none;
-  height: 3rem;
+  height: 3.2rem;
   width: 100%;
 }
 #page_login .login_cont .login_form .loginSet .logset_hide input[type=radio] {
   cursor: pointer;
 }
-#page_login .login_cont .login_form .loginSet .logset_hide .token_radio {
-  position: relative;
-  height: 0.2rem;
+#page_login .login_cont .login_form .loginSet .logset_hide .login_set_options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   width: 100%;
+  padding-left: 0.3rem;
   user-select: none;
 }
-#page_login .login_cont .login_form .loginSet .logset_hide .token_radio form {
-  position: absolute;
-  padding-left: 0.1rem;
-  height: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 4rem;
+#page_login .login_cont .login_form .loginSet .logset_hide .login_set_options .token_radio,
+#page_login .login_cont .login_form .loginSet .logset_hide .login_set_options .login_set_mstype,
+#page_login .login_cont .login_form .loginSet .logset_hide .login_set_options .login_set_security {
+  display: flex;
+  align-items: center;
+  width: 4.5rem;
+  line-height: 0.24rem;
+  font-size: 0.14rem;
+  white-space: nowrap;
 }
-#page_login .login_cont .login_form .loginSet .logset_hide .token_radio form #loginTokeRadio {
-  margin-left: 0.1rem;
+#page_login .login_cont .login_form .loginSet .logset_hide .login_set_options .token_radio > span:first-child,
+#page_login .login_cont .login_form .loginSet .logset_hide .login_set_options .login_set_mstype > span:first-child,
+#page_login .login_cont .login_form .loginSet .logset_hide .login_set_options .login_set_security > span:first-child {
+  flex-shrink: 0;
+  width: 1.1rem;
+  text-align: right;
 }
-#page_login .login_cont .login_form .loginSet .logset_hide .login_set_mstype {
-  position: absolute;
-  padding-left: 0.1rem;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-top: 0.05rem;
-  width: 4rem;
-  user-select: none;
+#page_login .login_cont .login_form .loginSet .logset_hide .login_set_options .token_radio .login_set_option,
+#page_login .login_cont .login_form .loginSet .logset_hide .login_set_options .login_set_mstype .login_set_option,
+#page_login .login_cont .login_form .loginSet .logset_hide .login_set_options .login_set_security .login_set_option {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  width: 0.8rem;
+  gap: 0.06rem;
 }
-#page_login .login_cont .login_form .loginSet .logset_hide .input_box {
-  margin-top: 0.35rem;
+#page_login .login_cont .login_form .loginSet .logset_hide .login_set_options .token_radio .login_set_option label,
+#page_login .login_cont .login_form .loginSet .logset_hide .login_set_options .login_set_mstype .login_set_option label,
+#page_login .login_cont .login_form .loginSet .logset_hide .login_set_options .login_set_security .login_set_option label {
+  display: inline-block;
+  width: 0.6rem;
+  text-align: left;
 }
 #page_login .login_cont .login_form .loginSet .logset_hide .form_input {
   height: 0.32rem;
@@ -735,7 +748,7 @@ a:active {
   width: 100%;
   height: 100%;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   pointer-events: none;
 }
 #page_meeting .main .page_meet_cont .page_meet_view .page_meet_video .page_chat_box > ul li {
