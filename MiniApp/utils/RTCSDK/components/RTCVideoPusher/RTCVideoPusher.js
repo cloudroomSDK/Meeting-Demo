@@ -83,7 +83,11 @@ Component({
 	methods: {
 		reset() {
 			console.crlog(`[VideoPusherComponent] reset()`);
-			this.setData({ showComponent: false }, () => {
+			this.setData({
+				showComponent: false,
+				defaultOpenVideo: this.data.enableCamera,
+				defaultOpenMic: !this.data.muted
+			}, () => {
 				this.setData({ showComponent: true }, () => {
 					this.ComponentInit();
 				})
@@ -167,7 +171,14 @@ Component({
 		},
 		setLivePusherOptions(key, value) { //SDK调用方法
 			return new Promise((resolve, reject) => {
-				if (key === 'enableCamera' && value === true && RTCSDK.systemInfo.cameraAuthorized === false) {
+				if (key === 'enableCamera') {
+					this.customCameraState = true;
+				} else if (key === 'muted') {
+					this.customMutedState = true;
+				}
+
+				const authorizeSetting = wx.getAppAuthorizeSetting();
+				if (key === 'enableCamera' && value === true && authorizeSetting.cameraAuthorized === 'denied') {
 					console.crlog('[VideoPusherComponent] app camera is not permissions');
 					RTCSDK.OpenVideoFailRslt.callback(RTCSDK.Constant['CRVideo_CAM_FAIL_APP_NO_PERMISSIONS']);	//业务层可以接收摄像头打开失败回调
 					return reject('noTpermissions');
@@ -175,7 +186,7 @@ Component({
 					console.crlog('[VideoPusherComponent] wxmini camera is not permissions');
 					RTCSDK.OpenVideoFailRslt.callback(RTCSDK.Constant['CRVideo_CAM_FAIL_WX_NO_PERMISSIONS']);	//业务层可以接收摄像头打开失败回调
 					return reject('noTpermissions');
-				} else if (key === 'muted' && value === false && RTCSDK.systemInfo.microphoneAuthorized === false) {
+				} else if (key === 'muted' && value === false && authorizeSetting.microphoneAuthorized === 'denied') {
 					console.crlog('[VideoPusherComponent] app record is not permissions');
 					RTCSDK.OpenMicFailRslt.callback(RTCSDK.Constant['CRVideo_MIC_FAIL_APP_NO_PERMISSIONS']);	//业务层可以接收麦克风打开失败回调
 					return reject('noTpermissions');
@@ -226,9 +237,9 @@ Component({
 			if (Object.prototype.toString.call(config) !== "[object Object]") return;
 			const obj = Object.keys(config).reduce((previousValue, currentValue) => {
 				if (currentValue === 'enableCamera') {
-					if (this.data.defaultOpenVideo !== config[currentValue]) previousValue.defaultOpenVideo = config[currentValue];
+					if (this.data.defaultOpenVideo !== config[currentValue] && !this.customCameraState) previousValue.defaultOpenVideo = config[currentValue];
 				} else if (currentValue === 'muted') {
-					if (this.data.defaultOpenMic === config[currentValue]) previousValue.defaultOpenMic = !config[currentValue]
+					if (this.data.defaultOpenMic === config[currentValue] && !this.customMutedState) previousValue.defaultOpenMic = !config[currentValue]
 				} else if (config[currentValue] !== this.data[currentValue]) {
 					previousValue[currentValue] = config[currentValue];
 				}

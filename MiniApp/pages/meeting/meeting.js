@@ -1,5 +1,5 @@
 const app = getApp();
-const RTCSDK = require('../../utils/RTCSDK/RTC_Miniapp_SDK.min.js');;
+const RTCSDK = require('../../utils/RTCSDK/index');
 const Tools = require('../../utils/tools');
 const sdkErrDesc = require('../../utils/sdkErrDesc');
 
@@ -20,8 +20,7 @@ Page({
 		sdkver: RTCSDK.sdkver, // sdk版本号
 		enableCam: false, // 摄像头是否关闭
 		curMeetId: null,
-		// userID: null, // 登录用户id
-		// nickname: null, // 登录用户昵称
+		myUserInfo: null,
 		pusherDebug: false, //推流组件调试开关
 		playerDebug: false, //播放组件调试开关
 		isBeautify: false, // 是否开启美颜功能
@@ -29,33 +28,72 @@ Page({
 		showChat: false,	//显示聊天框
 		chatCount: 0,	//显示聊天的数量
 
+		isRecordTime: true, // 是否录制时间
+		isRecordName: true, // 是否录制名称
+		isRecordOneself: false, // 是否只录制自己
+		isSvrRecording: false, // 是否正在云端录制中
+		recordTimer: -1, // 录制计时器id
+		recordNowTime: 0, // 当前录制时间
+		recordBtnText: '录制', // 录制按钮的文字
+		recordViewClass: 'icon', // 录制组件的class类名
+
 		openVideoList: [],
+
+		curCamStatus: false, // 摄像头当前开关
+		curMicStatus: false, // 麦克风当前开关
+
+		pusherDebug: app.globalData.pusherDebug,
+		playerDebug: app.globalData.playerDebug,
+		RTCVideoPusher: {
+			orientation: 'vertical', // vertical,horizontal,
+			aspect: '3:4', // 宽高比，可选值有 3:4, 9:16
+			beauty: 0, // 美颜，取值范围 0-9 ，0 表示关闭
+			whiteness: 0, // 美白，取值范围 0-9 ，0 表示关闭
+			devicePosition: 'front', // 前置或后置，值为front, back,此属性不支持动态修改，如需切换摄像头请调用api
+			muted: true, //默认静音
+			enableCamera: false, //默认打开摄像头
+			minBitrate: app.optionCfg.minRateRate, //	最小码率
+			maxBitrate: app.optionCfg.maxRateRate, // 最大码率
+			waitingImage: '/image/be_closed.jpg', // 进入后台时推流的等待画面
+		},
+		//视频播放组件默认配置,通过修改data，组件实施更新
+		RTCVideoPlayer: {
+			orientation: 'vertical', // 画面方向，可选值有 vertical，horizontal	
+			objectFit: 'fillCrop', // 填充模式，可选值有 contain，fillCrop	
+		},
+
+		//音频播放组件默认配置,通过修改data，组件实施更新
+		RTCAudioPlayer: {
+			soundMode: 'speaker', // 声音输出方式，有效值为 speaker（扬声器）、ear（听筒）
+		}
+
 	},
 
 	// 生命周期函数--监听页面加载
 	onLoad: function (options) {
 		console.log('Meeting page load...');
 
-		this.initData(); // 初始化数据
-		this.enterMeetSuccessFun(); // 跳到这个页面，表示已经进入房间，执行进入房间后操作
-
-		this.updateRecordStatue(); // 先获取云端录制状态
-		this.getMediaStatue(); //获取影音录制、屏幕共享状态
-	},
-	// 生命周期函数--监听页面初次渲染完成
-	onReady: function () {
-		console.log('Meeting page ready...');
-
 		wx.onNetworkStatusChange((res) => { // 监听网络状态变化
 			console.log('========  小程序网络变化  ========')
 			console.log('isConnected: ' + res.isConnected);
 			console.log('networkType: ' + res.networkType);
 		})
-		
+
 		this.setData({
-			pusherDebug: app.globalData.pusherDebug,
-			playerDebug: app.globalData.playerDebug
+			curMeetId: app.globalData.curMeetId,
+			curCamStatus: app.globalData.enterMeetOpenVideo,
+			curMicStatus: app.globalData.enterMeetOpenMic,
+			'RTCVideoPusher.enableCamera': app.globalData.enterMeetOpenVideo,
+			'RTCVideoPusher.muted': !app.globalData.enterMeetOpenMic,
 		})
+	},
+	// 生命周期函数--监听页面初次渲染完成
+	onReady: function () {
+		console.log('Meeting page ready...');
+
+		this.enterMeetSuccessFun(); // 跳到这个页面，表示已经进入房间，执行进入房间后操作
+		this.getRecordStatue(); // 先获取云端录制状态
+		this.getMediaStatue(); //获取影音录制、屏幕共享状态
 	},
 	// 生命周期函数--监听页面显示
 	onShow: function () {
@@ -65,8 +103,6 @@ Page({
 	// 生命周期函数--监听页面隐藏
 	onHide: function () {
 		console.log('Meeting page hide...');
-		app.isHide = true;
-
 	},
 	// 生命周期函数--监听页面卸载
 	onUnload: function () {
@@ -89,7 +125,7 @@ Page({
 			shareObj.token = app.globalData.serverCfg.token;
 		} else {
 			shareObj.useToken = false;
-			shareObj.AppID = app.globalData.serverCfg.AppID || app.globalData.serverCfg.defaultAppID;
+			shareObj.AppID = app.globalData.serverCfg.AppID || require('../../auth').defaultAppID;
 			shareObj.AppSecret = app.globalData.serverCfg.AppSecret;
 		}
 		shareObj.server = app.globalData.serverCfg.serverAddr;
@@ -102,74 +138,6 @@ Page({
 			success: function (res) { }
 		}
 	},
-	// 初始化数据
-	initData() {
-		// 成员信息配置，每个成员都需要配置各自对应的视频播放组件live-player。音频和视频都是live-player，音频不显示宽高，视频静音
-		const openVideoList = [],
-			curCamStatus = app.globalData.enterMeetOpenVideo, // 摄像头当前开关
-			curMicStatus = app.globalData.enterMeetOpenMic; // 麦克风当前开关
-
-		//推流组件默认配置,通过修改data，组件实施更新
-		const RTCVideoPusher = {
-			orientation: 'vertical', // vertical,horizontal,
-			aspect: '3:4', // 宽高比，可选值有 3:4, 9:16
-			beauty: 0, // 美颜，取值范围 0-9 ，0 表示关闭
-			whiteness: 0, // 美白，取值范围 0-9 ，0 表示关闭
-			devicePosition: 'front', // 前置或后置，值为front, back,此属性不支持动态修改，如需切换摄像头请调用api
-			muted: !curMicStatus, //默认静音
-			enableCamera: curCamStatus, //默认打开摄像头
-			minBitrate: app.optionCfg.minRateRate, //	最小码率
-			maxBitrate: app.optionCfg.maxRateRate, // 最大码率
-			waitingImage: '/image/be_closed.jpg', // 进入后台时推流的等待画面
-		}
-
-		//视频播放组件默认配置,通过修改data，组件实施更新
-		const RTCVideoPlayer = {
-			orientation: 'vertical', // 画面方向，可选值有 vertical，horizontal	
-			objectFit: 'fillCrop', // 填充模式，可选值有 contain，fillCrop	
-		}
-
-		//音频播放组件默认配置,通过修改data，组件实施更新
-		const RTCAudioPlayer = {
-			soundMode: 'speaker', // 声音输出方式，有效值为 speaker（扬声器）、ear（听筒）
-		}
-
-		const isRecordTime = true, // 是否录制时间
-			isRecordName = true, // 是否录制名称
-			isRecordOneself = false, // 是否只录制自己
-			userRatio = 1.777777, // 成员视频的默认比例
-			isSvrRecording = false, // 是否正在云端录制中
-			recordTimer = -1, // 录制计时器id
-			recordNowTime = 0, // 当前录制时间
-			recordBtnText = '录制', // 录制按钮的文字
-			recordViewClass = 'icon', // 录制组件的class类名
-			isBeautify = false, // 默认不打开美颜
-			mediaLayout = false, //屏幕共享或者影音共享布局
-			myUserInfo = null,
-			curMeetId = app.globalData.curMeetId; // 房间信息
-
-		this.setData({
-			RTCVideoPusher,
-			RTCVideoPlayer,
-			RTCAudioPlayer,
-			openVideoList,
-			isRecordTime,
-			isRecordName,
-			isRecordOneself,
-			userRatio,
-			isSvrRecording,
-			recordTimer,
-			recordNowTime,
-			recordBtnText,
-			recordViewClass,
-			isBeautify,
-			mediaLayout,
-			myUserInfo,
-			curMeetId,
-			curCamStatus,
-			curMicStatus
-		})
-	},
 	// 进入房间成功的操作
 	enterMeetSuccessFun() {
 		const myUserInfo = RTCSDK.GetMemberInfo(app.globalData.userInfo.UID);
@@ -177,7 +145,7 @@ Page({
 		//找到房间内所有摄像头列表
 		const watchableVideosList = RTCSDK.GetWatchableVideos();
 		const openVideoList = [];
-		
+
 		watchableVideosList.forEach(item => {
 			const memberInfo = RTCSDK.GetMemberInfo(item.userID);
 			const videoConfig = {
@@ -212,9 +180,9 @@ Page({
 			this.setKeepScreenOn();
 		}, 14e3);
 	},
-	longpressScreen(e){
+	longpressScreen(e) {
 		const { key } = e.currentTarget.dataset;
-		if(this.fullSceenId && this.selectComponent(`#${this.fullSceenId}`)) {
+		if (this.fullSceenId && this.selectComponent(`#${this.fullSceenId}`)) {
 			this.selectComponent(`#${key}`).exitFullScreen();
 			this.fullSceenId = null;
 		} else {
@@ -242,7 +210,7 @@ Page({
 			// autoPauseIfNavigate: true, // 当跳转到其它小程序页面时，是否自动暂停本页面的实时音视频播放
 			// autoPauseIfOpenNative: true, // 当跳转到其它微信原生页面时，是否自动暂停本页面的实时音视频播放
 		}
-		
+
 		this.setData({
 			mediaLayout: true,
 			mediaMemberInfo: RTCSDK.GetMemberInfo(UID),
@@ -268,7 +236,6 @@ Page({
 		EnterMeetingRslt(code, cookie) {
 			Tools.hideLoading();
 			if (code === 0) {
-				this.onLoad();
 				this.onReady();
 			} else {
 				wx.reLaunch({ // 返回登录页面
@@ -282,7 +249,10 @@ Page({
 		//通知自己从房间中掉线
 		MeetingDropped() {
 			this.clearRecordTimer();
+
+			// 使RTCVideoPusher和RTCVideoPlayer重新渲染
 			this.setData({
+				mediaLayout: false,
 				openVideoList: [],
 				myUserInfo: null,
 			})
@@ -498,26 +468,19 @@ Page({
 				Tools.showToast('云端录制已结束', 2000);
 			}
 		},
-		//云端录制文件、云端直播输出变化通知
-		CloudMixerOutputInfoChanged(mixerID, outputInfo) {
+		//云端录制/推流事件通知
+		CloudMixerEvent(mixerID, state, eventInfoObj) {
 			if (mixerID !== this.myMixerId) return;
-			switch (outputInfo.state) {
+			switch (state) {
 				case 3:
-					Tools.showToast(`录制出错！错误码：${outputInfo.errCode},${outputInfo.errDesc}`);
-					this.myMixerId = null;
+					Tools.showToast(`录制出错！错误码：${eventInfoObj.errCode},${eventInfoObj.errDesc}`, 3e3);
 					break;
-				case 4:
-					Tools.showToast(`正在上传，${Math.ceil(outputInfo.progress)}%`);
+				case 5:
+					Tools.showToast(`录制已完成，可在后台中查看录像文件`);
 					break;
 				case 6:
-					Tools.showToast(`上传失败`);
-					this.myMixerId = null;
+					Tools.showToast(`录制上传出错！错误码：${eventInfoObj.errCode},${eventInfoObj.errDesc}`, 3e3);
 					break;
-				case 7:
-					Tools.showToast(`录制已完成，可在后台中查看录像文件`);
-					this.myMixerId = null;
-					break;
-
 				default:
 					break;
 			}
@@ -736,33 +699,19 @@ Page({
 	// ------------------- 云端录制 -------------------
 	// 开始/停止云端录制
 	toggleCloudRecord(e) {
-		/* 3种状态：
-			正在录制中 this.myMixerId && this.data.isSvrRecording
-			已完成录制，后台正在处理	this.myMixerId && !this.data.isSvrRecording
-			未开始录制 !this.myMixerId && !this.data.isSvrRecording 
-		*/
-
-		// 录制中
-		if (this.myMixerId) {
-			// 正在录制
-			if (this.data.isSvrRecording) {
-				this.stopRecord(); //结束录制
-				if (this.data.recordTimer != -1) {
-					clearInterval(this.data.recordTimer);
-				}
-				this.setData({
-					recordBtnText: '录制',
-					recordViewClass: 'icon',
-					isSvrRecording: false,
-					recordTimer: -1,
-				})
-			} else {
-				// 已完成录制，后台正在处理
-				Tools.showToast('操作太频繁，请稍后再试');
+		// 正在录制
+		if (this.data.isSvrRecording) {
+			this.stopRecord(); //结束录制
+			if (this.data.recordTimer != -1) {
+				clearInterval(this.data.recordTimer);
 			}
+			this.setData({
+				recordBtnText: '录制',
+				recordViewClass: 'icon',
+				isSvrRecording: false,
+				recordTimer: -1,
+			})
 		} else {
-			// 未开始录制
-
 			const date = new Date();
 			let year = date.getFullYear(),
 				month = date.getMonth() + 1,
@@ -779,7 +728,7 @@ Page({
 
 			const svrPathName = `/${year}-${month}-${day}/${year}-${month}-${day}_${hour}-${minute}-${second}_WX_${this.data.curMeetId}`;
 			const [W, H, B] = record_size_arr[app.optionCfg.definition];
-			const { frameRate, recordMP3 } = app.optionCfg;
+			const { frameRate, recordMP3, maxFileDuration } = app.optionCfg;
 
 			const mixerCfg = {
 				mode: 0,
@@ -789,7 +738,8 @@ Page({
 					vHeight: H,
 					vBps: B * 1000,
 					vFps: frameRate,
-					layoutConfig: this.createRecordLayout()
+					layoutConfig: this.createRecordLayout(),
+					maxFileDuration
 				},
 				audioFileCfg: recordMP3 ? {
 					svrPathName: `${svrPathName}.mp3`
@@ -951,7 +901,6 @@ Page({
 	//清除计时器，退出房间时调用
 	clearRecordTimer() {
 		clearInterval(this.data.recordTimer);
-		// $record.removeClass('icon-recording').addClass('icon');
 		this.setData({
 			recordViewClass: 'icon'
 		})
@@ -963,8 +912,8 @@ Page({
 			RTCSDK.DestroyCloudMixer(this.myMixerId);
 		}
 	},
-	//更新云端录制状态
-	updateRecordStatue() {
+	//获取云端录制状态
+	getRecordStatue() {
 		let status = 0
 		//     0, 没有创建
 		//     1, 正在开启

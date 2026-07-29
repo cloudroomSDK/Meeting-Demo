@@ -1,7 +1,7 @@
 const sdkErrDesc = require('../../utils/sdkErrDesc');
 const Tools = require('../../utils/tools');
 const app = getApp();
-const RTCSDK = require('../../utils/RTCSDK/RTC_Miniapp_SDK.min.js');;
+const RTCSDK = require('../../utils/RTCSDK/index');
 
 let lastMeetId = wx.getStorageSync('CR_MeetingID') || '';
 
@@ -56,15 +56,15 @@ Page({
 	/**
 	 * 生命周期函数--监听页面卸载
 	 */
-	onUnload: function () {},
+	onUnload: function () { },
 	/**
 	 * 页面相关事件处理函数--监听用户下拉动作
 	 */
-	onPullDownRefresh: function () {},
+	onPullDownRefresh: function () { },
 	/**
 	 * 页面上拉触底事件的处理函数
 	 */
-	onReachBottom: function () {},
+	onReachBottom: function () { },
 	/**
 	 * 用户点击右上角分享
 	 */
@@ -111,9 +111,7 @@ Page({
 			Tools.showToast('请输入正确的房间号！');
 		} else {
 			Tools.showLoading('正在进入房间');
-			const UID = app.globalData.userInfo.UID,
-				nickName = app.globalData.userInfo.nickName;
-			RTCSDK.EnterMeeting2(meetingId, UID, nickName, {
+			RTCSDK.EnterMeeting3(meetingId, {
 				meetingId: meetingId
 			}); // sdk进入房间接口
 		}
@@ -140,8 +138,7 @@ Page({
 			if (cookie && cookie.share) {
 				Tools.showLoading('进入房间')
 				lastMeetId = cookie.shareInfo.meetId;
-				const nickName = app.globalData.userInfo.nickName;
-				RTCSDK.EnterMeeting2(lastMeetId, UID, nickName, {
+				RTCSDK.EnterMeeting3(lastMeetId, {
 					meetingId: lastMeetId
 				}); // sdk进入房间接口
 			}
@@ -187,9 +184,7 @@ Page({
 		CreateMeetingSuccess(meetObj, cookie) {
 			const meetingId = meetObj.ID;
 			Tools.showLoading('正在进入房间');
-			const UID = app.globalData.userInfo.UID,
-				nickName = app.globalData.userInfo.nickName;
-			RTCSDK.EnterMeeting2(meetingId, UID, nickName, {
+			RTCSDK.EnterMeeting3(meetingId, {
 				meetingId: meetingId
 			}); // sdk进入房间接口
 		},
@@ -220,11 +215,9 @@ Page({
 		//接受邀请成功的通知
 		AcceptInviteSuccess(inviteID, cookie) {
 			Tools.showLoading('正在进入房间');
-			const meetingId = cookie,
-				UID = app.globalData.userInfo.UID,
-				nickName = app.globalData.userInfo.nickName;
+			const meetingId = cookie;
 
-			RTCSDK.EnterMeeting2(meetingId, UID, nickName, {
+			RTCSDK.EnterMeeting3(meetingId, {
 				meetingId: meetingId
 			});
 		},

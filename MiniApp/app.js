@@ -1,18 +1,17 @@
-const RTCSDK = require('./utils/RTCSDK/RTC_Miniapp_SDK.min.js');
-// const RTCSDK = require('./utils/RTCSDK/crsdk/sdkApi');
+const RTCSDK = require('./utils/RTCSDK/index');
 const SDKErrDesc = require('./utils/sdkErrDesc');
 const Tools = require('./utils/tools');
+const Auth = require('./auth')
 
 const md5 = RTCSDK.MD5;
 
 App({
 	allMembers: [], // 房间内所有成员信息
 	isFullScreen: false, // 是否已全屏
-	isHide: false, // 是否已隐藏
 	optionCfg: null, //云端录制默认配置
 
 	globalData: {
-		ver: '1.6.1', // demo版本
+		ver: '1.7.2', // demo版本
 		sdkVer: RTCSDK.sdkver, // SDK版本
 		curMeetId: null, // 当前房间
 		enterMeetOpenVideo: true, // 入会打开摄像头
@@ -39,16 +38,16 @@ App({
 			definition: 1, //录制分辨率 0:360p ,1:480p ,2:720p
 			minRateRate: 200, //推流最大码率
 			maxRateRate: 800, //推流最小码率
+			maxFileDuration: 120, //切片时长
 		};
 
 		// 设置服务器和账号信息
 		let serverCfg = {};
 		serverCfg.useToken = wx.getStorageSync("CR_UseToken") || false; //1,账号密码鉴权 2,动态令牌鉴权
-		serverCfg.serverAddr = wx.getStorageSync("CR_ServerAddr") || 'sdk.cloudroom.com';
+		serverCfg.serverAddr = wx.getStorageSync("CR_ServerAddr") || Auth.defaultServer;
+		serverCfg.AppID = wx.getStorageSync("CR_AppID") || Auth.defaultAppID;
+		serverCfg.AppSecret = wx.getStorageSync("CR_AppSecret") || Auth.defaultAppSecret;
 		serverCfg.token = wx.getStorageSync("CR_Token") || '';
-		serverCfg.AppID = wx.getStorageSync("CR_AppID") || '';
-		serverCfg.defaultAppID = 'demo@cloudroom.com'; //登录账号为空时，使用此默认账号
-		serverCfg.AppSecret = wx.getStorageSync("CR_AppSecret") || '123456';
 		serverCfg.userAuthCode = wx.getStorageSync("userAuthCode") || '';
 		this.globalData.serverCfg = serverCfg;
 
@@ -66,8 +65,8 @@ App({
 
 		if (e.query.shareInfo) this.shareJoin = true;
 		require('./utils/sdkCallBack'); // 初始化SDK回调通知
-		this.systemInfo = wx.getSystemInfoSync();
-		console.log('系统信息：', this.systemInfo);
+		this.deviceInfo = wx.getDeviceInfo();
+		console.log('系统信息：', this.deviceInfo);
 		this.initDefaultCfg(); // 设置默认的配置信息
 		this.SDKInit(); //SDK初始化
 	},
@@ -121,24 +120,26 @@ App({
 			this.globalData.userInfo.UID = UID;
 		}
 
+		const { serverAddr, useToken, AppID, AppSecret, userAuthCode, token } = this.globalData.serverCfg;
+
+		if (!serverAddr || !AppID || !AppSecret) {
+			Tools.showToast('请设置服务器地址、AppID、AppSecret！');
+			return;
+		}
+
 		// 设置服务器地址
-		RTCSDK.SetServerAddr(this.globalData.serverCfg.serverAddr);
+		RTCSDK.SetServerAddr(serverAddr);
 
 		this.globalData.SDKLoginStatus = 1; //改变登录状态
 
 		// 判断登录方式，传统账号密码登录或者令牌登录
-		const useToken = this.globalData.serverCfg.useToken;
-		const userAuthCode = this.globalData.serverCfg.userAuthCode;
 		if (useToken) {
 			//token模式鉴权登录，推荐使用
-			const token = this.globalData.serverCfg.token;
 			RTCSDK.LoginByToken(token, nickName, UID, userAuthCode, {
 				share: false
 			});
 		} else {
 			//APPID账号密码登录模式
-			const AppID = this.globalData.serverCfg.AppID || this.globalData.serverCfg.defaultAppID;
-			const AppSecret = this.globalData.serverCfg.AppSecret;
 			RTCSDK.Login(AppID, md5(AppSecret), nickName, UID, userAuthCode, {
 				share: false
 			});
@@ -172,7 +173,7 @@ App({
 			});
 		} else {
 			//APPID账号密码登录模式
-			const AppID = shareInfo.AppID || shareInfo.defaultAppID;
+			const AppID = shareInfo.AppID;
 			const AppSecret = shareInfo.AppSecret;
 			RTCSDK.Login(AppID, md5(AppSecret), nickName, UID, userAuthCode, {
 				share: true,
@@ -181,14 +182,14 @@ App({
 		}
 	},
 	//更新检测
-	checkUpdate(){
+	checkUpdate() {
 		const updateManager = wx.getUpdateManager()
 
 		updateManager.onCheckForUpdate(function (res) {
 			// 请求完新版本信息的回调
-            console.log(`有新版本: ${res.hasUpdate}`)
+			console.log(`有新版本: ${res.hasUpdate}`)
 		})
-	
+
 		updateManager.onUpdateReady(function () {
 			wx.showModal({
 				title: '更新提示',

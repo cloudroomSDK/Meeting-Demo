@@ -113,7 +113,7 @@ Component({
 					this._boxHeight = res[0].height; //盒子高度
 
 					this.canvas = canvas;
-					const dpr = wx.getSystemInfoSync().pixelRatio;
+					const dpr = wx.getWindowInfo().pixelRatio;
 					this.dpr = dpr;
 
 					canvas.width = this.boxWidth * dpr;
@@ -144,7 +144,7 @@ Component({
 						this._boxWidth = res[0].width; //盒子宽度
 						this._boxHeight = res[0].height; //盒子高度
 
-						const dpr = wx.getSystemInfoSync().pixelRatio;
+						const dpr = wx.getWindowInfo().pixelRatio;
 						this.dpr = dpr;
 						canvas.width = res[0].width * dpr;
 						canvas.height = res[0].height * dpr;
@@ -175,8 +175,8 @@ Component({
 			} else {
 				scale = this.boxHeight / bgInfo.videoHeight; //视频缩放比例
 			}
-
-			if (RTCSDK.systemInfo.platform === 'ios') {
+			
+			if (RTCSDK._DeviceInfo.platform === 'ios' || RTCSDK._DeviceInfo.platform === 'ohos') {
 				let a, b;
 				if (bgInfo.width / bgInfo.height > this.boxWidth / this.boxHeight) {
 					const w = bgInfo.height * scale; //图片的高度
@@ -195,7 +195,7 @@ Component({
 				ctx.drawImage(this.bgImage, b / 2, a / 2, this.boxWidth - b, this.boxHeight - a);
 				ctx.translate(b / 2, a / 2);
 				ctx.scale(scale, scale);
-			} else if (RTCSDK.systemInfo.platform === 'android') {
+			} else if (RTCSDK._DeviceInfo.platform === 'android') {
 				const imgHeight = this.vertical ? this.bgImage.position[3] : this.bgImage.position[2];
 				const imgWidth = this.vertical ? this.bgImage.position[2] : this.bgImage.position[3];
 				let cx, cy, cw, ch;
@@ -246,7 +246,7 @@ Component({
 			}
 
 			image.onload = () => {
-				if (RTCSDK.systemInfo.platform === 'android') {
+				if (RTCSDK._DeviceInfo.platform === 'android') {
 					let position = [];
 
 					if (this.vertical) {

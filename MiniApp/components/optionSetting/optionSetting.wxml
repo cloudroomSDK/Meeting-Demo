@@ -80,6 +80,16 @@
 						</radio-group>
 					</view>
 				</view>
+				<view class="section radio">
+					<view class="key">切片时长</view>
+					<view class="value">
+						<radio-group class="radio-group" bindchange="maxFileDuration">
+							<radio color='#39abfb' wx:for-items="{{maxFileDurationList}}" wx:key="name" value="{{item.name}}" checked="{{item.checked}}" class="radio">
+								<text>{{item.value}}</text>
+							</radio>
+						</radio-group>
+					</view>
+				</view>
 				<view class="section slider">
 					<text>同时生成MP3文件</text>
 					<switch color='#39abfb' checked="{{recordMP3}}" bindchange="recordMP3Change" />

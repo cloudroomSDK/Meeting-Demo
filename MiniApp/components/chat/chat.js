@@ -1,6 +1,6 @@
 const Tools = require('../../utils/tools')
 const app = getApp()
-const RTCSDK = require('../../utils/RTCSDK/RTC_Miniapp_SDK.min.js');;
+const RTCSDK = require('../../utils/RTCSDK/index');
 
 Component({
 	properties: {

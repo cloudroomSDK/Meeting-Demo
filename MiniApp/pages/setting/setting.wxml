@@ -12,7 +12,7 @@
 			<block wx:if='{{!useToken}}'>
 				<view class="form_input">
 					<text class="text">App ID :</text>
-					<input type="text" value="{{AppID}}" bindinput='AppIDInput' placeholder="默认账号"></input>
+					<input type="text" value="{{AppID}}" bindinput='AppIDInput'></input>
 				</view>
 				<view class="form_input">
 					<text class="text">App Secret :</text>

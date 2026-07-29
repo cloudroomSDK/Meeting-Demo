@@ -1,9 +1,10 @@
 const app = getApp();
 const Tools = require('../../utils/tools');
-const RTCSDK = require('../../utils/RTCSDK/RTC_Miniapp_SDK.min.js');;
+const RTCSDK = require('../../utils/RTCSDK/index');
+const Auth = require('../../auth');
+const DefaultAppIDText = '默认AppID';
 
 Page({
-
 	/**
 	 * 页面的初始数据
 	 */
@@ -17,7 +18,7 @@ Page({
 		enterMeetOpenMic: true,
 		pusherDebug: false,
 		playerDebug: false,
-		wxDebug: app.systemInfo.enableDebug,
+		wxDebug: wx.getAppBaseInfo().enableDebug,
 	},
 
 	/**
@@ -27,7 +28,7 @@ Page({
 		this.setData({
 			serverAddr: app.globalData.serverCfg.serverAddr,
 			useToken: app.globalData.serverCfg.useToken,
-			AppID: app.globalData.serverCfg.AppID,
+			AppID: app.globalData.serverCfg.AppID === Auth.defaultAppID && Auth.defaultAppID !== '' ? DefaultAppIDText : app.globalData.serverCfg.AppID,
 			AppSecret: app.globalData.serverCfg.AppSecret,
 			token: app.globalData.serverCfg.token,
 			userAuthCode: app.globalData.serverCfg.userAuthCode,
@@ -80,6 +81,20 @@ Page({
 	// 点击保存按钮
 	loginSetSave(e) {
 		let configChange = false;
+		if (!this.data.serverAddr) {
+			Tools.showToast('请输入服务器地址');
+			return;
+		}
+		if (this.data.useToken) {
+			if (!this.data.token) {
+				Tools.showToast('请输入Token');
+				return;
+			}
+		} else if (!this.data.AppID || !this.data.AppSecret) {
+			Tools.showToast('请输入AppID、AppSecret');
+			return;
+		}
+
 		if (app.globalData.serverCfg.serverAddr !== this.data.serverAddr) {
 			wx.setStorage({
 				key: 'CR_ServerAddr',
@@ -96,7 +111,13 @@ Page({
 			app.globalData.serverCfg.useToken = this.data.useToken;
 			configChange = true;
 		}
-		if (app.globalData.serverCfg.AppID !== this.data.AppID) {
+		if (this.data.AppID === DefaultAppIDText) {
+			if (app.globalData.serverCfg.AppID !== Auth.defaultAppID) {
+				configChange = true;
+			}
+			app.globalData.serverCfg.AppID = Auth.defaultAppID;
+			wx.removeStorage({ key: 'CR_AppID' })
+		} else if (app.globalData.serverCfg.AppID !== this.data.AppID) {
 			wx.setStorage({
 				key: 'CR_AppID',
 				data: this.data.AppID,
@@ -128,7 +149,7 @@ Page({
 			app.globalData.serverCfg.userAuthCode = this.data.userAuthCode;
 			configChange = true;
 		}
-		
+
 		if (app.globalData.enterMeetOpenVideo !== this.data.enterMeetOpenVideo) {
 			app.globalData.enterMeetOpenVideo = this.data.enterMeetOpenVideo;
 		}
@@ -156,9 +177,9 @@ Page({
 	// 点击恢复默认按钮
 	resetLoginCfg(e) {
 		this.setData({
-			serverAddr: 'sdk.cloudroom.com',
-			AppID: '',
-			AppSecret: '123456',
+			serverAddr: Auth.defaultServer,
+			AppID: Auth.defaultAppID === '' ? '' : DefaultAppIDText,
+			AppSecret: Auth.defaultAppSecret,
 			userAuthCode: '',
 			useToken: false,
 			enterMeetOpenVideo: true,
@@ -173,18 +194,18 @@ Page({
 		})
 	},
 	pusherDebugSwitch(e) {
-		this.setData({pusherDebug: e.detail.value});
+		this.setData({ pusherDebug: e.detail.value });
 	},
 
 	playerDebugSwitch(e) {
-		this.setData({playerDebug: e.detail.value});
+		this.setData({ playerDebug: e.detail.value });
 	},
 
 	enterMeetOpenVideoSwitch(e) {
-		this.setData({enterMeetOpenVideo: e.detail.value});
+		this.setData({ enterMeetOpenVideo: e.detail.value });
 	},
 	enterMeetOpenMicSwitch(e) {
-		this.setData({enterMeetOpenMic: e.detail.value});
+		this.setData({ enterMeetOpenMic: e.detail.value });
 	},
 	wxDebugSwitch(e) {
 		wx.setEnableDebug({ enableDebug: e.detail.value })

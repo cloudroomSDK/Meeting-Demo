@@ -173,7 +173,7 @@ page {
 }
 
 .page_meet_video .page_screen .hideMyCam {
-	position: absolute;
+	position: absolute !important;
 	left: 300%;
 }
 

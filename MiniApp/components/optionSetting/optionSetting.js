@@ -1,6 +1,6 @@
 const Tools = require('../../utils/tools')
 const app = getApp()
-const RTCSDK = require('../../utils/RTCSDK/RTC_Miniapp_SDK.min.js');;
+const RTCSDK = require('../../utils/RTCSDK/index');
 
 Component({
 	properties: {
@@ -30,6 +30,19 @@ Component({
 			name: '2',
 			value: '720P',
 			checked: app.optionCfg.definition == 2
+		}],
+		maxFileDurationList: [{
+			name: 0,
+			value: '不切片',
+			checked: app.optionCfg.maxFileDuration == 0
+		}, {
+			name: 30,
+			value: '30分钟',
+			checked: app.optionCfg.maxFileDuration == 30
+		}, {
+			name: 120,
+			value: '2小时',
+			checked: app.optionCfg.maxFileDuration == 120
 		}],
 		localMirrorList: [{
 			value: 'auto',
@@ -155,6 +168,13 @@ Component({
 		resolutionChange(e) {
 			const ratio = +e.detail.value;
 			app.optionCfg.definition = ratio;
+			this.savaCfgLocal();
+			Tools.showToast('设置成功,重新录制生效');
+		},
+		//切片时长改变
+		maxFileDuration(e) {
+			const ratio = +e.detail.value;
+			app.optionCfg.maxFileDuration = ratio;
 			this.savaCfgLocal();
 			Tools.showToast('设置成功,重新录制生效');
 		},

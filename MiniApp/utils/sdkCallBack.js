@@ -1,4 +1,4 @@
-const RTCSDK = require('./RTCSDK/RTC_Miniapp_SDK.min.js');;
+const RTCSDK = require('./RTCSDK/index');
 const Tools = require('./tools');
 const sdkErrDesc = require('./sdkErrDesc');
 
@@ -12,7 +12,7 @@ const allPagesNotifyArr = [
 	'NotifyAllAudioClose',
 	'CreateCloudMixerFailed',
 	'CloudMixerStateChanged',
-	'CloudMixerOutputInfoChanged',
+	'CloudMixerEvent',
 	'NotifyScreenShareStarted',
 	'NotifyScreenShareStopped',
 	'NotifyMediaStart',

@@ -1,14 +1,5 @@
 let RTCSDK;
 
-let mode = null;
-try {
-	const res = wx.getSystemInfoSync()
-	//ios使用live模式，安卓使用rtc模式
-	mode = res.system.indexOf('iOS') > -1 ? 'live' : 'RTC';
-} catch (e) {
-	mode = 'RTC';
-}
-
 Component({
 	/**
 	 * 组件的属性列表
@@ -31,7 +22,7 @@ Component({
 		RTCAudioPlayer: {
 			src: '', // 音视频地址。目前仅支持 flv, rtmp 格式
 			src2: '', // 音视频地址。目前仅支持 flv, rtmp 格式
-			mode: mode, // live（直播），RTC（实时通话，该模式时延更低）
+			mode: 'RTC', // live（直播），RTC（实时通话，该模式时延更低）
 			autoplay: true, // 是否自动播放
 			muted: false, // 是否静音
 			orientation: 'vertical', // 画面方向，可选值有 vertical，horizontal
@@ -45,12 +36,12 @@ Component({
 	},
 
 	lifetimes: {
-		created: function () {
+		created: function() {
 			RTCSDK = wx.RTCSDK || getApp().globalData.RTCSDK;
 			this.init = false;
 		},
 		// 生命周期函数，可以为函数，或一个在methods段中定义的方法名
-		attached: function () {
+		attached: function() {
 			const soundMode = this.properties.soundMode == undefined ? this.data.RTCAudioPlayer.soundMode : this.properties.soundMode;
 			const autoPauseIfNavigate = this.properties.autoPauseIfNavigate == undefined ? this.data.RTCAudioPlayer.autoPauseIfNavigate : this.properties.autoPauseIfNavigate;
 			const autoPauseIfOpenNative = this.properties.autoPauseIfOpenNative == undefined ? this.data.RTCAudioPlayer.autoPauseIfOpenNative : this.properties.autoPauseIfOpenNative;
@@ -66,16 +57,16 @@ Component({
 			this.init = true;
 			this.ComponentInit();
 		},
-		moved: function () {},
-		detached: function () {
+		moved: function() {},
+		detached: function() {
 			RTCSDK.DestoryAudioPlayerContext();
 		},
 	},
 	pageLifetimes: {
 		// 组件所在页面的生命周期函数
-		show: function () {},
-		hide: function () {},
-		resize: function () {},
+		show: function() {},
+		hide: function() {},
+		resize: function() {},
 	},
 
 	/**
@@ -83,17 +74,17 @@ Component({
 	 */
 	methods: {
 		//通知业务层视频组件初始化完毕,返回uuid
-		ComponentInit: function () {
+		ComponentInit: function() {
 			this.context = RTCSDK.CreateAudioPlayerContext(
 				this, //组件实例
 				this.data.RTCAudioPlayer.id //组件唯一ID
 			);
 		},
-		notifyPullSrcInfo: function (src) {
+		notifyPullSrcInfo: function(src) {
 			const { useFirst, useSecond } = this.data;
 
-			if (useFirst && useSecond){
-				if(this.changeAudio === 2){
+			if (useFirst && useSecond) {
+				if (this.changeAudio === 2) {
 					this.setData({
 						useSecond: false,
 						['RTCAudioPlayer.src2']: '',
@@ -113,7 +104,7 @@ Component({
 					['RTCAudioPlayer.src']: src,
 				})
 				this.changeAudio = 1;
-			} else if(!useSecond){
+			} else if (!useSecond) {
 				this.setData({
 					useSecond: true,
 					['RTCAudioPlayer.src2']: src,
@@ -121,11 +112,11 @@ Component({
 				this.changeAudio = 2;
 			}
 		},
-		statechange: function (e) {
+		statechange: function(e) {
 			RTCSDK.BroadcastAudioPlayer(e, this.data.RTCAudioPlayer.id); //通知SDK播放器状态
 			this.triggerEvent('statechange', e);
-			if(e.detail.code == 2002 && this.changeAudio){
-				if(this.changeAudio === 1){
+			if (e.detail.code == 2002 && this.changeAudio) {
+				if (this.changeAudio === 1) {
 					this.setData({
 						useSecond: false,
 						['RTCAudioPlayer.src2']: '',
@@ -136,14 +127,14 @@ Component({
 						['RTCAudioPlayer.src']: ''
 					});
 				}
-				
+
 				this.isChange = null;
 			}
 		},
-		netstatus: function (e) {
+		netstatus: function(e) {
 			this.triggerEvent('netstatus', e);
 		},
-		error: function (e) {
+		error: function(e) {
 			this.triggerEvent('error', e);
 		},
 	},
@@ -152,7 +143,8 @@ Component({
 	 * 组件的事件监听器
 	 */
 	observers: {
-		'config': function (config) {
+		config(config) {
+			if (Object.prototype.toString.call(config) !== "[object Object]") return;
 			const soundMode = config.soundMode === undefined ? this.data.RTCAudioPlayer.soundMode : config.soundMode;
 			const autoPauseIfNavigate = config.autoPauseIfNavigate === undefined ? this.data.RTCAudioPlayer.autoPauseIfNavigate : config.autoPauseIfNavigate;
 			const autoPauseIfOpenNative = config.autoPauseIfOpenNative === undefined ? this.data.RTCAudioPlayer.autoPauseIfOpenNative : config.autoPauseIfOpenNative;

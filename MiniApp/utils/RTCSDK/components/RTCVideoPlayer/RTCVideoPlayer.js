@@ -46,10 +46,12 @@ Component({
 				soundMode: soundMode,
 			});
 
+			console.crlog(`[VideoPlayComponent] attached id: ${componentId}`);
 			this.ComponentInit();
 			this.init = true;
 		},
 		detached() {
+			console.crlog(`[VideoPlayComponent] detached id: ${this.data.id}`);
 			if (this.data.type === 'screen') RTCSDK.Publish.removeAllEvent('getScreenInfo');
 			this.fullScreenStatus && this.exitFullScreen();
 			this.ComponentUninit();
@@ -192,11 +194,11 @@ Component({
 					this.ComponentUninit();
 				}
 
-				this.setData(obj, () => {
-					if (shouldComponentInit) {
-						this.ComponentInit();
-					}
-				});
+				this.setData(obj);
+				
+				if (shouldComponentInit && this.init) {
+					this.ComponentInit();
+				}
 
 				console.crlog(`[VideoPlayComponent] config change,userId: ${this.data.userId},type: ${this.data.type},config: ${JSON.stringify(obj)}`);
 			}

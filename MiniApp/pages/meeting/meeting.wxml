@@ -27,9 +27,10 @@
 
 				<!-- 会议视频布局 -->
 				<view class="page_screen screen{{m1.getNum(openVideoList.length + curCamStatus)}}">
-					<view class='{{mediaLayout ? "hideMyCam" : ""}}' hidden='{{!curCamStatus}}'>
+					<view class='{{mediaLayout || !curCamStatus ? "hideMyCam" : ""}}'>
 						<!-- 推流组件，麦克风声音也是从推流组件输出，就算只开启麦克风，也要渲染该组件 -->
-						<RTCVideoPusher config='{{RTCVideoPusher}}' debug='{{pusherDebug}}'>
+						<!-- 加了wxif的判断条件，在权限重新打开或者掉线重登后，使组件重新渲染 -->
+						<RTCVideoPusher wx:if="{{ myUserInfo }}"  config='{{RTCVideoPusher}}' debug='{{pusherDebug}}'>
 							<view class='nickname'>我</view>
 						</RTCVideoPusher>
 					</view>
