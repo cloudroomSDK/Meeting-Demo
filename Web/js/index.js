@@ -335,6 +335,10 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
             MeetingDemo.Login.initSDK('urlEnter'); // 页面加载完自动初始化并登录
           }
 
+          if (paramsObj.vsize != undefined) {
+            $('#select_size').val(paramsObj.vsize);
+          }
+
           // url不带会议号，登录界面入会
         } else {
           this.initSDK(); // 页面加载完自动初始化并登录
@@ -2859,9 +2863,9 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         this.getAllCloudMixerInfo();
       };
       // SDK接口：通知 某个云端录制混图器输出变化
-      window.CRVideo_CloudMixerOutputInfoChanged.callback = (ID, jsonState) => {
+      window.CRVideo_CloudMixerEvent.callback = (ID, state, jsonState) => {
         let stateStr = '';
-        switch (jsonState.state) {
+        switch (state) {
           case 1:
             stateStr = '录制中';
             break;
@@ -2880,17 +2884,20 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
           case 6:
             stateStr = '上传失败';
             break;
-          case 7:
-            stateStr = '全部完成';
+          case 8:
+            $('.file-info-list').append(`<li>ID:${ID}，状态:全部完成</li>`);
+            $('.file-info-list')[0].scrollTop = $('.file-info-list')[0].scrollHeight;
             this.getAllCloudMixerInfo();
             break;
 
           default:
-            stateStr = jsonState.state;
+            stateStr = '未知';
             break;
         }
-        $('.file-info-list').append(`<li>ID:${ID}，文件名:${jsonState.fileName}，状态:${stateStr}</li>`);
-        $('.file-info-list')[0].scrollTop = $('.file-info-list')[0].scrollHeight;
+        if (state !== 8) {
+          $('.file-info-list').append(`<li>ID:${ID}，文件名:${jsonState.outputName}，状态:${stateStr}</li>`);
+          $('.file-info-list')[0].scrollTop = $('.file-info-list')[0].scrollHeight;
+        }
       };
     }
     loadEvent() {}
@@ -3007,12 +3014,14 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
       //如果需要生成MP4文件
       if (isCreateMp4File) {
         const type = +$('input[name=subscribeVideos]:checked').val();
+        const maxFileDuration = +$('input[name=maxFileDuration]:checked').val(); //切片时长
         const subscribeVideos = this.createSubscribeVideos(type);
 
         const videoFileCfg = {};
         videoFileCfg.aStreamType = +$('input[name=aStreamType]:checked').val() == 0 ? 0 : 1;
         videoFileCfg.svrPathName = `${svrPath}/$UID$_cam$CAMID$_$TIME$.mp4`;
         videoFileCfg.subscribeVideos = subscribeVideos;
+        videoFileCfg.maxFileDuration = maxFileDuration;
 
         jsonCfg.videoFileCfg = videoFileCfg;
       }
@@ -3086,6 +3095,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
         }
 
         const aChannelType = +$('input[name=audioTpyeForMp4]:checked').val(); //0单声道，1左右声道
+        const maxFileDuration = +$('input[name=maxFileDurationForInterflow]:checked').val(); //切片时长
 
         const { width, height } = this.interflowVideoCfg;
 
@@ -3094,6 +3104,7 @@ layui.use(['form', 'layer', 'laytpl', 'element'], function () {
           aChannelType: aChannelType,
           vWidth: width,
           vHeight: height,
+          maxFileDuration,
           layoutConfig: this.createLayoutConfig(),
         };
 
